@@ -10,6 +10,9 @@
     using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
+    /// <summary>
+    /// Defines a read only collection of NodeComponents, with protected list methods for children to make public
+    /// </summary>
     public class NodeComponentCollection : NodeComponent, IEnumerable<NodeComponent>, INotifyCollectionChanged
     {
         private INode parentNode;
@@ -53,6 +56,8 @@
             }
         }
 
+        public int ComponentCount => _subParts.Count;
+
         protected NodeComponent this[Index index]
         {
             get => _subParts[index];
@@ -71,19 +76,23 @@
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        protected virtual void Add(NodeComponent newField)
+        public int IndexOf(NodeComponent component) => _subParts.IndexOf(component);
+
+        public bool Contains(NodeComponent component) => _subParts.Contains(component);
+
+        protected virtual void ProtectedAdd(NodeComponent newField)
         {
             _subParts.Add(newField);
             newField.ParentNode = ParentNode;
         }
 
-        protected virtual void Insert(int index, NodeComponent newField)
+        protected virtual void ProtectedInsert(int index, NodeComponent newField)
         {
             _subParts.Insert(index, newField);
             newField.ParentNode = ParentNode;
         }
 
-        protected virtual void RemoveAt(int index)
+        protected virtual void ProtectedRemoveAt(int index)
         {
             if (GetIndex(index) < _subParts.Count)
             {
@@ -91,20 +100,23 @@
             }
         }
 
-        protected virtual bool Remove(NodeComponent component)
+        protected virtual bool ProtectedRemove(NodeComponent component)
         {
             return _subParts.Remove(component);
         }
 
-        protected virtual void Reset()
+        protected virtual void ProtectedReset()
         {
             for (int i = 0; i < _subParts.Count; i++)
             {
-                RemoveAt(i);
+                ProtectedRemoveAt(i);
             }
         }
 
-        protected virtual bool Contains(NodeComponent component) => _subParts.Contains(component);
+        protected virtual void ProtectedClear()
+        {
+            _subParts.Clear();
+        }
 
         private int GetIndex(Index index) => index.IsFromEnd ? _subParts.Count - index.Value : index.Value;
     }

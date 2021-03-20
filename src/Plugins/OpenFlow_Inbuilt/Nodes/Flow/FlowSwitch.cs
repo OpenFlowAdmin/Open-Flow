@@ -15,7 +15,20 @@
 
         private readonly ValueField valueInput = new ValueField("Value").WithInputTypeProvider(new TypeDefinition<bool>());
 
-        private readonly ValueFieldGenerator possibleOutputs = new(new ValueField("Outputs"), 0, null);
+        private readonly NodeComponentDictionary flowOutputs = new()
+        {
+            {
+                typeof(bool) ,
+                    new NodeComponentCollection(new[] {
+                        new NodeField("True").WithFlowOutput(),
+                        new NodeField("False").WithFlowOutput(),
+                    })
+            },
+            {
+                typeof(double) , new NodeField("A double was put in idk what to do with that")
+            }
+        }
+            ;
 
         public FlowSwitch()
         {
@@ -30,12 +43,13 @@
             {
                 yield return flowInput;
                 yield return valueInput;
-                yield return possibleOutputs;
+                yield return flowOutputs;
             }
         }
 
         public void Evaluate()
         {
+            /*
             if (valueInput[ValueField.InputKey] is bool boolInput)
             {
                 if (boolInput == true)
@@ -57,6 +71,7 @@
                     }
                 }
             }
+            */
         }
 
         private void FlowSwitch_OnTypeDefinitionChanged(object sender, PropertyChangedEventArgs e)

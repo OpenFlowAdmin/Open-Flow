@@ -22,7 +22,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             if (subComponents.TryGetValue(key, out NodeComponent component) && !Contains(component))
             {
-                Add(component);
+                ProtectedAdd(component);
                 return true;
             }
 
@@ -33,7 +33,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             if (subComponents.TryGetValue(key, out NodeComponent component) && Contains(component))
             {
-                Remove(component);
+                ProtectedRemove(component);
                 return true;
             }
 

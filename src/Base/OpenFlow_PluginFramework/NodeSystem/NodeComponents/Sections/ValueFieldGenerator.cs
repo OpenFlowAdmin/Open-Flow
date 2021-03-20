@@ -13,7 +13,7 @@
         public ValueFieldGenerator(ValueField clone, int minimumFieldCount, Func<int, string> nameRule = null)
             : base()
         {
-            Reset();
+            ProtectedReset();
             this.nameRule = nameRule;
             originalClone = clone;
             this.minimumFieldCount = minimumFieldCount;
@@ -52,7 +52,7 @@
                 originalClone.Name = nameRule(FieldCount);
             }
 
-            Add(originalClone.CloneTo(new ValueField("") { RemoveAction = (component) => { Remove(component); } }));
+            ProtectedAdd(originalClone.CloneTo(new ValueField("") { RemoveAction = (component) => { ProtectedRemove(component); } }));
 
             if (FieldCount > 1)
             {
@@ -60,14 +60,14 @@
             }
         }
 
-        protected override bool Remove(NodeComponent component)
+        protected override bool ProtectedRemove(NodeComponent component)
         {
             if (FieldCount <= minimumFieldCount + 1 || component == this[^1])
             {
                 return false;
             }
             
-            if (base.Remove(component))
+            if (base.ProtectedRemove(component))
             {
                 int index = 0;
                 foreach (NodeField field in AllFields)
