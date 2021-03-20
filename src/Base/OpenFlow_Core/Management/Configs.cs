@@ -50,7 +50,7 @@
                     state = State.InvalidPath;
                 }
 
-                XmlDocument configsDocu = new XmlDocument();
+                XmlDocument configsDocu = new();
                 configsDocu.Load(xmlDocPath);
                 if (configsDocu["Configs"] == null)
                 {
@@ -70,10 +70,9 @@
 
         public void LoadPluginDirectories()
         {
-            /*
             if (Valid)
             {
-                List<string> output = new List<string>();
+                List<string> output = new();
                 foreach (XmlNode path in configs["PluginDirectories"])
                 {
                     Debug.WriteLine(path.InnerText);
@@ -89,7 +88,6 @@
             {
                 PluginPaths = null;
             }
-            */
         }
     }
 }

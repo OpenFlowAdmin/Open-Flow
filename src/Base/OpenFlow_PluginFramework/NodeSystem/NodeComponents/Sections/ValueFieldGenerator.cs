@@ -6,9 +6,9 @@
 
     public class ValueFieldGenerator : NodeComponentCollection
     {
-        private ValueField originalClone;
-        private Func<int, string> nameRule;
-        private int minimumFieldCount;
+        private readonly ValueField originalClone;
+        private readonly Func<int, string> nameRule;
+        private readonly int minimumFieldCount;
 
         public ValueFieldGenerator(ValueField clone, int minimumFieldCount, Func<int, string> nameRule = null)
             : base()

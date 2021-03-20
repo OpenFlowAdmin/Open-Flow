@@ -10,20 +10,18 @@
     {
         public void LoadFromFolders(IEnumerable<string> folders)
         {
-            /*
-if (folders == null)
-{
-    throw new ArgumentNullException(nameof(folders));
-}
+            if (folders == null)
+            {
+                throw new ArgumentNullException(nameof(folders));
+            }
 
-foreach (string pluginFolder in folders)
-{
-    if (PluginLoader.TryLoadFromFolder(pluginFolder, out IPlugin plugin))
-    {
-        plugin.Register(this);
-    }
-}
-*/
+            foreach (string pluginFolder in folders)
+            {
+                if (PluginLoader.TryLoadFromFolder(pluginFolder, out IPlugin plugin))
+                {
+                    plugin.Register(this);
+                }
+            }
 
             foreach (IPlugin plugin in InbuiltPluginsLoader.GetInbuiltPlugins())
             {

@@ -15,7 +15,7 @@
 
         private readonly ValueField valueInput = new ValueField("Value").WithInputTypeProvider(new TypeDefinition<bool>());
 
-        private readonly ValueFieldGenerator possibleOutputs = new ValueFieldGenerator(new ValueField("Outputs"), 0, null);
+        private readonly ValueFieldGenerator possibleOutputs = new(new ValueField("Outputs"), 0, null);
 
         public FlowSwitch()
         {

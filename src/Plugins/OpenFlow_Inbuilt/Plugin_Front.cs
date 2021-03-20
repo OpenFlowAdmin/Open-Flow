@@ -18,8 +18,8 @@
 
     public class Plugin_Front : IPlugin
     {
-        private IEnumerable<KeyValuePair<string, IDataTemplate>> editors = new Dictionary<string, IDataTemplate>();
-        private IEnumerable<KeyValuePair<string, IDataTemplate>> displays = new Dictionary<string, IDataTemplate>();
+        private readonly IEnumerable<KeyValuePair<string, IDataTemplate>> editors = new Dictionary<string, IDataTemplate>();
+        private readonly IEnumerable<KeyValuePair<string, IDataTemplate>> displays = new Dictionary<string, IDataTemplate>();
 
         public Plugin_Front()
         {
@@ -32,9 +32,9 @@
 
         public void Register(IPluginHost host)
         {
-            host.RegisterType("#FF0000", "Number", 0.0, "NumberEnterDisplay", "StringDisplay");
-            host.RegisterType("#0000FF", "Text", "", "StringEditor", "StringDisplay");
-            host.RegisterType("#0000FF", "Condition", false, "StringDisplay", "StringDisplay");
+            host.RegisterType<double>("#FF0000", "Number", 0.0, "NumberEnterDisplay", "StringDisplay");
+            host.RegisterType<string>("#0000FF", "Text", "", "StringEditor", "StringDisplay");
+            host.RegisterType<bool>("#00FFFF", "Condition", false, "StringDisplay", "StringDisplay");
 
             //host.TryAddTypeConverter<double, string, Node_Convert_To_String>();
 

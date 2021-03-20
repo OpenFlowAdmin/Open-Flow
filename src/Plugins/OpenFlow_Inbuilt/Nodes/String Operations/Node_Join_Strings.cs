@@ -8,7 +8,7 @@
 
     public class Node_Join_Strings : INode
     {
-        private readonly ValueFieldGenerator combineStrings = new ValueFieldGenerator(new ValueField("Text").WithInput<string>(), 2);
+        private readonly ValueFieldGenerator combineStrings = new(new ValueField("Text").WithInput<string>(), 2);
         private readonly ValueField combinedString = new ValueField("Combined String").WithOutput<string>();
 
         public string NodeName => "Join Strings";

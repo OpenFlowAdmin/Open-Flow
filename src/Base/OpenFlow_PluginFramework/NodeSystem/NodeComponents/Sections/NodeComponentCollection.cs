@@ -13,7 +13,7 @@
     public class NodeComponentCollection : NodeComponent, IEnumerable<NodeComponent>, INotifyCollectionChanged
     {
         private INode parentNode;
-        private ObservableCollection<NodeComponent> _subParts;
+        private readonly ObservableCollection<NodeComponent> _subParts;
 
         public NodeComponentCollection() : this(Enumerable.Empty<NodeComponent>()) { }
 

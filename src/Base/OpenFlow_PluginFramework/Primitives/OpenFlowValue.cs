@@ -10,10 +10,10 @@
     /// </summary>
     public class OpenFlowValue : INotifyPropertyChanged
     {
+        private readonly ITypeDefinitionProvider typeDefinitionProvider;
         private object value;
         private bool isEditable;
         private OpenFlowValue driver; 
-        private ITypeDefinitionProvider typeDefinitionProvider;
         private ITypeDefinition currentTypeDefinition;
         private string name;
 
@@ -148,7 +148,7 @@
         /// Clones this OpenFlowValue
         /// </summary>
         /// <returns>A new OpenFlowValue with the same properties as this one</returns>
-        public OpenFlowValue Clone() => new OpenFlowValue(typeDefinitionProvider)
+        public OpenFlowValue Clone() => new(typeDefinitionProvider)
         {
             Value = Value,
             IsEditable = IsEditable,
