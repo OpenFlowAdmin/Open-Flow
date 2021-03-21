@@ -175,14 +175,14 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 {
                     componentCollection.AllFields.CollectionChanged -= Child_NodeFieldsList_Changed;
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.AllFields, GetLinearIndexFromNested(index)));
+                    Count -= componentCollection.FieldCount;
                 }
                 else
                 {
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, parts, GetLinearIndexFromNested(index)));
+                    Count -= 1;
                 }
             }
-
-            Count -= parts.Count;
         }
 
         private void NodePartsAdded(IList parts, int index = -1)
@@ -193,19 +193,33 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 {
                     componentCollection.AllFields.CollectionChanged += Child_NodeFieldsList_Changed;
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.AllFields, GetLinearIndexFromNested(index)));
+                    Count += componentCollection.FieldCount;
                 }
                 else
                 {
                     CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, parts, GetLinearIndexFromNested(index)));
+                    Count += 1;
                 }
             }
-
-            Count += parts.Count;
         }
 
         private void Child_NodeFieldsList_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             Debug.WriteLine("One of my children's ComponentCollecitons changed");
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    Count += e.NewItems.Count;
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    Count -= e.OldItems.Count;
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    Count = Count - e.OldItems.Count + e.NewItems.Count;
+                    break;
+            }
+
             int i = 0;
             int startingIndex = 0;
             while (i < parts.Count && (parts[i] as NodeComponentCollection)?.AllFields != sender)

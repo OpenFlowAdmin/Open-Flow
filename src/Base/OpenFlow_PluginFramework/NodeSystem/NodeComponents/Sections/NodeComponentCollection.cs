@@ -107,7 +107,7 @@
 
         protected virtual void ProtectedReset()
         {
-            for (int i = 0; i < _subParts.Count; i++)
+            for (int i = _subParts.Count - 1; i >= 0; i--)
             {
                 ProtectedRemoveAt(i);
             }

@@ -77,6 +77,7 @@ namespace OpenFlow_Core
 
         private void RemoveRange(int index, int count)
         {
+            Debug.WriteLine($"Removing {count} items at index {index}");
             index = index == -1 ? mapTo.Count - 1 : index;
             for (int i = 0; i < count; i++)
             {
