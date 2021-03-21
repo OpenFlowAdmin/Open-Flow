@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
-    class NodeComponentList : NodeComponentCollection, IList<NodeComponent>
+    public class NodeComponentList : NodeComponentCollection, IList<NodeComponent>
     {
         public NodeComponent this[int index] { get => base[index]; set => base[index] = value; }
 

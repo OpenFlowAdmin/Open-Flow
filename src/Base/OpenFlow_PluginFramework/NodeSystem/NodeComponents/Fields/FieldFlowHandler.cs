@@ -5,7 +5,7 @@
 
     public static class FieldFlowHandler
     {
-        private static readonly Dictionary<NodeField, FlowState> FlowStates = new Dictionary<NodeField, FlowState>();
+        private static readonly Dictionary<NodeField, FlowState> FlowStates = new();
 
         public static NodeField WithFlowInput(this NodeField field, bool inputState = true)
         {
@@ -77,7 +77,7 @@
                 }
             }
 
-            public static implicit operator NotifyChange<T>(T val) => new NotifyChange<T>(val);
+            public static implicit operator NotifyChange<T>(T val) => new(val);
 
             public static implicit operator T(NotifyChange<T> notChange) => notChange.Val;
 

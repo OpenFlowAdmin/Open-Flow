@@ -47,7 +47,7 @@ namespace OpenFlow_PluginFramework.Primitives.ValueConstraints
         {
             if (constraints.Count > 0)
             {
-                Func<T, T> PreviousTotal = constraints[constraints.Count - 1].TotalFunc;
+                Func<T, T> PreviousTotal = constraints[^1].TotalFunc;
                 TotalFunc = (x) => MyFunc(PreviousTotal(x));
             }
 

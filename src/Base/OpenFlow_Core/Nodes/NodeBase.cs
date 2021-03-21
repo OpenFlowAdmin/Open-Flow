@@ -59,7 +59,7 @@
 
         public ReadOnlyObservableCollection<DisplayNodeField> Fields { get; }
 
-        public NodeBase DuplicateNode() => new NodeBase((INode)Activator.CreateInstance(baseNode.GetType()));
+        public NodeBase DuplicateNode() => new((INode)Activator.CreateInstance(baseNode.GetType()));
 
         public bool TryGetSpecialField(SpecialFieldFlags flag, out DisplayNodeField field)
         {

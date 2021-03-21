@@ -127,7 +127,6 @@
                 {
                     Input = new FlowConnector(ConnectionTypes.Input);
                 }
-                Alignment = Output == null ? HorizontalAlignment.Left : HorizontalAlignment.Middle;
             }
             else if (baseField is ValueField valField && valField.InputDisplayValue != null)
             {
@@ -135,13 +134,12 @@
                 {
                     Input = new ValueConnector(valField.GetDisplayValue(ValueField.InputKey), ConnectionTypes.Input);
                 }
-                Alignment = Output == null ? HorizontalAlignment.Left : HorizontalAlignment.Middle;
             }
             else
             {
                 Input = null;
-                Alignment = Output == null ? HorizontalAlignment.Middle : HorizontalAlignment.Right;
             }
+            RecalculateAlignment();
         }
 
         private void RefreshOutput()
@@ -152,7 +150,6 @@
                 {
                     Output = new FlowConnector(ConnectionTypes.Output);
                 }
-                Alignment = Input == null ? HorizontalAlignment.Right : HorizontalAlignment.Middle;
             }
             else if (baseField is ValueField valField && valField.OutputDisplayValue != null)
             {
@@ -160,22 +157,30 @@
                 {
                     Output = new ValueConnector(valField.GetDisplayValue(ValueField.OutputKey), ConnectionTypes.Output);
                 }
-                Alignment = Input == null ? HorizontalAlignment.Right : HorizontalAlignment.Middle;
             }
             else
             {
                 Output = null;
-                Alignment = Input == null ? HorizontalAlignment.Middle : HorizontalAlignment.Left;
             }
+            RecalculateAlignment();
+        }
+
+        private void RecalculateAlignment()
+        {
+            Alignment =
+                Input is null && Output is not null ? HorizontalAlignment.Right : (
+                Input is not null && Output is null ? HorizontalAlignment.Left : 
+                HorizontalAlignment.Middle);
+            Debug.WriteLine(Alignment);
         }
 
         private void BaseField_ValueStoreChanged(object sender, object e)
         {
-            if (e as string == ValueField.InputKey)
+            if (e as string is ValueField.InputKey)
             {
                 RefreshInput();
             }
-            else if (e as string == ValueField.OutputKey)
+            else if (e as string is ValueField.OutputKey)
             {
                 RefreshOutput();
             }

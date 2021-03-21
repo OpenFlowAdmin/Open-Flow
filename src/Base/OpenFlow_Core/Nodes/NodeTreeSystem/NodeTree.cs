@@ -27,7 +27,7 @@
                     (newConnection.Input as ValueConnector)?.DisplayValue.TypeDefinition.ValueType,
                     out Type converterType))
                 {
-                    NodeBase newNode = new NodeBase((INode)Activator.CreateInstance(converterType));
+                    NodeBase newNode = new((INode)Activator.CreateInstance(converterType));
                     if (newNode.TryGetSpecialField(SpecialFieldFlags.ConvertInput, out DisplayNodeField convertInput) && newNode.TryGetSpecialField(SpecialFieldFlags.ConvertOutput, out DisplayNodeField convertOutput) &&
                         NodeConnection.Construct(newConnection.Output, convertInput.Input, out NodeConnection firstConnection) && SimpleConnect(firstConnection) &&
                         NodeConnection.Construct(convertOutput.Output, newConnection.Input, out NodeConnection secondConnection) && SimpleConnect(secondConnection))

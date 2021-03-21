@@ -19,6 +19,10 @@
 
         private readonly ValueField valueInput = new ValueField("Switch Value").WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider());
 
+        private readonly NodeField OutputsLabel = new NodeField("Possible Values");
+
+        private readonly NodeField defaultOutput = new NodeField("Default").WithFlowOutput();
+
         private readonly NodeComponentDictionary flowOutputs = new()
         {
             {
@@ -28,11 +32,7 @@
                         new ValueField("False").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false}).WithFlowOutput(),
                     })
             },
-            {
-                typeof(double) , new NodeField("A double was put in idk what to do with that")
-            }
-        }
-            ;
+        };
 
         public FlowSwitch()
         {
@@ -47,20 +47,23 @@
             {
                 yield return flowInput;
                 yield return valueInput;
+                yield return OutputsLabel;
                 yield return flowOutputs;
             }
         }
 
         public void Evaluate()
         {
-            foreach (ValueField field in flowOutputs.AllFields)
+            foreach (NodeField field in flowOutputs.AllFields)
             {
-                if (field.DisplayedValue.Value.Equals(valueInput.Input))
+                if (field is ValueField valueField && valueField.DisplayedValue.Value.Equals(valueInput.Input))
                 {
                     this.SetSpecialField(SpecialFieldFlags.FlowOutput, field);
                     return;
                 }
             }
+
+            this.SetSpecialField(SpecialFieldFlags.FlowOutput, defaultOutput);
         }
 
         private void FlowSwitch_OnTypeDefinitionChanged(object sender, PropertyChangedEventArgs e)
@@ -73,30 +76,33 @@
 
         private void ChangeSwitchTypeTo(ITypeDefinition typeDef)
         {
-            Debug.WriteLine("Type definition changed");
             flowOutputs.HideAllComponents();
             if (!flowOutputs.ContainsKey(typeDef.ValueType))
             {
-                if (typeDef.ValueType.IsEnum)
-                {
-                    flowOutputs.Add(typeDef.ValueType,
-                        new NodeComponentCollection(typeDef.ValueType.GetEnumNames().Select(x => {
-                            ValueField newField = new ValueField(x).WithTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" }).WithFlowOutput() as ValueField;
-                            newField.DisplayedValue.Value = Enum.Parse(typeDef.ValueType, x);
-                            return newField;
-                        })));
-                }
-                else
-                {
-                    flowOutputs.Add(typeDef.ValueType, new ValueFieldGenerator(
-                        new ValueField("Case").WithInputTypeProvider(typeDef).WithFlowOutput() as ValueField,
-                        0,
-                        (x) => $"Case {x + 1}"
-));
-                }
+                flowOutputs.Add(typeDef.ValueType, GenerateSwitchesFor(typeDef));
             }
 
             flowOutputs.ShowSectionByKey(typeDef.ValueType);
+        }
+
+        private NodeComponent GenerateSwitchesFor(ITypeDefinition typeDef)
+        {
+            if (typeDef.ValueType.IsEnum)
+            {
+                return new NodeComponentCollection(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x)).WithFlowOutput()));
+            }
+
+            return new NodeComponentList() {
+                new ValueFieldGenerator(new ValueField("Case").WithInputTypeProvider(typeDef).WithFlowOutput() as ValueField, 0, (x) => $"Case {x + 1}"),
+                defaultOutput,
+            };
+        }
+
+        private static ValueField ValueDisplay(ITypeDefinition typeDef, object x)
+        {
+            ValueField output = new ValueField(x.ToString()).WithTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" });
+            output.DisplayedValue.Value = x;
+            return output;
         }
     }
 }

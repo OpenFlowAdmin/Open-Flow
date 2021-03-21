@@ -58,14 +58,13 @@
 							  <TranslateTransform X="15"/>
 						  </Path.RenderTransform>
 					  </Path>
-					  <DockPanel HorizontalAlignment="Stretch">
-						  <ContentControl HorizontalAlignment="{Binding Alignment, Converter={StaticResource ConvertAlignment}}"
-                        	  Margin="8,4"
-	                          Content="{Binding DisplayedValue}"
-	                          ContentTemplate="{Binding UIs[Avalonia.Controls.Templates.IDataTemplate]}"
-				              DockPanel.Dock="Left"
-                        	  VerticalContentAlignment="Center">
-						  </ContentControl>
+					  <ContentControl HorizontalAlignment="{Binding Alignment, Converter={StaticResource ConvertAlignment}}"
+	                      Margin="8,4"
+	                      Content="{Binding DisplayedValue}"
+	                      ContentTemplate="{Binding UIs[Avalonia.Controls.Templates.IDataTemplate]}"
+	                      VerticalContentAlignment="Center">
+					  </ContentControl>
+					  <DockPanel>
 						  <Button Command="{Binding RemoveSelf}" 
 								  Content="-"
 								  IsVisible="{Binding RemoveSelf, Converter={StaticResource IsNotNull}}"
