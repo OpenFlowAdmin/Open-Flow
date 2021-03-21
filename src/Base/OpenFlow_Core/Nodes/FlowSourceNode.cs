@@ -2,17 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
-    public class FlowSourceNode : IFlowNode
+    public class FlowSourceNode : INode
     {
-        private readonly ValueField sourceField = new("Manual Trigger", "Trigger Button");
+        private readonly NodeField sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
 
         public FlowSourceNode()
         {
-            // sourceField["Trigger Button"] = (Action)FlowOutput.Activate;
+            Debug.WriteLine((sourceField as ValueField)?.GetDisplayValue("Displayed").IsUserEditable);
+            Debug.WriteLine((sourceField as ValueField)?.GetDisplayValue("Displayed").TypeDefinition.DisplayName);
+            // sourceField["Trigger Button"] = new Action(() => { });
         }
 
         public NodeField FlowOutField => sourceField;

@@ -30,11 +30,11 @@
 
         public Dictionary<Type, TypeInfoRecord> TypeInfo { get; } = new ();
 
-        public LoadedNodeManager LoadedNodeManager { get; } = new LoadedNodeManager();
+        public LoadedNodeManager LoadedNodeManager { get; } = new();
 
-        public RegisteredUIs RegisteredEditors { get; } = new RegisteredUIs();
+        public RegisteredUIs RegisteredEditors { get; } = new();
 
-        public RegisteredUIs RegisteredDisplays { get; } = new RegisteredUIs();
+        public RegisteredUIs RegisteredDisplays { get; } = new();
 
         public TypeInfoRecord GetTypeInfo(Type type)
         {

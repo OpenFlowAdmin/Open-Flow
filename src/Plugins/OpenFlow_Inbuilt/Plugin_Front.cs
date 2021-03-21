@@ -35,6 +35,7 @@
             host.RegisterType<double>("#FF0000", "Number", 0.0, "NumberEnterDisplay", "StringDisplay");
             host.RegisterType<string>("#0000FF", "Text", "", "StringEditor", "StringDisplay");
             host.RegisterType<bool>("#00FFFF", "Condition", false, "StringDisplay", "StringDisplay");
+            host.RegisterType<Action>("00FF00", "Button", null, "DefaultDisplay", "ActionDisplay");
             host.RegisterType<MouseButtonEnum>("#FFFF00", "Mouse Button", MouseButtonEnum.LeftButton, "StringDisplay", "StringDisplay");
 
             //host.TryAddTypeConverter<double, string, Node_Convert_To_String>();
