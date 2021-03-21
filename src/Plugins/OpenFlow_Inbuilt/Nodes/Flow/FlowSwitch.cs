@@ -15,19 +15,17 @@
 
     public class FlowSwitch : INode
     {
-        private const string lookupOutputValueKey = "LoopupValueKey";
-
         private readonly NodeField flowInput = new NodeField("Flow Input").WithFlowInput(true);
 
-        private readonly ValueField valueInput = new ValueField("Value").WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider());
+        private readonly ValueField valueInput = new ValueField("Switch Value").WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider());
 
         private readonly NodeComponentDictionary flowOutputs = new()
         {
             {
                 typeof(bool),
                     new NodeComponentCollection(new[] {
-                        new ValueField("True").WithValue(lookupOutputValueKey, true).WithFlowOutput(),
-                        new ValueField("False").WithValue(lookupOutputValueKey, false).WithFlowOutput(),
+                        new ValueField("True").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}).WithFlowOutput(),
+                        new ValueField("False").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false}).WithFlowOutput(),
                     })
             },
             {
@@ -83,7 +81,7 @@
                 {
                     flowOutputs.Add(typeDef.ValueType,
                         new NodeComponentCollection(typeDef.ValueType.GetEnumNames().Select(x => {
-                            ValueField newField = new ValueField(x).WithTypeProvider(lookupOutputValueKey, typeDef).WithFlowOutput() as ValueField;
+                            ValueField newField = new ValueField(x).WithTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" }).WithFlowOutput() as ValueField;
                             newField.DisplayedValue.Value = Enum.Parse(typeDef.ValueType, x);
                             return newField;
                         })));
