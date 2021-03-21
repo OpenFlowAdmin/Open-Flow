@@ -10,7 +10,7 @@
             : base(connectionType)
         {
             DisplayValue = displayValue;
-            DisplayValue.IsEditable = ConnectionType == ConnectionTypes.Input;
+            DisplayValue.IsUserEditable = ConnectionType == ConnectionTypes.Input;
             DisplayValue.PropertyChanged += (o, e) =>
             {
                 if (e.PropertyName == nameof(DisplayValue.TypeDefinition))
@@ -26,7 +26,17 @@
 
         public override bool IsExclusiveConnection => ConnectionType == ConnectionTypes.Input;
 
-        public override string ColourHex => Instance.Current.TypeInfo[DisplayValue.TypeDefinition.ValueType]?.HexColour ?? "#FFFFFF";
+        public override string ColourHex {
+            get 
+            {
+                if (DisplayValue.TypeDefinition is null)
+                {
+                    return "#FFFFFF";
+                }
+
+                return Instance.Current.TypeInfo[DisplayValue.TypeDefinition.ValueType].HexColour;
+            }
+        }
 
         protected override bool CanAddConnection(Connector connector)
             => base.CanAddConnection(connector) &&

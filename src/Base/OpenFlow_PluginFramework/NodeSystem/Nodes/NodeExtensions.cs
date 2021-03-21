@@ -50,7 +50,7 @@
 
         public static void TriggerEvaluate(this INode node)
         {
-            if (TriggerNodeEvaluate.TryGetValue(node, out Action trigger))
+            if (node != null && TriggerNodeEvaluate.TryGetValue(node, out Action trigger))
             {
                 trigger?.Invoke();
             }

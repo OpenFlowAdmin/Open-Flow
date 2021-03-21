@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
@@ -22,6 +23,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             if (subComponents.TryGetValue(key, out NodeComponent component) && !Contains(component))
             {
+                Debug.WriteLine("Showing component");
                 ProtectedAdd(component);
                 return true;
             }
@@ -38,6 +40,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             }
 
             return false;
+        }
+
+        public void HideAllComponents()
+        {
+            ProtectedReset();
         }
 
         public void Add(object key, NodeComponent value) => subComponents.Add(key, value);

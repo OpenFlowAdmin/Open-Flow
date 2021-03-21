@@ -97,11 +97,13 @@
                 return true;
             }
 
+            /*
             if (TypeDescriptor.GetConverter(value.GetType()).CanConvertTo(ValueType))
             {
                 acceptedVal = (T)TypeDescriptor.GetConverter(value.GetType()).ConvertTo(value, ValueType);
                 return true;
             }
+            */
 
             acceptedVal = default;
             return false;

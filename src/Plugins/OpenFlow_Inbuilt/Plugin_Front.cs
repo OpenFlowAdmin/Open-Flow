@@ -15,6 +15,8 @@
     using Avalonia.Markup.Xaml.XamlIl.Runtime;
     using System.Collections.Generic;
     using System.Linq;
+    using OpenFlow_Inbuilt.Nodes.Maths.Comparisons;
+    using OpenFlow_Inbuilt.Nodes.Input.MouseInput;
 
     public class Plugin_Front : IPlugin
     {
@@ -35,6 +37,7 @@
             host.RegisterType<double>("#FF0000", "Number", 0.0, "NumberEnterDisplay", "StringDisplay");
             host.RegisterType<string>("#0000FF", "Text", "", "StringEditor", "StringDisplay");
             host.RegisterType<bool>("#00FFFF", "Condition", false, "StringDisplay", "StringDisplay");
+            host.RegisterType<MouseButtonEnum>("#FFFF00", "Mouse Button", MouseButtonEnum.LeftButton, "StringDisplay", "StringDisplay");
 
             //host.TryAddTypeConverter<double, string, Node_Convert_To_String>();
 
@@ -49,8 +52,10 @@
 
             host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide>("Number", "Arithmetic");
             host.AddNodeToMenu<NodeSine>("Number", "Functions");
+            host.AddNodeToMenu<Equal>("Number", "Comparisons");
             host.AddNodeToMenu<Node_Join_Strings>("Text");
             host.AddNodeToMenu<FlowSwitch>("Flow Control");
+            host.AddNodeToMenu<MouseButton>("Input", "Mouse");
         }
 
         private static IEnumerable<KeyValuePair<string, IDataTemplate>> DataTemplatesFromFolder(string folderPath)

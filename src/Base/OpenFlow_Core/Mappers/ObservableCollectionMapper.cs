@@ -17,7 +17,7 @@ namespace OpenFlow_Core
 
         public static ReadOnlyObservableCollection<TOut> Create(INotifyCollectionChanged collection, ITypeMapper<TIn, TOut> mapper)
         {
-            ObservableCollection<TOut> output = new ObservableCollection<TOut>();
+            ObservableCollection<TOut> output = new();
             _ = new ObservableCollectionMapper<TIn, TOut>(output, collection, mapper);
             return new ReadOnlyObservableCollection<TOut>(output);
         }
@@ -80,7 +80,7 @@ namespace OpenFlow_Core
             index = index == -1 ? mapTo.Count - 1 : index;
             for (int i = 0; i < count; i++)
             {
-                mapTo.RemoveAt(i + index);
+                mapTo.RemoveAt(index + count - 1 - i);
             }
         }
     }

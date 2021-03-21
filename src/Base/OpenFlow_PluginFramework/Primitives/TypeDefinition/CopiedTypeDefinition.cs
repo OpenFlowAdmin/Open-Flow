@@ -1,36 +1,33 @@
-﻿ namespace OpenFlow_PluginFramework.Primitives.TypeDefinition
-{
-    using System;
-    using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// Defines how a value should be changed and edited. Constrains itself based on an object input
-    /// </summary>
-    public class AutoTypeDefinition : ITypeDefinition
+namespace OpenFlow_PluginFramework.Primitives.TypeDefinition
+{
+    public class CopiedTypeDefinition : ITypeDefinition
     {
-        /// <summary>
-        /// Makes a new instance of the AutoTypeDefinition Class
-        /// </summary>
-        /// <param name="defaultValue">The default value the TypeDefinition is built around</param>
-        public AutoTypeDefinition(object defaultValue)
+        public CopiedTypeDefinition(ITypeDefinition copyFrom)
         {
-            DefaultValue = defaultValue;
-            ValueType = defaultValue.GetType();
+            ValueType = copyFrom.ValueType;
+            DefaultValue = copyFrom.DefaultValue;
+            EditorName = copyFrom.EditorName;
+            DisplayName = copyFrom.DisplayName;
+            DefaultTypeDefiniton = this;
         }
 
-        ///<inheritdoc/>
-        public object DefaultValue { get; }
 
-        ///<inheritdoc/>
-        public Type ValueType { get; }
+        public Type ValueType { get; init; }
 
-        ///<inheritdoc/>
+        public object DefaultValue { get; init; }
+
         public string EditorName { get; init; }
 
-        ///<inheritdoc/>
         public string DisplayName { get; init; }
 
-        public ITypeDefinition DefaultTypeDefiniton => this;
+        public ITypeDefinition DefaultTypeDefiniton { get; }
 
         public bool CanAcceptValue(object value)
         {

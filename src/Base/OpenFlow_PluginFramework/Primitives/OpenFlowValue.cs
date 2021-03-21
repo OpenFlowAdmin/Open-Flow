@@ -46,7 +46,7 @@
                 {
                     currentTypeDefinition = value;
                     this.value = currentTypeDefinition.DefaultValue;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEditable)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUserEditable)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TypeDefinition)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
                 }
@@ -87,7 +87,7 @@
         /// <summary>
         /// Whether the OpenFlowValue should be edited by the user
         /// </summary>
-        public bool IsEditable
+        public bool IsUserEditable
         {
             get => isEditable;
             set
@@ -95,7 +95,7 @@
                 if (isEditable != value)
                 {
                     isEditable = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEditable)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUserEditable)));
                 }
             }
         }
@@ -119,11 +119,11 @@
                 {
                     driver.PropertyChanged += DriverPropertyChanged;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                    IsEditable = false;
+                    IsUserEditable = false;
                 }
                 else
                 {
-                    IsEditable = true;
+                    IsUserEditable = true;
                 }
             }
         }
@@ -135,6 +135,11 @@
         /// <returns>True if the value can be set, false if the value cannot</returns>
         public bool CanSetValue(object value)
         {
+            if (TypeDefinition != null && TypeDefinition.CanAcceptValue(value))
+            {
+                return true;
+            }
+
             if (typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition))
             {
                 TypeDefinition = typeDefinition;
@@ -151,7 +156,7 @@
         public OpenFlowValue Clone() => new(typeDefinitionProvider)
         {
             Value = Value,
-            IsEditable = IsEditable,
+            IsUserEditable = IsUserEditable,
             Name = Name,
         };
 

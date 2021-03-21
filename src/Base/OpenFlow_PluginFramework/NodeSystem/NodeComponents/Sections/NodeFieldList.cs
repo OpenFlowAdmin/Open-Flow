@@ -13,7 +13,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
     public class NodeFieldList : INotifyCollectionChanged, IList, IList<NodeField>
     {
-        private ObservableCollection<NodeComponent> parts;
+        private readonly ObservableCollection<NodeComponent> parts;
 
         public NodeFieldList(ObservableCollection<NodeComponent> nodeParts)
         {
@@ -143,6 +143,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void NodeParts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            Debug.WriteLine("Something changed with the NodeComponentCollection I'm looking at");
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -173,9 +174,14 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 if (part is NodeComponentCollection componentCollection)
                 {
                     componentCollection.AllFields.CollectionChanged -= Child_NodeFieldsList_Changed;
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.AllFields, GetLinearIndexFromNested(index)));
+                }
+                else
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, parts, GetLinearIndexFromNested(index)));
                 }
             }
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, parts, GetLinearIndexFromNested(index)));
+
             Count -= parts.Count;
         }
 
@@ -186,17 +192,23 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 if (part is NodeComponentCollection componentCollection)
                 {
                     componentCollection.AllFields.CollectionChanged += Child_NodeFieldsList_Changed;
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.AllFields, GetLinearIndexFromNested(index)));
+                }
+                else
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, parts, GetLinearIndexFromNested(index)));
                 }
             }
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, parts, GetLinearIndexFromNested(index)));
+
             Count += parts.Count;
         }
 
         private void Child_NodeFieldsList_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
+            Debug.WriteLine("One of my children's ComponentCollecitons changed");
             int i = 0;
             int startingIndex = 0;
-            while (i < parts.Count && parts[i] != sender)
+            while (i < parts.Count && (parts[i] as NodeComponentCollection)?.AllFields != sender)
             {
                 startingIndex += parts[i].FieldCount;
                 i++;
@@ -205,10 +217,10 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             CollectionChanged?.Invoke(this, ChangeCollectionChangedIndex(e, startingIndex, (sender as IList).Count));
         }
 
-        private NotifyCollectionChangedEventArgs ChangeCollectionChangedIndex(NotifyCollectionChangedEventArgs e, int offset, int listLength) 
+        private static NotifyCollectionChangedEventArgs ChangeCollectionChangedIndex(NotifyCollectionChangedEventArgs e, int offset, int listLength) 
         {
-            int newStartingIndex = e.NewStartingIndex == -1 ? listLength - 1 : e.NewStartingIndex;
-            int oldStartingIndex = e.OldStartingIndex == -1 ? listLength - 1 : e.OldStartingIndex;
+            int newStartingIndex = (e.NewStartingIndex == -1 ? listLength - 1 : e.NewStartingIndex) + offset;
+            int oldStartingIndex = (e.OldStartingIndex == -1 ? listLength - 1 : e.OldStartingIndex) + offset;
             return (e.Action) switch
             {
                 NotifyCollectionChangedAction.Add => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, e.NewItems, newStartingIndex),

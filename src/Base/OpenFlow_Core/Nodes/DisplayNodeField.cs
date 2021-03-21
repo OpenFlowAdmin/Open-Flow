@@ -92,7 +92,7 @@
             {
                 if (DisplayedValue?.TypeDefinition != null)
                 {
-                    if (DisplayedValue.IsEditable)
+                    if (DisplayedValue.IsUserEditable)
                     {
                         if (Instance.Current.RegisteredEditors.TryGetUIs(DisplayedValue.TypeDefinition.EditorName, out Dictionary<string, object> editors))
                         {
@@ -197,7 +197,7 @@
 
         private void DisplayedValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(OpenFlowValue.IsEditable) or nameof(OpenFlowValue.TypeDefinition))
+            if (e.PropertyName is nameof(OpenFlowValue.IsUserEditable) or nameof(OpenFlowValue.TypeDefinition))
             {
                 NotifyPropertyChanged(nameof(UIs));
             }
