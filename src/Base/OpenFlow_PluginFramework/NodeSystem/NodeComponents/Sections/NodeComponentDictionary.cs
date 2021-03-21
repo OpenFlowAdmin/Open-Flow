@@ -23,7 +23,6 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             if (subComponents.TryGetValue(key, out NodeComponent component) && !Contains(component))
             {
-                Debug.WriteLine("Showing component");
                 ProtectedAdd(component);
                 return true;
             }

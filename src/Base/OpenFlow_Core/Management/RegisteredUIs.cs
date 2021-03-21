@@ -10,7 +10,6 @@
 
         public bool AddUI<T>(string name, T ui)
         {
-            Debug.WriteLine($"Adding UI {name}");
             if (registeredUIs.TryGetValue(name, out Dictionary<string, object> reg))
             {
                 if (reg.ContainsKey(typeof(T).FullName))

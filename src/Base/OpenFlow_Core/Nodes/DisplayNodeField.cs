@@ -171,7 +171,6 @@
                 Input is null && Output is not null ? HorizontalAlignment.Right : (
                 Input is not null && Output is null ? HorizontalAlignment.Left : 
                 HorizontalAlignment.Middle);
-            Debug.WriteLine(Alignment);
         }
 
         private void BaseField_ValueStoreChanged(object sender, object e)

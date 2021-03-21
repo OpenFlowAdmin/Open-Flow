@@ -75,7 +75,6 @@
                 List<string> output = new();
                 foreach (XmlNode path in configs["PluginDirectories"])
                 {
-                    Debug.WriteLine(path.InnerText);
                     if (Directory.Exists(path.InnerText))
                     {
                         output.AddRange(Directory.GetDirectories(path.InnerText));

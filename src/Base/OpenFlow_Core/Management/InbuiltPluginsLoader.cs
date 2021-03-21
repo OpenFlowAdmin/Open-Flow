@@ -13,10 +13,8 @@ namespace OpenFlow_Core.Management
     {
         public static IEnumerable<IPlugin> GetInbuiltPlugins()
         {
-            Debug.WriteLine(InbuiltPluginsFolder);
             foreach (string projectPath in Directory.EnumerateDirectories(InbuiltPluginsFolder))
             {
-                Debug.WriteLine(projectPath);
                 if (PluginLoader.TryLoadFromFolder(GetBinFromProjectFolder(projectPath), out IPlugin plugin))
                 {
                     yield return plugin;

@@ -143,7 +143,6 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void NodeParts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Debug.WriteLine("Something changed with the NodeComponentCollection I'm looking at");
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -205,8 +204,6 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void Child_NodeFieldsList_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Debug.WriteLine("One of my children's ComponentCollecitons changed");
-
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:

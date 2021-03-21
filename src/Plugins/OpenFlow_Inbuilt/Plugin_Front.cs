@@ -25,9 +25,7 @@
 
         public Plugin_Front()
         {
-            Debug.WriteLine("Plugin Front Initialized");
             string projectFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent.FullName, @"Plugins\OpenFlow_Inbuilt\");
-            Debug.WriteLine(projectFolder);
             editors = DataTemplatesFromFolder(Path.Combine(projectFolder, @"Editors"));
             displays = DataTemplatesFromFolder(Path.Combine(projectFolder, @"Displays"));
         }
@@ -60,7 +58,6 @@
 
         private static IEnumerable<KeyValuePair<string, IDataTemplate>> DataTemplatesFromFolder(string folderPath)
         {
-            Debug.WriteLine(folderPath);
             IEnumerable<KeyValuePair<string, IDataTemplate>> dataTemplates = new Dictionary<string, IDataTemplate> ();
             foreach (Styles fileStyles in Directory.EnumerateFiles(folderPath)
                 .Select(x => AvaloniaRuntimeXamlLoader.Parse(File.ReadAllText(x)) as Styles)
@@ -70,7 +67,6 @@
                     .Where(x => x.Key is string && x.Value is IDataTemplate)
                     .Select(x => new KeyValuePair<string, IDataTemplate>(x.Key as string, x.Value as IDataTemplate)));
             }
-            Debug.WriteLine(dataTemplates.Count());
             return dataTemplates;
         }
     }
