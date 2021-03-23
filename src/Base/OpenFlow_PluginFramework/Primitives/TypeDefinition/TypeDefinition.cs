@@ -26,7 +26,7 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinition
         /// <inheritdoc/>
         public virtual bool CanAcceptValue(object value)
         {
-            if (value == null)
+            if (value is null)
             {
                 return false;
             }
