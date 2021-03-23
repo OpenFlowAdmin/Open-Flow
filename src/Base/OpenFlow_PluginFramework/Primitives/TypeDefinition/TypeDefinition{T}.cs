@@ -10,7 +10,7 @@
     /// Defines how a value should be edited and displayed
     /// </summary>
     /// <typeparam name="T">The type of the value</typeparam>
-    public class TypeDefinition<T> : ITypeDefinition
+    public class TypeDefinition<T> : TypeDefinition
     {
         private readonly ValueConstraintChain<T> constraints = new();
 
@@ -20,46 +20,16 @@
         public Dictionary<string, object> ConstraintValues => constraints.ConstraintValues;
 
         /// <inheritdoc/>
-        public Type ValueType { get; protected set; } = typeof(T);
+        public override Type ValueType { get; } = typeof(T);
 
         /// <inheritdoc/>
-        public string EditorName { get; init; }
+        public override string EditorName { get; init; }
 
         /// <inheritdoc/>
-        public string DisplayName { get; init; }
+        public override string DisplayName { get; init; }
 
         /// <inheritdoc/>
-        public object DefaultValue { get; init; }
-
-        public ITypeDefinition DefaultTypeDefiniton => this;
-
-        /// <inheritdoc>
-        public bool TryGetTypeDefinitionFor(object value, out ITypeDefinition typeDefinition)
-        {
-            if (CanAcceptValue(value, out _))
-            {
-                typeDefinition = this;
-                return true;
-            }
-
-            typeDefinition = default;
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public bool TryConstraintValue(object inputValue, out object outputValue)
-        {
-            if (CanAcceptValue(inputValue, out T typedValue))
-            {
-                outputValue = constraints.TotalConstraint(typedValue);
-                return true;
-            }
-
-            outputValue = default;
-            return false;
-        }
-
-        public bool CanAcceptValue(object value) => CanAcceptValue(value, out _);
+        public override object DefaultValue { get; init; }
 
         /// <summary>
         /// Adds a constraint to this type definition that will be applied whenever the value is set
@@ -83,31 +53,6 @@
             return this;
         }
 
-        private bool CanAcceptValue(object value, out T acceptedVal)
-        {
-            if (value == null)
-            {
-                acceptedVal = default;
-                return false;
-            }
-
-            if (ValueType.IsAssignableFrom(value.GetType()))
-            {
-                acceptedVal = (T)value;
-                return true;
-            }
-
-            /*
-            if (TypeDescriptor.GetConverter(value.GetType()).CanConvertTo(ValueType))
-            {
-                acceptedVal = (T)TypeDescriptor.GetConverter(value.GetType()).ConvertTo(value, ValueType);
-                return true;
-            }
-            */
-
-            acceptedVal = default;
-            return false;
-        }
-
+        protected override object ConstraintValue(object value) => constraints.TotalConstraint((T)value);
     }
 }

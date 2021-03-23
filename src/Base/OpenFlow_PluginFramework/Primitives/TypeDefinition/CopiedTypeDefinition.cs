@@ -7,66 +7,25 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.Primitives.TypeDefinition
 {
-    public class CopiedTypeDefinition : ITypeDefinition
+    public class CopiedTypeDefinition : TypeDefinition
     {
         public CopiedTypeDefinition(ITypeDefinition copyFrom)
         {
-            ValueType = copyFrom.ValueType;
             DefaultValue = copyFrom.DefaultValue;
             EditorName = copyFrom.EditorName;
             DisplayName = copyFrom.DisplayName;
-            DefaultTypeDefiniton = this;
         }
 
+        /// <inheritdoc/>
+        public override Type ValueType => DefaultValue.GetType();
 
-        public Type ValueType { get; init; }
+        /// <inheritdoc/>
+        public override object DefaultValue { get; init; }
 
-        public object DefaultValue { get; init; }
+        /// <inheritdoc/>
+        public override string EditorName { get; init; }
 
-        public string EditorName { get; init; }
-
-        public string DisplayName { get; init; }
-
-        public ITypeDefinition DefaultTypeDefiniton { get; }
-
-        public bool CanAcceptValue(object value)
-        {
-            if (value == null)
-            {
-                return false;
-            }
-
-            if (ValueType.IsAssignableFrom(value.GetType()))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        ///<inheritdoc/>
-        public bool TryConstraintValue(object inputValue, out object outputValue)
-        {
-            if (CanAcceptValue(inputValue))
-            {
-                outputValue = inputValue;
-                return true;
-            }
-
-            outputValue = default;
-            return false;
-        }
-
-        public bool TryGetTypeDefinitionFor(object value, out ITypeDefinition typeDefinition)
-        {
-            if (CanAcceptValue(value))
-            {
-                typeDefinition = this;
-                return true;
-            }
-
-            typeDefinition = default;
-            return false;
-        }
+        /// <inheritdoc/>
+        public override string DisplayName { get; init; }
     }
 }

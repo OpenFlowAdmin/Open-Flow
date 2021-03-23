@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines how a value should be changed and edited. Constrains itself based on an object input
     /// </summary>
-    public class AutoTypeDefinition : ITypeDefinition
+    public class AutoTypeDefinition : TypeDefinition
     {
         /// <summary>
         /// Makes a new instance of the AutoTypeDefinition Class
@@ -15,61 +15,18 @@
         public AutoTypeDefinition(object defaultValue)
         {
             DefaultValue = defaultValue;
-            ValueType = defaultValue.GetType();
         }
 
         ///<inheritdoc/>
-        public object DefaultValue { get; }
+        public override object DefaultValue { get; init; }
 
         ///<inheritdoc/>
-        public Type ValueType { get; }
+        public override Type ValueType => DefaultValue.GetType();
 
         ///<inheritdoc/>
-        public string EditorName { get; init; }
+        public override string EditorName { get; init; }
 
         ///<inheritdoc/>
-        public string DisplayName { get; init; }
-
-        public ITypeDefinition DefaultTypeDefiniton => this;
-
-        public bool CanAcceptValue(object value)
-        {
-            if (value == null)
-            {
-                return false;
-            }
-
-            if (ValueType.IsAssignableFrom(value.GetType()))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        ///<inheritdoc/>
-        public bool TryConstraintValue(object inputValue, out object outputValue)
-        {
-            if (CanAcceptValue(inputValue))
-            {
-                outputValue = inputValue;
-                return true;
-            }
-
-            outputValue = default;
-            return false;
-        }
-
-        public bool TryGetTypeDefinitionFor(object value, out ITypeDefinition typeDefinition)
-        {
-            if (CanAcceptValue(value))
-            {
-                typeDefinition = this;
-                return true;
-            }
-
-            typeDefinition = default;
-            return false;
-        }
+        public override string DisplayName { get; init; }
     }
 }
