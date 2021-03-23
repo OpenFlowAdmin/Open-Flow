@@ -5,11 +5,14 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
 
-    public abstract class FlowNode : IFlowNode
+    public abstract class FlowNode : INode
     {
-        private readonly NodeField flowField = new NodeField("Flow").WithFlowInput().WithFlowOutput();
+        private readonly NodeField _flowField = new NodeField("Flow").WithFlowInput().WithFlowOutput();
 
-        public NodeField FlowOutField => flowField;
+        public FlowNode()
+        {
+            this.SetSpecialField(SpecialFieldFlags.FlowOutput, _flowField);
+        }
 
         public abstract string NodeName { get; }
 
@@ -17,7 +20,7 @@
         {
             get
             {
-                yield return flowField;
+                yield return _flowField;
                 foreach (NodeComponent field in FlowNodeFields)
                 {
                     yield return field;

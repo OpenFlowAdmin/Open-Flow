@@ -6,20 +6,20 @@
 
     public class NodeComponentAutoCloner : NodeComponentCollection
     {
-        private readonly NodeComponent originalClone;
-        private readonly Func<int, string> nameRule;
-        private readonly int minimumFieldCount;
+        private readonly NodeComponent _originalClone;
+        private readonly Func<int, string> _nameRule;
+        private readonly int _minimumFieldCount;
 
         public NodeComponentAutoCloner(NodeComponent clone, int minimumFieldCount, Func<int, string> nameRule = null)
             : base()
         {
-            this.nameRule = nameRule;
-            originalClone = clone;
-            this.minimumFieldCount = minimumFieldCount;
+            this._nameRule = nameRule;
+            _originalClone = clone;
+            this._minimumFieldCount = minimumFieldCount;
 
-            originalClone.ParentNode = ParentNode;
-            originalClone.Opacity.Value = 0.5;
-            originalClone.SetRemoveAction((component) => 
+            _originalClone.ParentNode = ParentNode;
+            _originalClone.Opacity.Value = 0.5;
+            _originalClone.SetRemoveAction((component) => 
             {
                 ProtectedRemove(component);
                 UpdateNames();
@@ -38,7 +38,7 @@
             set
             {
                 base.ParentNode = value;
-                originalClone.ParentNode = value;
+                _originalClone.ParentNode = value;
             }
         }
 
@@ -51,17 +51,17 @@
 
         private void CloneComponent()
         {
-            if (nameRule != null)
+            if (_nameRule != null)
             {
                 int index = 0;
-                foreach (NodeField field in originalClone.NodeFields)
+                foreach (NodeField field in _originalClone.NodeFields)
                 {
-                    field.Name = nameRule(NodeFields.Count + index);
+                    field.Name = _nameRule(NodeFields.Count + index);
                     index++;
                 }
             }
 
-            ProtectedAdd(originalClone.Clone());//To(new ValueField("") { RemoveAction = (component) => { ProtectedRemove(component); } }));
+            ProtectedAdd(_originalClone.Clone());//To(new ValueField("") { RemoveAction = (component) => { ProtectedRemove(component); } }));
 
             if (NodeFields.Count > 1)
             {
@@ -73,7 +73,7 @@
 
         protected override bool ProtectedRemove(NodeComponent component)
         {
-            if (NodeFields.Count <= minimumFieldCount + 1 || component == this[^1])
+            if (NodeFields.Count <= _minimumFieldCount + 1 || component == this[^1])
             {
                 return false;
             }
@@ -99,7 +99,7 @@
             int index = 0;
             foreach (NodeField field in NodeFields)
             {
-                field.Name = nameRule(index);
+                field.Name = _nameRule(index);
                 index++;
             }
         }

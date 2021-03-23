@@ -9,22 +9,22 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider
 {
     public class AutoTypeDefinitionProvider : ITypeDefinitionProvider
     {
-        private ITypeDefinition definitionToProvide;
+        private ITypeDefinition _definitionToProvide;
 
-        public ITypeDefinition DefaultTypeDefiniton => null;
+        public ITypeDefinition DefaultTypeDefiniton => _definitionToProvide;
 
         public bool TryGetTypeDefinitionFor(object value, out ITypeDefinition typeDefinition)
         {
-            if (definitionToProvide == null)
+            if (_definitionToProvide == null)
             {
-                definitionToProvide = new AutoTypeDefinition(value);
-                typeDefinition = definitionToProvide;
+                _definitionToProvide = new AutoTypeDefinition(value);
+                typeDefinition = _definitionToProvide;
                 return true;
             }
 
-            if (definitionToProvide.CanAcceptValue(value))
+            if (_definitionToProvide.CanAcceptValue(value))
             {
-                typeDefinition = definitionToProvide;
+                typeDefinition = _definitionToProvide;
                 return true;
             }
 

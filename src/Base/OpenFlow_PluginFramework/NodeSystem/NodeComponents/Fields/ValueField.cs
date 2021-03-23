@@ -14,7 +14,7 @@
         public const string InputKey = "Input";
         public const string OutputKey = "Output";
 
-        private readonly Dictionary<object, OpenFlowValue> valueStore = new();
+        private readonly Dictionary<object, OpenFlowValue> _valueStore = new();
 
         public ValueField(string name, object displayValueKey = null) : base(name)
         {
@@ -31,7 +31,7 @@
             set
             {
                 base.Name = value;
-                foreach (OpenFlowValue storedValue in valueStore.Values)
+                foreach (OpenFlowValue storedValue in _valueStore.Values)
                 {
                     storedValue.Name = base.Name;
                 }
@@ -52,7 +52,7 @@
                 {
                     RemoveValue(key);
                 }
-                else if (valueStore.TryGetValue(key, out OpenFlowValue OFVal))
+                else if (_valueStore.TryGetValue(key, out OpenFlowValue OFVal))
                 {
                     if (OFVal.CanSetValue(value))
                     {
@@ -86,9 +86,9 @@
 
         public void AddValue(object key, OpenFlowValue newVal)
         {
-            valueStore.Add(key, newVal);
+            _valueStore.Add(key, newVal);
             newVal.PropertyChanged += ChildValue_PropertyChanged;
-            if (valueStore.Count == 1)
+            if (_valueStore.Count == 1)
             {
                 SetDisplayedValue(key);
             }
@@ -97,10 +97,10 @@
 
         private bool RemoveValue(object key)
         {
-            if (valueStore.TryGetValue(key, out OpenFlowValue val))
+            if (_valueStore.TryGetValue(key, out OpenFlowValue val))
             {
                 val.PropertyChanged -= ChildValue_PropertyChanged;
-                valueStore.Remove(key);
+                _valueStore.Remove(key);
                 ValueStoreChanged?.Invoke(this, key);
                 return true;
             }
@@ -122,7 +122,7 @@
         protected override ValueField CloneTo(NodeComponent nodeField)
         {
             base.CloneTo(nodeField);
-            foreach (KeyValuePair<object, OpenFlowValue> kvp in valueStore)
+            foreach (KeyValuePair<object, OpenFlowValue> kvp in _valueStore)
             {
                 (nodeField as ValueField).AddValue(kvp.Key, kvp.Value.Clone());
             }
@@ -130,7 +130,7 @@
             return nodeField as ValueField;
         }
 
-        public OpenFlowValue GetDisplayValue(object key) => key != null && valueStore.TryGetValue(key, out OpenFlowValue value) ? value : null;
+        public OpenFlowValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out OpenFlowValue value) ? value : null;
     }
 
     public partial class ValueField

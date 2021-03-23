@@ -12,7 +12,7 @@ namespace OpenFlow_PluginFramework.Primitives
     /// </summary>
     public class Opacity : INotifyPropertyChanged
     {
-        private readonly List<Opacity> opacityFactors = new();
+        private readonly List<Opacity> _opacityFactors = new();
         private double _myValue = 1.0;
         private double _factorValue = 1.0;
 
@@ -38,7 +38,7 @@ namespace OpenFlow_PluginFramework.Primitives
         public void AddOpacityFactor(Opacity factor)
         {
             factor.PropertyChanged += Factor_PropertyChanged;
-            opacityFactors.Add(factor);
+            _opacityFactors.Add(factor);
             UpdateFactor();
         }
 
@@ -48,7 +48,7 @@ namespace OpenFlow_PluginFramework.Primitives
         /// <param name="factor">The factor to remove</param>
         public bool RemoveOpacityFactor(Opacity factor)
         {
-            if (opacityFactors.Remove(factor))
+            if (_opacityFactors.Remove(factor))
             {
                 factor.PropertyChanged -= Factor_PropertyChanged;
                 UpdateFactor();
@@ -74,7 +74,7 @@ namespace OpenFlow_PluginFramework.Primitives
         private void UpdateFactor()
         {
             _factorValue = 1.0;
-            foreach (Opacity factor in opacityFactors)
+            foreach (Opacity factor in _opacityFactors)
             {
                 _factorValue *= factor.Value;
             }

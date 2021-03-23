@@ -16,33 +16,33 @@
     public class NodeComponentCollection : NodeComponent, IEnumerable<NodeComponent>, INotifyCollectionChanged
     {
         private INode parentNode;
-        private readonly ObservableCollection<NodeComponent> _subParts;
+        private readonly ObservableCollection<NodeComponent> _childComponents;
 
         public NodeComponentCollection() : this(Enumerable.Empty<NodeComponent>()) { }
 
-        public NodeComponentCollection(params NodeComponent[] components) : this(components.AsEnumerable()) { }
+        public NodeComponentCollection(params NodeComponent[] childComponents) : this(childComponents.AsEnumerable()) { }
 
-        public NodeComponentCollection(IEnumerable<NodeComponent> subParts)
+        public NodeComponentCollection(IEnumerable<NodeComponent> childComponents)
         {
-            foreach (NodeComponent component in subParts)
+            foreach (NodeComponent component in childComponents)
             {
                 component.Opacity.AddOpacityFactor(Opacity);
             }
 
-            _subParts = new ObservableCollection<NodeComponent>(subParts);
-            NodeFields = new NodeFieldList(_subParts);
+            _childComponents = new ObservableCollection<NodeComponent>(childComponents);
+            NodeFields = new NodeFieldList(_childComponents);
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
             add
             {
-                _subParts.CollectionChanged += value;
+                _childComponents.CollectionChanged += value;
             }
             
             remove
             {
-                _subParts.CollectionChanged -= value;
+                _childComponents.CollectionChanged -= value;
             }
         }
 
@@ -54,73 +54,73 @@
             set
             {
                 parentNode = value;
-                foreach (NodeComponent part in _subParts)
+                foreach (NodeComponent component in _childComponents)
                 {
-                    part.ParentNode = parentNode;
+                    component.ParentNode = parentNode;
                 }
             }
         }
 
-        public int ComponentCount => _subParts.Count;
+        public int ComponentCount => _childComponents.Count;
 
         protected NodeComponent this[Index index]
         {
-            get => _subParts[index];
+            get => _childComponents[index];
             set 
             {
-                if (GetIndex(index) >= _subParts.Count)
+                if (GetIndex(index) >= _childComponents.Count)
                 {
                     throw new IndexOutOfRangeException();
                 }
 
-                _subParts[index] = value;
+                _childComponents[index] = value;
             }
         }
 
-        public IEnumerator<NodeComponent> GetEnumerator() => _subParts.GetEnumerator();
+        public IEnumerator<NodeComponent> GetEnumerator() => _childComponents.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public int IndexOf(NodeComponent component) => _subParts.IndexOf(component);
+        public int IndexOf(NodeComponent component) => _childComponents.IndexOf(component);
 
-        public bool Contains(NodeComponent component) => _subParts.Contains(component);
+        public bool Contains(NodeComponent component) => _childComponents.Contains(component);
 
-        public override NodeComponent Clone() => CloneTo(new NodeComponentCollection(_subParts.Select(x => x.Clone())));
+        public override NodeComponent Clone() => CloneTo(new NodeComponentCollection(_childComponents.Select(x => x.Clone())));
 
         protected virtual void ProtectedAdd(NodeComponent newComponent)
         {
-            ProtectedInsert(_subParts.Count, newComponent);
+            ProtectedInsert(_childComponents.Count, newComponent);
         }
 
         protected virtual void ProtectedInsert(int index, NodeComponent newComponent)
         {
-            _subParts.Insert(index, newComponent);
+            _childComponents.Insert(index, newComponent);
             newComponent.Opacity.AddOpacityFactor(Opacity);
             newComponent.ParentNode = ParentNode;
         }
 
         protected virtual void ProtectedRemoveAt(int index)
         {
-            if (GetIndex(index) < _subParts.Count)
+            if (GetIndex(index) < _childComponents.Count)
             {
-                _subParts.RemoveAt(index);
+                _childComponents.RemoveAt(index);
             }
         }
 
         protected virtual bool ProtectedRemove(NodeComponent component)
         {
             component.Opacity.RemoveOpacityFactor(Opacity);
-            return _subParts.Remove(component);
+            return _childComponents.Remove(component);
         }
 
         protected virtual void ProtectedReset()
         {
-            for (int i = _subParts.Count - 1; i >= 0; i--)
+            for (int i = _childComponents.Count - 1; i >= 0; i--)
             {
                 ProtectedRemoveAt(i);
             }
         }
 
-        private int GetIndex(Index index) => index.IsFromEnd ? _subParts.Count - index.Value : index.Value;
+        private int GetIndex(Index index) => index.IsFromEnd ? _childComponents.Count - index.Value : index.Value;
     }
 }

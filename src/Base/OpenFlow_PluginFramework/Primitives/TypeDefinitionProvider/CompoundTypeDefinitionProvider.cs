@@ -9,7 +9,7 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider
 {
     public class CompoundTypeDefinitionProvider : ITypeDefinitionProvider
     {
-        private readonly ITypeDefinition[] typeDefinitions;
+        private readonly ITypeDefinition[] _acceptedTypeDefinitions;
 
         public CompoundTypeDefinitionProvider(params ITypeDefinition[] typeDefinitions)
         {
@@ -23,7 +23,7 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider
                 throw new ArgumentException("Length of typeDefinitions must be at least one");
             }
 
-            this.typeDefinitions = typeDefinitions;
+            _acceptedTypeDefinitions = typeDefinitions;
         }
 
 
@@ -31,7 +31,7 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider
 
         public bool TryGetTypeDefinitionFor(object value, out ITypeDefinition typeDefinition)
         {
-            foreach (ITypeDefinition typeDef in typeDefinitions)
+            foreach (ITypeDefinition typeDef in _acceptedTypeDefinitions)
             {
                 if (typeDef.CanAcceptValue(value))
                 {

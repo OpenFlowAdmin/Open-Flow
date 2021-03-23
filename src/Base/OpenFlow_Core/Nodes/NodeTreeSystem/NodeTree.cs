@@ -9,7 +9,7 @@
 
     public class NodeTree
     {
-        private readonly Dictionary<Connector, Connector> connections = new();
+        private readonly Dictionary<Connector, Connector> _connections = new();
 
         public ObservableCollection<NodeBase> Nodes { get; private set; } = new();
 
@@ -47,9 +47,9 @@
 
         public Connector ConnectionChanged(Connector interacted)
         {
-            if (connections.TryGetValue(interacted, out Connector value))
+            if (_connections.TryGetValue(interacted, out Connector value))
             {
-                connections.Remove(interacted);
+                _connections.Remove(interacted);
                 interacted.TryRemoveConnection(value);
                 return value;
             }
@@ -64,7 +64,7 @@
 
         public IEnumerable<NodeConnection> GetConnections()
         {
-            Dictionary<Connector, Connector>.Enumerator enumerator = connections.GetEnumerator();
+            Dictionary<Connector, Connector>.Enumerator enumerator = _connections.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 if (NodeConnection.Construct(enumerator.Current.Key, enumerator.Current.Value, out NodeConnection connection))
@@ -80,11 +80,11 @@
             {
                 if (connection.Input.IsExclusiveConnection)
                 {
-                    connections[connection.Input] = connection.Output;
+                    _connections[connection.Input] = connection.Output;
                 }
                 else if (connection.Output.IsExclusiveConnection)
                 {
-                    connections[connection.Output] = connection.Input;
+                    _connections[connection.Output] = connection.Input;
                 }
 
                 return true;

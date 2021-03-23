@@ -9,13 +9,13 @@
 
     public class Configs
     {
-        private readonly string xmlDocPath;
-        private State state;
-        private XmlNode configs;
+        private readonly string _xmlDocPath;
+        private State _state;
+        private XmlNode _configs;
 
         public Configs(string path)
         {
-            xmlDocPath = path;
+            _xmlDocPath = path;
             Reload();
         }
 
@@ -27,38 +27,38 @@
             Working,
         }
 
-        public string ErrorState => state switch
+        public string ErrorState => _state switch
         {
-            State.InvalidPath => "The config file could not be found in " + xmlDocPath,
+            State.InvalidPath => "The config file could not be found in " + _xmlDocPath,
             State.InvalidFile => "The config file was found but is not valid",
             State.Unknown => "An unknown error occured loading the config file",
             State.Working => "There were no errors, the config file is valid",
             _ => "wtf bro",
         };
 
-        public bool Valid => state == State.Working;
+        public bool Valid => _state == State.Working;
 
         public ReadOnlyCollection<string> PluginPaths { get; private set; }
 
         public void Reload()
         {
-            state = State.Unknown;
+            _state = State.Unknown;
             try
             {
-                if (!File.Exists(xmlDocPath))
+                if (!File.Exists(_xmlDocPath))
                 {
-                    state = State.InvalidPath;
+                    _state = State.InvalidPath;
                 }
 
                 XmlDocument configsDocu = new();
-                configsDocu.Load(xmlDocPath);
+                configsDocu.Load(_xmlDocPath);
                 if (configsDocu["Configs"] == null)
                 {
-                    state = State.InvalidFile;
+                    _state = State.InvalidFile;
                 }
 
-                configs = configsDocu["Configs"];
-                state = State.Working;
+                _configs = configsDocu["Configs"];
+                _state = State.Working;
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@
             if (Valid)
             {
                 List<string> output = new();
-                foreach (XmlNode path in configs["PluginDirectories"])
+                foreach (XmlNode path in _configs["PluginDirectories"])
                 {
                     if (Directory.Exists(path.InnerText))
                     {

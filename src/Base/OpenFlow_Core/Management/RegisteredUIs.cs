@@ -6,11 +6,11 @@
 
     public class RegisteredUIs
     {
-        private readonly Dictionary<string, Dictionary<string, object>> registeredUIs = new();
+        private readonly Dictionary<string, Dictionary<string, object>> _registeredUIs = new();
 
         public bool AddUI<T>(string name, T ui)
         {
-            if (registeredUIs.TryGetValue(name, out Dictionary<string, object> reg))
+            if (_registeredUIs.TryGetValue(name, out Dictionary<string, object> reg))
             {
                 if (reg.ContainsKey(typeof(T).FullName))
                 {
@@ -21,7 +21,7 @@
             }
             else
             {
-                registeredUIs.Add(name, new Dictionary<string, object>() { { typeof(T).FullName, ui } });
+                _registeredUIs.Add(name, new Dictionary<string, object>() { { typeof(T).FullName, ui } });
             }
 
             return true;
@@ -29,7 +29,7 @@
 
         public bool TryGetUI<T>(string name, out T ui)
         {
-            if (registeredUIs.TryGetValue(name, out Dictionary<string, object> reg) && reg.TryGetValue(typeof(T).FullName, out object uiObj))
+            if (_registeredUIs.TryGetValue(name, out Dictionary<string, object> reg) && reg.TryGetValue(typeof(T).FullName, out object uiObj))
             {
                 ui = (T)uiObj;
                 return true;
@@ -41,7 +41,7 @@
 
         public bool TryGetUIs(string name, out Dictionary<string, object> uis)
         {
-            if (name != null && registeredUIs.TryGetValue(name, out Dictionary<string, object> myUIs))
+            if (name != null && _registeredUIs.TryGetValue(name, out Dictionary<string, object> myUIs))
             {
                 uis = myUIs;
                 return true;

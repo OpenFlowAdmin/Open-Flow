@@ -9,7 +9,7 @@ namespace OpenFlow_PluginFramework.Primitives.ValueConstraints
     /// <typeparam name="T">The type which will be constrained</typeparam>
     public class ValueConstraintChain<T>
     {
-        private readonly List<ValueConstraint<T>> constraints = new();
+        private readonly List<ValueConstraint<T>> _constraints = new();
 
         /// <summary>
         /// Values registered to be associated with certain constraints
@@ -32,7 +32,7 @@ namespace OpenFlow_PluginFramework.Primitives.ValueConstraints
                 ConstraintValues.Add(constraint.Name, constraint.Value);
             }
 
-            constraint.AddToEndOfChain(constraints);
+            constraint.AddToEndOfChain(_constraints);
             TotalConstraint = constraint.TotalFunc;
         }
 

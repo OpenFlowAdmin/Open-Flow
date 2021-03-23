@@ -12,12 +12,12 @@
     /// <typeparam name="T">The type of the value</typeparam>
     public class TypeDefinition<T> : TypeDefinition
     {
-        private readonly ValueConstraintChain<T> constraints = new();
+        private readonly ValueConstraintChain<T> _constraints = new();
 
         /// <summary>
         /// A dictionary of values which describe how the value is constrained. Used to display additional information in UIs
         /// </summary>
-        public Dictionary<string, object> ConstraintValues => constraints.ConstraintValues;
+        public Dictionary<string, object> ConstraintValues => _constraints.ConstraintValues;
 
         /// <inheritdoc/>
         public override Type ValueType { get; } = typeof(T);
@@ -38,7 +38,7 @@
         /// <returns>The same TypeDefinition for fluent coding</returns>
         public TypeDefinition<T> WithConstraint(ValueConstraint<T> constraint)
         {
-            constraints.AddConstraint(constraint);
+            _constraints.AddConstraint(constraint);
             return this;
         }
 
@@ -49,10 +49,10 @@
         /// <returns></returns>
         public TypeDefinition<T> WithConstraint(Func<T, T> func)
         {
-            constraints.AddConstraint(func);
+            _constraints.AddConstraint(func);
             return this;
         }
 
-        protected override object ConstraintValue(object value) => constraints.TotalConstraint((T)value);
+        protected override object ConstraintValue(object value) => _constraints.TotalConstraint((T)value);
     }
 }

@@ -10,20 +10,20 @@
 
     public class Instance
     {
-        private readonly PluginManager pluginManager;
-        private readonly Configs configs = new(Path.Combine(Directory.GetCurrentDirectory(), @"Configs.xml"));
+        private readonly PluginManager _pluginManager;
+        private readonly Configs _configs = new(Path.Combine(Directory.GetCurrentDirectory(), @"Configs.xml"));
 
         public Instance()
         {
             Current = this;
-            pluginManager = new PluginManager();
-            if (configs.Valid && configs.PluginPaths != null)
+            _pluginManager = new PluginManager();
+            if (_configs.Valid && _configs.PluginPaths != null)
             {
 
 
             }
 
-            pluginManager.LoadFromFolders(configs.PluginPaths);
+            _pluginManager.LoadFromFolders(_configs.PluginPaths);
         }
 
         public static Instance Current { get; private set; }

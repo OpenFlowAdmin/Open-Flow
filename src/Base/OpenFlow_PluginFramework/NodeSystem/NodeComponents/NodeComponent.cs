@@ -13,7 +13,7 @@
     public abstract class  NodeComponent : INotifyPropertyChanged
     {
         private bool _isVisible = true;
-        private Action<NodeComponent> removeAction;
+        private Action<NodeComponent> _removeAction;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -42,7 +42,7 @@
 
         public void SetRemoveAction(Action<NodeComponent> removeAction)
         {
-            this.removeAction = removeAction;
+            this._removeAction = removeAction;
             RemoveSelf = () =>
             {
                 removeAction(this);
@@ -55,7 +55,7 @@
         protected virtual NodeComponent CloneTo(NodeComponent component)
         {
             component.ParentNode = ParentNode;
-            component.SetRemoveAction(removeAction);
+            component.SetRemoveAction(_removeAction);
             component.Opacity.Value = Opacity.Value;
 
             return component;

@@ -14,20 +14,20 @@
 
     public class NodeBase
     {
-        private readonly INode baseNode;
-        private readonly NodeComponentCollection fieldSection;
-        private bool errorState;
-        private bool evaluating;
+        private readonly INode _baseNode;
+        private readonly NodeComponentCollection _fieldSection;
+        private bool _errorState;
+        private bool _evaluating;
 
         public NodeBase(INode baseNode)
         {
-            this.baseNode = baseNode;
-            fieldSection = new NodeComponentCollection(baseNode.Fields)
+            this._baseNode = baseNode;
+            _fieldSection = new NodeComponentCollection(baseNode.Fields)
             {
                 ParentNode = baseNode
             };
 
-            Fields = ObservableCollectionMapper<NodeField, DisplayNodeField>.Create(fieldSection.NodeFields, new NodeFieldMapper());
+            Fields = ObservableCollectionMapper<NodeField, DisplayNodeField>.Create(_fieldSection.NodeFields, new NodeFieldMapper());
 
             baseNode.SubscribeToEvaluate(TryEvaluate);
 
@@ -38,13 +38,13 @@
 
         public bool ErrorState
         {
-            get => errorState;
+            get => _errorState;
             private set
             {
-                if (value != errorState)
+                if (value != _errorState)
                 {
-                    errorState = value;
-                    ErrorStateChanged?.Invoke(this, errorState);
+                    _errorState = value;
+                    ErrorStateChanged?.Invoke(this, _errorState);
                 }
             }
         }
@@ -55,17 +55,17 @@
 
         public object Tag { get; set; }
 
-        public string Name => baseNode.NodeName;
+        public string Name => _baseNode.NodeName;
 
         public ReadOnlyObservableCollection<DisplayNodeField> Fields { get; }
 
-        public NodeBase DuplicateNode() => new((INode)Activator.CreateInstance(baseNode.GetType()));
+        public NodeBase DuplicateNode() => new((INode)Activator.CreateInstance(_baseNode.GetType()));
 
         public bool TryGetSpecialField(SpecialFieldFlags flag, out DisplayNodeField field)
         {
-            if (baseNode.TryGetSpecialField(flag, out NodeField baseField))
+            if (_baseNode.TryGetSpecialField(flag, out NodeField baseField))
             {
-                field = Fields[fieldSection.NodeFields.IndexOf(baseField)];
+                field = Fields[_fieldSection.NodeFields.IndexOf(baseField)];
                 return true;
             }
             else
@@ -77,12 +77,12 @@
 
         public void TryEvaluate()
         {
-            if (!evaluating)
+            if (!_evaluating)
             {
-                evaluating = true;
+                _evaluating = true;
                 try
                 {
-                    baseNode.Evaluate();
+                    _baseNode.Evaluate();
                     ErrorState = false;
                 }
                 catch
@@ -90,7 +90,7 @@
                     ErrorState = true;
                 }
 
-                evaluating = false;
+                _evaluating = false;
             }
         }
 

@@ -13,14 +13,14 @@
 
     public class DisplayNodeField : INotifyPropertyChanged
     {
-        private readonly NodeField baseField;
-        private Connector input;
-        private Connector output;
-        private HorizontalAlignment alignment;
+        private readonly NodeField _baseField;
+        private Connector _input;
+        private Connector _output;
+        private HorizontalAlignment _alignment;
 
         public DisplayNodeField(NodeField baseField)
         {
-            this.baseField = baseField;
+            this._baseField = baseField;
             baseField.GetFlowInput().SubscribeToChange(b => RefreshInput());
             baseField.GetFlowOutput().SubscribeToChange(b => RefreshOutput());
 
@@ -46,12 +46,12 @@
 
         public Connector Input
         {
-            get => input;
+            get => _input;
             set
             {
-                if (value != input)
+                if (value != _input)
                 {
-                    input = value;
+                    _input = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Input)));
                 }
             }
@@ -59,27 +59,27 @@
 
         public Connector Output
         {
-            get => output;
+            get => _output;
             set
             {
-                if (value != output)
+                if (value != _output)
                 {
-                    output = value;
+                    _output = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Output)));
                 }
             }
         }
 
-        public Opacity Opacity => baseField.Opacity;
+        public Opacity Opacity => _baseField.Opacity;
 
-        public Action RemoveSelf => baseField.RemoveSelf;
+        public Action RemoveSelf => _baseField.RemoveSelf;
 
         public HorizontalAlignment Alignment
         {
-            get => alignment;
+            get => _alignment;
             set
             {
-                alignment = value;
+                _alignment = value;
                 NotifyPropertyChanged();
             }
         }
@@ -121,14 +121,14 @@
 
         private void RefreshInput()
         {
-            if (baseField.GetFlowInput().Val)
+            if (_baseField.GetFlowInput().Val)
             {
                 if (Input is not FlowConnector)
                 {
                     Input = new FlowConnector(ConnectionTypes.Input);
                 }
             }
-            else if (baseField is ValueField valField && valField.InputDisplayValue != null)
+            else if (_baseField is ValueField valField && valField.InputDisplayValue != null)
             {
                 if (Input is not ValueConnector)
                 {
@@ -144,14 +144,14 @@
 
         private void RefreshOutput()
         {
-            if (baseField.GetFlowOutput().Val)
+            if (_baseField.GetFlowOutput().Val)
             {
                 if (Output is not FlowConnector)
                 {
                     Output = new FlowConnector(ConnectionTypes.Output);
                 }
             }
-            else if (baseField is ValueField valField && valField.OutputDisplayValue != null)
+            else if (_baseField is ValueField valField && valField.OutputDisplayValue != null)
             {
                 if (Output is not ValueConnector)
                 {
@@ -191,10 +191,10 @@
             {
                 DisplayedValue.PropertyChanged -= DisplayedValue_PropertyChanged;
             }
-            DisplayedValue = (baseField as ValueField)?.DisplayedValue ?? new OpenFlowValue() { Name = baseField.Name };
+            DisplayedValue = (_baseField as ValueField)?.DisplayedValue ?? new OpenFlowValue() { Name = _baseField.Name };
             
             DisplayedValue.PropertyChanged += DisplayedValue_PropertyChanged;
-            DisplayedValue.Name = baseField.Name;
+            DisplayedValue.Name = _baseField.Name;
             NotifyPropertyChanged(nameof(UIs));
             NotifyPropertyChanged(nameof(DisplayedValue));
         }

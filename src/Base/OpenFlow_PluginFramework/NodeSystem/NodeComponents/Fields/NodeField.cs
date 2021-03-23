@@ -11,7 +11,7 @@
 
     public class NodeField : NodeComponent
     {
-        private string name;
+        private string _name;
 
         public NodeField(string name)
         {
@@ -21,12 +21,12 @@
 
         public virtual string Name
         {
-            get => name;
+            get => _name;
             set
             {
-                if (name != value)
+                if (_name != value)
                 {
-                    name = value;
+                    _name = value;
                     NotifyPropertyChanged();
                 }
             }

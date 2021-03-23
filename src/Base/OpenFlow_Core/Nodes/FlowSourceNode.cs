@@ -9,16 +9,16 @@
 
     public class FlowSourceNode : INode
     {
-        private readonly NodeField sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", false, () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
+        private readonly NodeField _sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", false, () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
 
         public FlowSourceNode()
         {
-            Debug.WriteLine((sourceField as ValueField)?.GetDisplayValue("Displayed").IsUserEditable);
-            Debug.WriteLine((sourceField as ValueField)?.GetDisplayValue("Displayed").TypeDefinition.DisplayName);
+            Debug.WriteLine((_sourceField as ValueField)?.GetDisplayValue("Displayed").IsUserEditable);
+            Debug.WriteLine((_sourceField as ValueField)?.GetDisplayValue("Displayed").TypeDefinition.DisplayName);
             // sourceField["Trigger Button"] = new Action(() => { });
         }
 
-        public NodeField FlowOutField => sourceField;
+        public NodeField FlowOutField => _sourceField;
 
         public string NodeName => "Flow Source";
 
@@ -26,7 +26,7 @@
         {
             get
             {
-                yield return sourceField;
+                yield return _sourceField;
             }
         }
 

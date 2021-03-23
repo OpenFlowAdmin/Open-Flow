@@ -10,12 +10,12 @@
     /// </summary>
     public class OpenFlowValue : INotifyPropertyChanged
     {
-        private readonly ITypeDefinitionProvider typeDefinitionProvider;
-        private object value;
-        private bool isEditable;
-        private OpenFlowValue driver; 
-        private ITypeDefinition currentTypeDefinition;
-        private string name;
+        private readonly ITypeDefinitionProvider _typeDefinitionProvider;
+        private object _value;
+        private bool _isEditable;
+        private OpenFlowValue _driver; 
+        private ITypeDefinition _currentTypeDefinition;
+        private string _name;
 
         /// <summary>
         /// Creates a new instance of the OpenFlowValue class
@@ -23,13 +23,13 @@
         /// <param name="typeDefinitions">A list of possible <see cref="ITypeDefinition"/> which defines what values are allowed</param>
         public OpenFlowValue(ITypeDefinitionProvider typeDefinitionProvider)
         {
-            this.typeDefinitionProvider = typeDefinitionProvider;
+            this._typeDefinitionProvider = typeDefinitionProvider;
             TypeDefinition = typeDefinitionProvider.DefaultTypeDefiniton;
         }
 
         public OpenFlowValue()
         {
-            typeDefinitionProvider = new AutoTypeDefinitionProvider();
+            _typeDefinitionProvider = new AutoTypeDefinitionProvider();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,13 +39,13 @@
         /// </summary>
         public ITypeDefinition TypeDefinition
         {
-            get => currentTypeDefinition;
+            get => _currentTypeDefinition;
             private set
             {
-                if (value != currentTypeDefinition)
+                if (value != _currentTypeDefinition)
                 {
-                    currentTypeDefinition = value;
-                    this.value = currentTypeDefinition.DefaultValue;
+                    _currentTypeDefinition = value;
+                    _value = _currentTypeDefinition.DefaultValue;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUserEditable)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TypeDefinition)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
@@ -58,10 +58,10 @@
         /// </summary>
         public string Name
         {
-            get => name;
+            get => _name;
             set
             {
-                name = value;
+                _name = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
             }
         }
@@ -71,14 +71,14 @@
         /// </summary>
         public object Value
         {
-            get => driver == null ? value : driver.Value;
+            get => _driver == null ? _value : _driver.Value;
             set
             {
-                currentTypeDefinition ??= typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
+                _currentTypeDefinition ??= _typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
 
-                if (currentTypeDefinition != null && currentTypeDefinition.TryConstraintValue(value, out object outputVal) && !outputVal.Equals(Value))
+                if (_currentTypeDefinition != null && _currentTypeDefinition.TryConstraintValue(value, out object outputVal) && !outputVal.Equals(Value))
                 {
-                    this.value = outputVal;
+                    _value = outputVal;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
                 }
             }
@@ -89,12 +89,12 @@
         /// </summary>
         public bool IsUserEditable
         {
-            get => isEditable;
+            get => _isEditable;
             set
             {
-                if (isEditable != value)
+                if (_isEditable != value)
                 {
-                    isEditable = value;
+                    _isEditable = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsUserEditable)));
                 }
             }
@@ -105,19 +105,19 @@
         /// </summary>
         public OpenFlowValue Driver
         {
-            get => driver;
+            get => _driver;
             set
             {
-                if (driver != null)
+                if (_driver != null)
                 {
-                    driver.PropertyChanged -= DriverPropertyChanged;
+                    _driver.PropertyChanged -= DriverPropertyChanged;
                 }
 
-                driver = value;
+                _driver = value;
 
-                if (driver != null)
+                if (_driver != null)
                 {
-                    driver.PropertyChanged += DriverPropertyChanged;
+                    _driver.PropertyChanged += DriverPropertyChanged;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
                     IsUserEditable = false;
                 }
@@ -140,7 +140,7 @@
                 return true;
             }
 
-            if (typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition))
+            if (_typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition))
             {
                 TypeDefinition = typeDefinition;
                 return true;
@@ -153,7 +153,7 @@
         /// Clones this OpenFlowValue
         /// </summary>
         /// <returns>A new OpenFlowValue with the same properties as this one</returns>
-        public OpenFlowValue Clone() => new(typeDefinitionProvider)
+        public OpenFlowValue Clone() => new(_typeDefinitionProvider)
         {
             Value = Value,
             IsUserEditable = IsUserEditable,
