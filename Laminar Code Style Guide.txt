@@ -1,5 +1,4 @@
 General:
-
  - No public fields (always properties)
  - Only one (ish) level of indentation. If you implement more complexity, make it it’s own method
  - Avoid “else” (should be easier in conjunction with the last bullet point) (Sounds weird, ask me)
