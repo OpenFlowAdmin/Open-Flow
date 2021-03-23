@@ -15,11 +15,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
     {
         private readonly ObservableCollection<NodeComponent> _components;
 
-        public NodeFieldList(ObservableCollection<NodeComponent> nodeParts)
+        public NodeFieldList(ObservableCollection<NodeComponent> nodeComponents)
         {
-            nodeParts.CollectionChanged += NodeParts_CollectionChanged;
-            _components = nodeParts;
-            NodePartsAdded(nodeParts);
+            nodeComponents.CollectionChanged += Components_CollectionChanged;
+            _components = nodeComponents;
+            ComponentsAdded(nodeComponents);
         }
 
         public int Count { get; private set; } = 0;
@@ -134,32 +134,32 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             return output;
         }
 
-        private void NodeParts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Components_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    NodePartsAdded(e.NewItems, e.NewStartingIndex);
+                    ComponentsAdded(e.NewItems, e.NewStartingIndex);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    NodePartsRemoved(e.OldItems, e.OldStartingIndex);
+                    ComponentsRemoved(e.OldItems, e.OldStartingIndex);
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    NodePartsRemoved(e.OldItems, e.OldStartingIndex);
-                    NodePartsAdded(e.NewItems, e.NewStartingIndex);
+                    ComponentsRemoved(e.OldItems, e.OldStartingIndex);
+                    ComponentsAdded(e.NewItems, e.NewStartingIndex);
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     Count = 0;
                     CollectionChanged?.Invoke(this, e);
                     break;
                 case NotifyCollectionChangedAction.Move:
-                    NodePartsRemoved(e.OldItems, e.OldStartingIndex);
-                    NodePartsAdded(e.NewItems, e.NewStartingIndex);
+                    ComponentsRemoved(e.OldItems, e.OldStartingIndex);
+                    ComponentsAdded(e.NewItems, e.NewStartingIndex);
                     break;
             }
         }
 
-        private void NodePartsRemoved(IList components, int index)
+        private void ComponentsRemoved(IList components, int index)
         {
             foreach (NodeComponent component in components)
             {
@@ -174,7 +174,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             }
         }
 
-        private void NodePartsAdded(IList components, int index = -1)
+        private void ComponentsAdded(IList components, int index = -1)
         {
             foreach (NodeComponent component in components)
             {
