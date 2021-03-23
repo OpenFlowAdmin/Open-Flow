@@ -178,9 +178,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 }
                 else
                 {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, parts, GetLinearIndexFromNested(index)));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, part, GetLinearIndexFromNested(index)));
                     Count -= 1;
                 }
+
+                (part as NodeComponent).VisibilityChanged -= NodePart_VisibilityChanged;
             }
         }
 
@@ -196,8 +198,40 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 }
                 else
                 {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, parts, GetLinearIndexFromNested(index)));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, part, GetLinearIndexFromNested(index)));
                     Count += 1;
+                }
+
+                (part as NodeComponent).VisibilityChanged += NodePart_VisibilityChanged;
+            }
+        }
+
+        private void NodePart_VisibilityChanged(object sender, bool e)
+        {
+            if (e)
+            {
+                if (sender is NodeComponentCollection componentCollection)
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.AllFields, IndexOf(sender)));
+                    Count += componentCollection.FieldCount;
+                }
+                else
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, sender, IndexOf(sender)));
+                    Count += 1;
+                }
+            }
+            else
+            {
+                if (sender is NodeComponentCollection componentCollection)
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.AllFields, IndexOf(sender)));
+                    Count -= componentCollection.FieldCount;
+                }
+                else
+                {
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, sender, IndexOf(sender)));
+                    Count -= 1;
                 }
             }
         }

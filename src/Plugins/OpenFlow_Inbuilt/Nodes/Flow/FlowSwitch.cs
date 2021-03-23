@@ -28,8 +28,8 @@
             {
                 typeof(bool),
                     new NodeComponentCollection(new[] {
-                        new ValueField("True").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}).WithFlowOutput(),
-                        new ValueField("False").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false}).WithFlowOutput(),
+                        new ValueField("True").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}, false).WithFlowOutput(),
+                        new ValueField("False").WithTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false}, false).WithFlowOutput(),
                     })
             },
         };
@@ -100,7 +100,7 @@
 
         private static ValueField ValueDisplay(ITypeDefinition typeDef, object x)
         {
-            ValueField output = new ValueField(x.ToString()).WithTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" });
+            ValueField output = new ValueField(x.ToString()).WithTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" }, false);
             output.DisplayedValue.Value = x;
             return output;
         }

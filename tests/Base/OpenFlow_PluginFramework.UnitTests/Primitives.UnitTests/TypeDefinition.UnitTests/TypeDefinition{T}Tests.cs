@@ -24,14 +24,6 @@ namespace OpenFlow_PluginFramework.UnitTests.Primitives.UnitTests.TypeDefinition
         }
 
         [Fact]
-        public void TrySetValue_ShouldPass_WhenInputCanBeConverted()
-        {
-            var result = _sut.TryConstraintValue(10, out _);
-
-            result.Should().BeTrue();
-        }
-
-        [Fact]
         public void TrySetValue_ShouldFail_OnTypeDifference()
         {
             var result = _sut.TryConstraintValue("Test", out _);

@@ -1,0 +1,16 @@
+﻿<Styles
+  xmlns = "https://github.com/avaloniaui"
+  xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:OFPF = "clr-namespace:OpenFlow_PluginFramework.Primitives;assembly=OpenFlow_PluginFramework"
+  xmlns:local = "clr-namespace:OpenFlow_Inbuilt.UserControls">
+
+    <Styles.Resources>
+		
+        <DataTemplate DataType="OFPF:OpenFlowValue" x:Key="EnumEditor">
+            <StackPanel Orientation="Vertical" Spacing="4">
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+				<ComboBox Items="{Binding Value}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Styles.Resources>
+</Styles>

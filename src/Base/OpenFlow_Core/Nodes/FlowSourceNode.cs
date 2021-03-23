@@ -9,7 +9,7 @@
 
     public class FlowSourceNode : INode
     {
-        private readonly NodeField sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
+        private readonly NodeField sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", false, () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
 
         public FlowSourceNode()
         {

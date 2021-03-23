@@ -17,6 +17,7 @@
     using System.Linq;
     using OpenFlow_Inbuilt.Nodes.Maths.Comparisons;
     using OpenFlow_Inbuilt.Nodes.Input.MouseInput;
+    using Avalonia.Controls;
 
     public class Plugin_Front : IPlugin
     {
@@ -36,7 +37,7 @@
             host.RegisterType<string>("#0000FF", "Text", "", "StringEditor", "StringDisplay");
             host.RegisterType<bool>("#00FFFF", "Condition", false, "StringDisplay", "StringDisplay");
             host.RegisterType<Action>("00FF00", "Button", null, "DefaultDisplay", "ActionDisplay");
-            host.RegisterType<MouseButtonEnum>("#FFFF00", "Mouse Button", MouseButtonEnum.LeftButton, "StringDisplay", "StringDisplay");
+            host.RegisterType<MouseButtonEnum>("#FFFF00", "Mouse Button", MouseButtonEnum.LeftButton, "EnumEditor", "StringDisplay");
 
             //host.TryAddTypeConverter<double, string, Node_Convert_To_String>();
 

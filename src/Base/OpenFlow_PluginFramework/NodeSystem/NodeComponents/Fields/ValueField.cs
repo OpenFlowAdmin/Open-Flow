@@ -52,13 +52,21 @@
                 {
                     RemoveValue(key);
                 }
-                else if (valueStore.TryGetValue(key, out OpenFlowValue OFVal) && OFVal.CanSetValue(value))
+                else if (valueStore.TryGetValue(key, out OpenFlowValue OFVal))
                 {
-                    OFVal.Value = value;
+                    if (OFVal.CanSetValue(value))
+                    {
+                        OFVal.Value = value;
+                    }
+                    else
+                    {
+                        RemoveValue(key);
+                        AddValue(key, new AutoTypeDefinition(value), true);
+                    }
                 }
                 else
                 {
-                    AddValue(key, new AutoTypeDefinition(value));
+                    AddValue(key, new AutoTypeDefinition(value), true);
                 }
             }
         }
@@ -71,9 +79,9 @@
             NotifyPropertyChanged(nameof(DisplayedValue));
         }
 
-        private void AddValue(object key, ITypeDefinitionProvider typeDefs)
+        private void AddValue(object key, ITypeDefinitionProvider typeDefs, bool isUserEditable)
         {
-            AddValue(key, new OpenFlowValue(typeDefs));
+            AddValue(key, new OpenFlowValue(typeDefs) { IsUserEditable = isUserEditable });
         }
 
         public void AddValue(object key, OpenFlowValue newVal)
@@ -140,20 +148,23 @@
             set => this[OutputKey] = value;
         }
 
-        public ValueField WithValue<T>(object key, T value = default, string editorName = null, string displayName = null) => WithTypeProvider(key, new TypeDefinition<T>() { DefaultValue = value, EditorName = editorName, DisplayName = displayName });
-
-        public ValueField WithTypeProvider(object key, ITypeDefinitionProvider typeDefinitions)
+        public ValueField WithValue<T>(object key, bool isUserEditable, T value = default, string editorName = null, string displayName = null)
         {
-            AddValue(key, typeDefinitions);
+            return WithTypeProvider(key, new TypeDefinition<T>() { DefaultValue = value, EditorName = editorName, DisplayName = displayName }, isUserEditable);
+        }
+
+        public ValueField WithTypeProvider(object key, ITypeDefinitionProvider typeDefinitions, bool isUserEditable)
+        {
+            AddValue(key, typeDefinitions, isUserEditable);
             return this;
         }
 
-        public ValueField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(InputKey, initialValue, editorName, displayName);
+        public ValueField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(InputKey, true, initialValue, editorName, displayName);
 
-        public ValueField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(InputKey, typeDefinition);
+        public ValueField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(InputKey, typeDefinition, true);
 
-        public ValueField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(OutputKey, initialValue, editorName, displayName);
+        public ValueField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(OutputKey, false, initialValue, editorName, displayName);
 
-        public ValueField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(OutputKey, typeDefinition);
+        public ValueField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(OutputKey, typeDefinition, false);
     }
 }

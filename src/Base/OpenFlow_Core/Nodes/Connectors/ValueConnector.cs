@@ -10,7 +10,6 @@
             : base(connectionType)
         {
             DisplayValue = displayValue;
-            DisplayValue.IsUserEditable = ConnectionType == ConnectionTypes.Input;
             DisplayValue.PropertyChanged += (o, e) =>
             {
                 if (e.PropertyName == nameof(DisplayValue.TypeDefinition))

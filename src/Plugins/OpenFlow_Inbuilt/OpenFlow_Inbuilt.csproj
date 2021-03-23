@@ -24,6 +24,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </AvaloniaResource>
+	<AvaloniaResource Include="Editors\EnumEditor.xaml">
+	  <SubType>Designer</SubType>
+	  <Generator>MSBuild:Compile</Generator>
+	</AvaloniaResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.0" />
@@ -36,10 +40,16 @@
     <None Update="Displays\ActionDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <None Update="Editors\EnumEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="Editors\NumberEnterDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <None Update="Displays\StringDisplay.xaml">
+	<None Update="Editors\EnumEditor.xaml">
+	  <Generator>MSBuild:Compile</Generator>
+	</None>
+	  <None Update="Displays\StringDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
     <None Update="Editors\StringEditor.xaml">
