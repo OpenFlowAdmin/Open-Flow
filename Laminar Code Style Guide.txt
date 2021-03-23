@@ -1,0 +1,35 @@
+General:
+
+No public fields (always properties)
+Only one (ish) level of indentation. If you implement more complexity, make it it’s own method
+Avoid “else” (should be easier in conjunction with the last bullet point) (Sounds weird, ask me)
+Data validation up front, (if null => throw exception) instead of (if not null => do stuff)
+
+
+Class Ordering:
+Ordering Members
+Fields
+Constructors
+Delegates/Events
+Properties
+Methods
+Enums
+Nested Classes
+
+Ordering modifiers
+Const
+Static
+Readonly
+
+Ordering Accessibility
+Public
+Internal
+Protected
+Private
+
+
+Naming Conventions:
+Methods, classes, events and properties use PascalCase
+Method parameters use camelCase
+Fields use _underscoreCamelCase
+Anything static uses PascalCase
