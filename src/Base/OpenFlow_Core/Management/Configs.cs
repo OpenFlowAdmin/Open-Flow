@@ -19,14 +19,6 @@
             Reload();
         }
 
-        private enum State
-        {
-            InvalidPath,
-            InvalidFile,
-            Unknown,
-            Working,
-        }
-
         public string ErrorState => _state switch
         {
             State.InvalidPath => "The config file could not be found in " + _xmlDocPath,
@@ -87,6 +79,14 @@
             {
                 PluginPaths = null;
             }
+        }
+
+        private enum State
+        {
+            InvalidPath,
+            InvalidFile,
+            Unknown,
+            Working,
         }
     }
 }
