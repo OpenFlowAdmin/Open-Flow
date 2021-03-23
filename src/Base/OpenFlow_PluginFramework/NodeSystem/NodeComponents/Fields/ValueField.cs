@@ -45,7 +45,7 @@
             {
                 if (key == null)
                 {
-                    throw new ArgumentNullException("Key for ValueField cannot be null");
+                    throw new ArgumentNullException(nameof(key));
                 }
 
                 if (value == null)
