@@ -14,7 +14,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public int Count => ComponentCount;
 
-        public void Clear() => ProtectedClear();
+        public void Clear() => ProtectedReset();
 
         public void CopyTo(NodeComponent[] array, int arrayIndex)
         {

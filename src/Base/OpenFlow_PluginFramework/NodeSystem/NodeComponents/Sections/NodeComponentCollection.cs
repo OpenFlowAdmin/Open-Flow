@@ -22,6 +22,11 @@
 
         public NodeComponentCollection(IEnumerable<NodeComponent> subParts)
         {
+            foreach (NodeComponent component in subParts)
+            {
+                component.Opacity.AddOpacityFactor(Opacity);
+            }
+
             _subParts = new ObservableCollection<NodeComponent>(subParts);
             AllFields = new NodeFieldList(_subParts);
         }
@@ -80,16 +85,16 @@
 
         public bool Contains(NodeComponent component) => _subParts.Contains(component);
 
-        protected virtual void ProtectedAdd(NodeComponent newField)
+        protected virtual void ProtectedAdd(NodeComponent newComponent)
         {
-            _subParts.Add(newField);
-            newField.ParentNode = ParentNode;
+            ProtectedInsert(_subParts.Count - 1, newComponent);
         }
 
-        protected virtual void ProtectedInsert(int index, NodeComponent newField)
+        protected virtual void ProtectedInsert(int index, NodeComponent newComponent)
         {
-            _subParts.Insert(index, newField);
-            newField.ParentNode = ParentNode;
+            _subParts.Insert(index, newComponent);
+            newComponent.Opacity.AddOpacityFactor(Opacity);
+            newComponent.ParentNode = ParentNode;
         }
 
         protected virtual void ProtectedRemoveAt(int index)
@@ -102,6 +107,7 @@
 
         protected virtual bool ProtectedRemove(NodeComponent component)
         {
+            component.Opacity.RemoveOpacityFactor(Opacity);
             return _subParts.Remove(component);
         }
 
@@ -111,11 +117,6 @@
             {
                 ProtectedRemoveAt(i);
             }
-        }
-
-        protected virtual void ProtectedClear()
-        {
-            _subParts.Clear();
         }
 
         private int GetIndex(Index index) => index.IsFromEnd ? _subParts.Count - index.Value : index.Value;
