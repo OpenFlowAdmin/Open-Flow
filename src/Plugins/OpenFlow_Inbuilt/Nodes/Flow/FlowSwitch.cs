@@ -54,7 +54,7 @@
 
         public void Evaluate()
         {
-            foreach (NodeField field in flowOutputs.AllFields)
+            foreach (NodeField field in flowOutputs.NodeFields)
             {
                 if (field is ValueField valueField && valueField.DisplayedValue.Value.Equals(valueInput.Input))
                 {
@@ -92,10 +92,10 @@
                 return new NodeComponentCollection(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x)).WithFlowOutput()));
             }
 
-            return new NodeComponentList() {
-                new ValueFieldGenerator(new ValueField("Case").WithInputTypeProvider(typeDef).WithFlowOutput() as ValueField, 0, (x) => $"Case {x + 1}"),
-                defaultOutput,
-            };
+            return new NodeComponentCollection(
+                new NodeComponentAutoCloner(new ValueField("Case").WithInputTypeProvider(typeDef).WithFlowOutput(), 0, (x) => $"Case {x + 1}"),
+                defaultOutput
+            );
         }
 
         private static ValueField ValueDisplay(ITypeDefinition typeDef, object x)

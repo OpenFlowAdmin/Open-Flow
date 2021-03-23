@@ -1,6 +1,7 @@
 ﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
@@ -12,6 +13,7 @@
     public abstract class  NodeComponent : INotifyPropertyChanged
     {
         private bool _isVisible = true;
+        private Action<NodeComponent> removeAction;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -19,23 +21,11 @@
 
         public virtual INode ParentNode { get; set; }
 
-        public Action<NodeComponent> RemoveAction 
-        { 
-            init
-            {
-                RemoveSelf = () => 
-                {
-                    value(this);
-                    ParentNode.TriggerEvaluate();
-                };
-            }
-        }
+        public abstract IList NodeFields { get; }
 
         public Action RemoveSelf { get; private set; }
 
         public Opacity Opacity { get; } = new();
-
-        public abstract int FieldCount { get; }
 
         public virtual bool IsVisible
         {
@@ -48,6 +38,27 @@
                     VisibilityChanged?.Invoke(this, _isVisible);
                 }
             }
+        }
+
+        public void SetRemoveAction(Action<NodeComponent> removeAction)
+        {
+            this.removeAction = removeAction;
+            RemoveSelf = () =>
+            {
+                removeAction(this);
+                ParentNode.TriggerEvaluate();
+            };
+        }
+
+        public abstract NodeComponent Clone();
+
+        protected virtual NodeComponent CloneTo(NodeComponent component)
+        {
+            component.ParentNode = ParentNode;
+            component.SetRemoveAction(removeAction);
+            component.Opacity.Value = Opacity.Value;
+
+            return component;
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

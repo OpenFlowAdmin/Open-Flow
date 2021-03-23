@@ -8,7 +8,7 @@
 
     public class NodeMultiply : INode
     {
-        private readonly ValueFieldGenerator multiplyFields = new(new ValueField("Number").WithInput(1.0), 1, index => $"Number {index + 1}");
+        private readonly NodeComponentAutoCloner multiplyFields = new(new ValueField("Number").WithInput(1.0), 1, index => $"Number {index + 1}");
         private readonly ValueField outputField = new ValueField("Product").WithOutput<double>();
 
         public string NodeName => "Multiply";

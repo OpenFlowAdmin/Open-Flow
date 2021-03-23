@@ -20,6 +20,8 @@
 
         public NodeComponentCollection() : this(Enumerable.Empty<NodeComponent>()) { }
 
+        public NodeComponentCollection(params NodeComponent[] components) : this(components.AsEnumerable()) { }
+
         public NodeComponentCollection(IEnumerable<NodeComponent> subParts)
         {
             foreach (NodeComponent component in subParts)
@@ -28,7 +30,7 @@
             }
 
             _subParts = new ObservableCollection<NodeComponent>(subParts);
-            AllFields = new NodeFieldList(_subParts);
+            NodeFields = new NodeFieldList(_subParts);
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
@@ -44,9 +46,7 @@
             }
         }
 
-        public NodeFieldList AllFields { get; }
-
-        public override int FieldCount => AllFields.Count;
+        public override NodeFieldList NodeFields { get; }
 
         public override INode ParentNode
         {
@@ -85,9 +85,11 @@
 
         public bool Contains(NodeComponent component) => _subParts.Contains(component);
 
+        public override NodeComponent Clone() => CloneTo(new NodeComponentCollection(_subParts.Select(x => x.Clone())));
+
         protected virtual void ProtectedAdd(NodeComponent newComponent)
         {
-            ProtectedInsert(_subParts.Count - 1, newComponent);
+            ProtectedInsert(_subParts.Count, newComponent);
         }
 
         protected virtual void ProtectedInsert(int index, NodeComponent newComponent)

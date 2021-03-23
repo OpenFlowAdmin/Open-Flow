@@ -8,7 +8,7 @@
 
     public class NodeAdd : INode
     {
-        private readonly ValueFieldGenerator addFields = new(new ValueField("Number").WithInput(0.0), 1, index => $"Number {index + 1}");
+        private readonly NodeComponentAutoCloner addFields = new(new ValueField("Number").WithInput(0.0), 1, index => $"Number {index + 1}");
         private readonly ValueField totalField = new ValueField("Total").WithOutput<double>();
 
         public string NodeName { get; } = "Add";

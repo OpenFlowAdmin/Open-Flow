@@ -58,23 +58,16 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public IEnumerator<NodeField> GetEnumerator()
         {
-            foreach (NodeComponent part in parts)
+            foreach (NodeComponent component in parts)
             {
-                if (!part.IsVisible)
+                if (!component.IsVisible)
                 {
                     continue;
                 }
 
-                if (part is NodeField nodeField)
+                foreach (NodeField field in component.NodeFields)
                 {
-                    yield return nodeField;
-                }
-                else if (part is NodeComponentCollection nodeSection)
-                {
-                    foreach (NodeField field in nodeSection.AllFields)
-                    {
-                        yield return field;
-                    }
+                    yield return field;
                 }
             }
         }
@@ -136,7 +129,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             int output = 0;
             for (int i = 0; i < nested; i++)
             {
-                output += parts[i].FieldCount;
+                output += parts[i].NodeFields.Count;
             }
             return output;
         }
@@ -168,41 +161,31 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void NodePartsRemoved(IList parts, int index)
         {
-            foreach (object part in parts)
+            foreach (NodeComponent component in parts)
             {
-                if (part is NodeComponentCollection componentCollection)
+                if (component is NodeComponentCollection componentCollection)
                 {
-                    componentCollection.AllFields.CollectionChanged -= Child_NodeFieldsList_Changed;
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.AllFields, GetLinearIndexFromNested(index)));
-                    Count -= componentCollection.FieldCount;
-                }
-                else
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, part, GetLinearIndexFromNested(index)));
-                    Count -= 1;
+                    componentCollection.NodeFields.CollectionChanged -= Child_NodeFieldsList_Changed;
                 }
 
-                (part as NodeComponent).VisibilityChanged -= NodePart_VisibilityChanged;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.NodeFields, GetLinearIndexFromNested(index)));
+                Count -= component.NodeFields.Count;
+                component.VisibilityChanged -= NodePart_VisibilityChanged;
             }
         }
 
         private void NodePartsAdded(IList parts, int index = -1)
         {
-            foreach (object part in parts)
+            foreach (NodeComponent component in parts)
             {
-                if (part is NodeComponentCollection componentCollection)
+                if (component is NodeComponentCollection componentCollection)
                 {
-                    componentCollection.AllFields.CollectionChanged += Child_NodeFieldsList_Changed;
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.AllFields, GetLinearIndexFromNested(index)));
-                    Count += componentCollection.FieldCount;
-                }
-                else
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, part, GetLinearIndexFromNested(index)));
-                    Count += 1;
+                    componentCollection.NodeFields.CollectionChanged += Child_NodeFieldsList_Changed;
                 }
 
-                (part as NodeComponent).VisibilityChanged += NodePart_VisibilityChanged;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.NodeFields, GetLinearIndexFromNested(index)));
+                Count += component.NodeFields.Count;
+                component.VisibilityChanged += NodePart_VisibilityChanged;
             }
         }
 
@@ -210,29 +193,13 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             if (e)
             {
-                if (sender is NodeComponentCollection componentCollection)
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.AllFields, IndexOf(sender)));
-                    Count += componentCollection.FieldCount;
-                }
-                else
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, sender, IndexOf(sender)));
-                    Count += 1;
-                }
+                //CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, componentCollection.NodeFields, IndexOf(sender)));
+                Count += (sender as NodeComponent).NodeFields.Count;
             }
             else
             {
-                if (sender is NodeComponentCollection componentCollection)
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.AllFields, IndexOf(sender)));
-                    Count -= componentCollection.FieldCount;
-                }
-                else
-                {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, sender, IndexOf(sender)));
-                    Count -= 1;
-                }
+                // CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, componentCollection.NodeFields, IndexOf(sender)));
+                Count -= (sender as NodeComponent).NodeFields.Count;
             }
         }
 
@@ -253,9 +220,9 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
             int i = 0;
             int startingIndex = 0;
-            while (i < parts.Count && (parts[i] as NodeComponentCollection)?.AllFields != sender)
+            while (i < parts.Count && (parts[i] as NodeComponentCollection)?.NodeFields != sender)
             {
-                startingIndex += parts[i].FieldCount;
+                startingIndex += parts[i].NodeFields.Count;
                 i++;
             }
 

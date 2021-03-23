@@ -113,18 +113,21 @@
             {
                 ParentNode.TriggerEvaluate();
                 AnyValueChanged?.Invoke(this, (sender as OpenFlowValue)?.Value);
+                NotifyPropertyChanged("Child Value");
             }
         }
 
-        public override NodeField CloneTo(NodeField nodeField)
+        public override NodeComponent Clone() => CloneTo(new ValueField(Name));
+
+        protected override ValueField CloneTo(NodeComponent nodeField)
         {
             base.CloneTo(nodeField);
             foreach (KeyValuePair<object, OpenFlowValue> kvp in valueStore)
             {
-                (nodeField as ValueField)?.AddValue(kvp.Key, kvp.Value.Clone());
+                (nodeField as ValueField).AddValue(kvp.Key, kvp.Value.Clone());
             }
 
-            return nodeField;
+            return nodeField as ValueField;
         }
 
         public OpenFlowValue GetDisplayValue(object key) => key != null && valueStore.TryGetValue(key, out OpenFlowValue value) ? value : null;

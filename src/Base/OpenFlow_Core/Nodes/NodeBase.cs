@@ -27,7 +27,7 @@
                 ParentNode = baseNode
             };
 
-            Fields = ObservableCollectionMapper<NodeField, DisplayNodeField>.Create(fieldSection.AllFields, new NodeFieldMapper());
+            Fields = ObservableCollectionMapper<NodeField, DisplayNodeField>.Create(fieldSection.NodeFields, new NodeFieldMapper());
 
             baseNode.SubscribeToEvaluate(TryEvaluate);
 
@@ -65,7 +65,7 @@
         {
             if (baseNode.TryGetSpecialField(flag, out NodeField baseField))
             {
-                field = Fields[fieldSection.AllFields.IndexOf(baseField)];
+                field = Fields[fieldSection.NodeFields.IndexOf(baseField)];
                 return true;
             }
             else

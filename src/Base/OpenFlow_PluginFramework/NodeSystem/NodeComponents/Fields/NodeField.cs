@@ -1,6 +1,7 @@
 ﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -8,13 +9,14 @@
     using System.Runtime.CompilerServices;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
-    public class NodeField : NodeComponent, ICloneable
+    public class NodeField : NodeComponent
     {
         private string name;
 
         public NodeField(string name)
         {
             Name = name;
+            NodeFields = new List<NodeField>() { this };
         }
 
         public virtual string Name
@@ -30,15 +32,15 @@
             }
         }
 
-        public override int FieldCount { get; } = 1;
+        public override IList NodeFields { get; }
 
-        public object Clone() => CloneTo(new NodeField(Name));
+        public override NodeComponent Clone() => CloneTo(new NodeField(Name));
 
-        public virtual NodeField CloneTo(NodeField nodeField)
+        protected override NodeField CloneTo(NodeComponent nodeField)
         {
-            nodeField.Name = Name;
-            nodeField.Opacity.Value = Opacity.Value;
-            return nodeField.WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput());
+            base.CloneTo(nodeField);
+            (nodeField as NodeField).Name = Name;
+            return (nodeField as NodeField).WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput());
         }
     }
 }
