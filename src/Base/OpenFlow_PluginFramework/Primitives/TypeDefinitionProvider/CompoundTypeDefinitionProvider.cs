@@ -11,7 +11,7 @@ namespace OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider
     {
         private readonly ITypeDefinition[] typeDefinitions;
 
-        public CompoundTypeDefinitionProvider(ITypeDefinition[] typeDefinitions)
+        public CompoundTypeDefinitionProvider(params ITypeDefinition[] typeDefinitions)
         {
             if (typeDefinitions is null)
             {
