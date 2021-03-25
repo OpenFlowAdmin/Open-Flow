@@ -6,6 +6,7 @@
     using System.IO;
     using System.Reflection;
     using OpenFlow_Core.Management;
+    using OpenFlow_Core.Management.UserInterface;
     using OpenFlow_Core.Nodes;
 
     public class Instance
@@ -32,9 +33,9 @@
 
         public LoadedNodeManager LoadedNodeManager { get; } = new();
 
-        public RegisteredUIs RegisteredEditors { get; } = new();
+        public UserInterfaceRegister RegisteredEditors { get; } = new();
 
-        public RegisteredUIs RegisteredDisplays { get; } = new();
+        public UserInterfaceRegister RegisteredDisplays { get; } = new();
 
         public TypeInfoRecord GetTypeInfo(Type type)
         {

@@ -50,6 +50,8 @@
                 host.RegisterDisplay(kvp.Key, kvp.Value);
             }
 
+            host.RegisterDisplay<IControl>("DefaultDisplay", typeof(UserControls.DefaultDisplay));
+
             host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide>("Number", "Arithmetic");
             host.AddNodeToMenu<NodeSine>("Number", "Functions");
             host.AddNodeToMenu<Equal>("Number", "Comparisons");

@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace OpenFlow_Inbuilt.UserControls
 {
-    public class EnumComboBoxControl : UserControl
+    public class DefaultDisplay : UserControl
     {
-        public EnumComboBoxControl()
+        public DefaultDisplay()
         {
             InitializeComponent();
         }

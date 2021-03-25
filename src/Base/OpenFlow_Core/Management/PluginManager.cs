@@ -148,8 +148,12 @@
             throw new NotImplementedException();
         }
 
-        public bool RegisterEditor<T>(string name, T editor) => Instance.Current.RegisteredEditors.AddUI(name, editor);
+        public bool RegisterEditor<T>(string name, T editor) => Instance.Current.RegisteredEditors.RegisterUserInterface(name, editor);
 
-        public bool RegisterDisplay<T>(string name, T display) => Instance.Current.RegisteredDisplays.AddUI(name, display);
+        public bool RegisterDisplay<T>(string name, T display) => Instance.Current.RegisteredDisplays.RegisterUserInterface(name, display);
+
+        public bool RegisterEditor<T>(string name, Type editorType) => Instance.Current.RegisteredEditors.RegisterUserInterface<T>(name, editorType);
+
+        public bool RegisterDisplay<T>(string name, Type displayType) => Instance.Current.RegisteredDisplays.RegisterUserInterface<T>(name, displayType);
     }
 }

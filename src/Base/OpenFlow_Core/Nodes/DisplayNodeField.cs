@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using OpenFlow_Core.Management.UserInterface;
     using OpenFlow_Core.Nodes.Connectors;
     using OpenFlow_PluginFramework.NodeSystem;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
@@ -20,7 +21,7 @@
 
         public DisplayNodeField(NodeField baseField)
         {
-            this._baseField = baseField;
+            _baseField = baseField;
             baseField.GetFlowInput().SubscribeToChange(b => RefreshInput());
             baseField.GetFlowOutput().SubscribeToChange(b => RefreshOutput());
 
@@ -86,6 +87,9 @@
 
         public OpenFlowValue DisplayedValue { get; private set; }
 
+        public UIManager UIs { get; } = new();
+
+        /*
         public Dictionary<string, object> UIs
         {
             get
@@ -118,6 +122,7 @@
                 return Instance.Current.RegisteredDisplays.TryGetUIs("DefaultDisplay", out Dictionary<string, object> def) ? def : null;
             }
         }
+        */
 
         private void RefreshInput()
         {
@@ -191,8 +196,9 @@
             {
                 DisplayedValue.PropertyChanged -= DisplayedValue_PropertyChanged;
             }
+
             DisplayedValue = (_baseField as ValueField)?.DisplayedValue ?? new OpenFlowValue() { Name = _baseField.Name };
-            
+            UIs.SetChildValue(DisplayedValue);
             DisplayedValue.PropertyChanged += DisplayedValue_PropertyChanged;
             DisplayedValue.Name = _baseField.Name;
             NotifyPropertyChanged(nameof(UIs));

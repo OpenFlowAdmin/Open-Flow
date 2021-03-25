@@ -1,6 +1,7 @@
 ﻿namespace OpenFlow_PluginFramework.Registration
 {
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using System;
 
     /// <summary>
     /// Defines a host which can have OpenFlow classes from PlugIns registered with it
@@ -165,6 +166,7 @@
         /// <param name="editor">The editor</param>
         /// <returns>True if the editor could be registered</returns>
         bool RegisterEditor<T>(string name, T editor);
+        bool RegisterEditor<T>(string name, Type editor);
 
         /// <summary>
         /// Registers a display with a specific name in a specific UI implementation
@@ -174,5 +176,6 @@
         /// <param name="editor">The display</param>
         /// <returns>True if the display could be registered</returns>
         bool RegisterDisplay<T>(string name, T display);
+        bool RegisterDisplay<T>(string name, Type displayType);
     }
 }
