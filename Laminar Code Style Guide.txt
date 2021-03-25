@@ -3,6 +3,7 @@ General:
  - Only one (ish) level of indentation. If you implement more complexity, make it it’s own method
  - Avoid “else” (should be easier in conjunction with the last bullet point) (Sounds weird, ask me)
  - Data validation up front, (if null => throw exception) instead of (if not null => do stuff)
+ - Do not use var; always explicitly write out the type. E.g. (string test = new();) instead of (var test = new string();)
 
 
 Class Ordering:
