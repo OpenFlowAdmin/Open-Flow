@@ -19,28 +19,31 @@ namespace OpenFlow_Core.Management.UserInterface
         {
             get
             {
-                if (_childValue.IsUserEditable)
+                if (_childValue.TypeDefinition is not null)
                 {
-                    if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, _childValue.TypeDefinition.EditorName, out object userInterface))
+                    if (_childValue.IsUserEditable)
                     {
-                        return userInterface;
-                    }
+                        if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, _childValue.TypeDefinition.EditorName, out object userInterface))
+                        {
+                            return userInterface;
+                        }
 
-                    if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultEditor, out object defaultTypeUserInterface))
-                    {
-                        return defaultTypeUserInterface;
+                        if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultEditor, out object defaultTypeUserInterface))
+                        {
+                            return defaultTypeUserInterface;
+                        }
                     }
-                }
-                else
-                {
-                    if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, _childValue.TypeDefinition.DisplayName, out object userInterface))
+                    else
                     {
-                        return userInterface;
-                    }
+                        if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, _childValue.TypeDefinition.DisplayName, out object userInterface))
+                        {
+                            return userInterface;
+                        }
 
-                    if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultDisplay, out object defaultTypeUserInterface))
-                    {
-                        return defaultTypeUserInterface;
+                        if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultDisplay, out object defaultTypeUserInterface))
+                        {
+                            return defaultTypeUserInterface;
+                        }
                     }
                 }
 

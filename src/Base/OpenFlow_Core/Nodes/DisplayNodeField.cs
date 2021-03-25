@@ -89,41 +89,6 @@
 
         public UIManager UIs { get; } = new();
 
-        /*
-        public Dictionary<string, object> UIs
-        {
-            get
-            {
-                if (DisplayedValue?.TypeDefinition != null)
-                {
-                    if (DisplayedValue.IsUserEditable)
-                    {
-                        if (Instance.Current.RegisteredEditors.TryGetUIs(DisplayedValue.TypeDefinition.EditorName, out Dictionary<string, object> editors))
-                        {
-                            return editors;
-                        }
-                        else if (Instance.Current.RegisteredEditors.TryGetUIs(Instance.Current.GetTypeInfo(DisplayedValue.TypeDefinition.ValueType).DefaultEditor, out Dictionary<string, object> defaultEditors))
-                        {
-                            return defaultEditors;
-                        }
-                    }
-                    else
-                    {
-                        if (Instance.Current.RegisteredDisplays.TryGetUIs(DisplayedValue.TypeDefinition.DisplayName, out Dictionary<string, object> displays))
-                        {
-                            return displays;
-                        }
-                        else if (Instance.Current.RegisteredDisplays.TryGetUIs(Instance.Current.TypeInfo[DisplayedValue.TypeDefinition.ValueType].DefaultDisplay, out Dictionary<string, object> defaultDisplays))
-                        {
-                            return defaultDisplays;
-                        }
-                    }
-                }
-                return Instance.Current.RegisteredDisplays.TryGetUIs("DefaultDisplay", out Dictionary<string, object> def) ? def : null;
-            }
-        }
-        */
-
         private void RefreshInput()
         {
             if (_baseField.GetFlowInput().Val)
@@ -192,25 +157,10 @@
 
         private void UpdateDisplayedValue()
         {
-            if (DisplayedValue != null) 
-            {
-                DisplayedValue.PropertyChanged -= DisplayedValue_PropertyChanged;
-            }
-
             DisplayedValue = (_baseField as ValueField)?.DisplayedValue ?? new OpenFlowValue() { Name = _baseField.Name };
             UIs.SetChildValue(DisplayedValue);
-            DisplayedValue.PropertyChanged += DisplayedValue_PropertyChanged;
             DisplayedValue.Name = _baseField.Name;
-            NotifyPropertyChanged(nameof(UIs));
             NotifyPropertyChanged(nameof(DisplayedValue));
-        }
-
-        private void DisplayedValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName is nameof(OpenFlowValue.IsUserEditable) or nameof(OpenFlowValue.TypeDefinition))
-            {
-                NotifyPropertyChanged(nameof(UIs));
-            }
         }
 
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
