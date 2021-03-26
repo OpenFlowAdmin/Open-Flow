@@ -13,18 +13,27 @@ namespace OpenFlow_Core.Management.UserInterface
     public class UIManager
     {
         private OpenFlowValue _childValue;
-        private readonly Dictionary<string, ObservableObject> _userInterfacePerType = new();
+        private string _userInterfaceType;
+        private readonly List<ObservableObject> _userInterfaces = new();
 
         public object this[string key]
         {
             get
             {
-                if (!_userInterfacePerType.ContainsKey(key))
+                CleanUserInterfaces();
+                if (_userInterfaceType == null)
                 {
-                    _userInterfacePerType.Add(key, new ObservableObject(GetUIOfType(key)));
+                    _userInterfaceType = key;
                 }
 
-                return _userInterfacePerType[key];
+                if (_userInterfaceType != key)
+                {
+                    throw new Exception("UIManager cannot handle multiple types of interface at once!");
+                }
+
+                ObservableObject newObject = new(GetUIOfType(key));
+                _userInterfaces.Add(newObject);
+                return newObject;
             }
         }
 
@@ -50,9 +59,27 @@ namespace OpenFlow_Core.Management.UserInterface
 
         private void RefreshUserInterfaces()
         {
-            foreach (KeyValuePair<string, ObservableObject> observable in _userInterfacePerType)
+            object newUserInterface = GetUIOfType(_userInterfaceType);
+            foreach (ObservableObject userInterface in _userInterfaces)
             {
-                observable.Value.Observable = GetUIOfType(observable.Key);
+                userInterface.Observable = newUserInterface;
+            }
+        }
+
+        private void CleanUserInterfaces()
+        {
+            int i = 0;
+            while (i < _userInterfaces.Count)
+            {
+                if (_userInterfaces[i].HasNoListeners())
+                {
+                    Debug.WriteLine("Cleaning is working");
+                    _userInterfaces.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
             }
         }
 

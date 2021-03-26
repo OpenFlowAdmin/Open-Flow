@@ -12,7 +12,7 @@
             {
                 OpenFlow_Core.HorizontalAlignment.Left => HorizontalAlignment.Left,
                 OpenFlow_Core.HorizontalAlignment.Right => HorizontalAlignment.Right,
-                _ => HorizontalAlignment.Center,
+                _ => HorizontalAlignment.Stretch,
             };
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

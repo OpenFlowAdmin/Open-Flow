@@ -35,8 +35,9 @@
             host.RegisterEditor<IControl>("NumberEditor", typeof(NumberEditor));
             host.RegisterEditor<IControl>("StringEditor", typeof(StringEditor));
             host.RegisterEditor<IControl>("EnumEditor", typeof(EnumEditor));
+            host.RegisterEditor<IControl>("SliderEditor", typeof(SliderEditor));
 
-            host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide>("Number", "Arithmetic");
+            host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide, SliderTest>("Number", "Arithmetic");
             host.AddNodeToMenu<NodeSine>("Number", "Functions");
             host.AddNodeToMenu<Equal>("Number", "Comparisons");
             host.AddNodeToMenu<Node_Join_Strings>("Text");
