@@ -18,6 +18,7 @@
     using OpenFlow_Inbuilt.Nodes.Maths.Comparisons;
     using OpenFlow_Inbuilt.Nodes.Input.MouseInput;
     using Avalonia.Controls;
+    using OpenFlow_Inbuilt.UserControls;
 
     public class Plugin_Front : IPlugin
     {
@@ -33,7 +34,7 @@
 
         public void Register(IPluginHost host)
         {
-            host.RegisterType<double>("#FF0000", "Number", 0.0, "NumberEnterDisplay", "StringDisplay");
+            host.RegisterType<double>("#FF0000", "Number", 0.0, "NumberEditor", "StringDisplay");
             host.RegisterType<string>("#0000FF", "Text", "", "StringEditor", "StringDisplay");
             host.RegisterType<bool>("#00FFFF", "Condition", false, "StringDisplay", "StringDisplay");
             host.RegisterType<Action>("00FF00", "Button", null, "DefaultDisplay", "ActionDisplay");
@@ -50,7 +51,11 @@
                 host.RegisterDisplay(kvp.Key, kvp.Value);
             }
 
-            host.RegisterDisplay<IControl>("DefaultDisplay", typeof(UserControls.DefaultDisplay));
+            host.RegisterDisplay<IControl>("DefaultDisplay", typeof(DefaultDisplay));
+            host.RegisterDisplay<IControl>("StringDisplay", typeof(StringDisplay));
+            host.RegisterEditor<IControl>("NumberEditor", typeof(NumberEditor));
+            host.RegisterEditor<IControl>("StringEditor", typeof(StringEditor));
+            host.RegisterEditor<IControl>("EnumEditor", typeof(EnumEditor));
 
             host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide>("Number", "Arithmetic");
             host.AddNodeToMenu<NodeSine>("Number", "Functions");

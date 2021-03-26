@@ -9,7 +9,7 @@
   <Style Selector="nds|NodeDisplay">
     <Style.Resources>
       <conv:IsNotNull x:Key="IsNotNull"/>
-      <conv:ConvertAlignment x:Key="ConvertAlignment"/>
+      <conv:ConvertAlignment x:Key="AlignmentConverter"/>
     </Style.Resources>
     
     <Setter Property="ClipToBounds" Value="False"/>
@@ -58,11 +58,11 @@
 							  <TranslateTransform X="15"/>
 						  </Path.RenderTransform>
 					  </Path>
-					  <Decorator 
-						  HorizontalAlignment="Stretch"
-						  Margin="8,4"
-						  Child="{Binding UIs[Avalonia.Controls.IControl]}"
-						  VerticalAlignment="Center"/>
+					  <Decorator
+	                      HorizontalAlignment="{Binding Alignment, Converter={StaticResource AlignmentConverter}}"
+	                      Margin="8,4"
+	                      Child="{Binding UIs[Avalonia.Controls.IControl].Observable}"
+	                      VerticalAlignment="Center"/>
 					  <DockPanel>
 						  <Button Command="{Binding RemoveSelf}" 
 								  Content="-"

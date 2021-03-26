@@ -3,56 +3,28 @@ using OpenFlow_PluginFramework.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenFlow_Core.Management.UserInterface
 {
-    public class UIManager : INotifyPropertyChanged
+    public class UIManager
     {
         private OpenFlowValue _childValue;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly Dictionary<string, ObservableObject> _userInterfacePerType = new();
 
         public object this[string key]
         {
             get
             {
-                if (_childValue.TypeDefinition is not null)
+                if (!_userInterfacePerType.ContainsKey(key))
                 {
-                    if (_childValue.IsUserEditable)
-                    {
-                        if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, _childValue.TypeDefinition.EditorName, out object userInterface))
-                        {
-                            return userInterface;
-                        }
-
-                        if (Instance.Current.RegisteredEditors.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultEditor, out object defaultTypeUserInterface))
-                        {
-                            return defaultTypeUserInterface;
-                        }
-                    }
-                    else
-                    {
-                        if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, _childValue.TypeDefinition.DisplayName, out object userInterface))
-                        {
-                            return userInterface;
-                        }
-
-                        if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultDisplay, out object defaultTypeUserInterface))
-                        {
-                            return defaultTypeUserInterface;
-                        }
-                    }
+                    _userInterfacePerType.Add(key, new ObservableObject(GetUIOfType(key)));
                 }
 
-                if (Instance.Current.RegisteredDisplays.TryGetUserInterface(key, "DefaultDisplay", out object defaultDisplay))
-                {
-                    return defaultDisplay;
-                }
-
-                return null;
+                return _userInterfacePerType[key];
             }
         }
 
@@ -65,14 +37,63 @@ namespace OpenFlow_Core.Management.UserInterface
 
             _childValue = childValue;
             _childValue.PropertyChanged += ChildValue_PropertyChanged;
+            RefreshUserInterfaces();
         }
 
         private void ChildValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is nameof(OpenFlowValue.IsUserEditable) or nameof(OpenFlowValue.TypeDefinition))
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+                RefreshUserInterfaces();
             }
         }
+
+        private void RefreshUserInterfaces()
+        {
+            foreach (KeyValuePair<string, ObservableObject> observable in _userInterfacePerType)
+            {
+                observable.Value.Observable = GetUIOfType(observable.Key);
+            }
+        }
+
+
+        private object GetUIOfType(string AQNOfType)
+        {
+            if (_childValue.TypeDefinition is not null)
+            {
+                if (_childValue.IsUserEditable)
+                {
+                    if (Instance.Current.RegisteredEditors.TryGetUserInterface(AQNOfType, _childValue.TypeDefinition.EditorName, out object userInterface))
+                    {
+                        return userInterface;
+                    }
+
+                    if (Instance.Current.RegisteredEditors.TryGetUserInterface(AQNOfType, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultEditor, out object defaultTypeUserInterface))
+                    {
+                        return defaultTypeUserInterface;
+                    }
+                }
+                else
+                {
+                    if (Instance.Current.RegisteredDisplays.TryGetUserInterface(AQNOfType, _childValue.TypeDefinition.DisplayName, out object userInterface))
+                    {
+                        return userInterface;
+                    }
+
+                    if (Instance.Current.RegisteredDisplays.TryGetUserInterface(AQNOfType, Instance.Current.GetTypeInfo(_childValue.TypeDefinition.ValueType).DefaultDisplay, out object defaultTypeUserInterface))
+                    {
+                        return defaultTypeUserInterface;
+                    }
+                }
+            }
+
+            if (Instance.Current.RegisteredDisplays.TryGetUserInterface(AQNOfType, "DefaultDisplay", out object defaultDisplay))
+            {
+                return defaultDisplay;
+            }
+
+            return null;
+        }
+
     }
 }

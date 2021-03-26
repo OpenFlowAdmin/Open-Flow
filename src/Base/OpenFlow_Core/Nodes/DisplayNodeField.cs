@@ -38,6 +38,9 @@
                     UpdateDisplayedValue();
                 }
             };
+
+            UIs = new UIManager();
+
             RefreshInput();
             RefreshOutput();
             UpdateDisplayedValue();
@@ -87,7 +90,7 @@
 
         public OpenFlowValue DisplayedValue { get; private set; }
 
-        public UIManager UIs { get; } = new();
+        public UIManager UIs { get; }
 
         private void RefreshInput()
         {
