@@ -20,8 +20,8 @@ namespace OpenFlow_Inbuilt.UserControls
 
         private void EnumEditor_DataContextChanged(object sender, System.EventArgs e)
         {
-            this.FindControl<ComboBox>("CBox").Items = (DataContext as OpenFlowValue)?.TypeDefinition.ValueType.GetEnumNames();
-            this.FindControl<ComboBox>("CBox").SelectedItem = (DataContext as OpenFlowValue)?.Value;
+            this.FindControl<ComboBox>("CBox").Items = (DataContext as OpenFlowValue)?.TypeDefinition.ValueType.GetEnumValues();
+            //this.FindControl<ComboBox>("CBox").SelectedItem = (DataContext as OpenFlowValue)?.Value;
         }
     }
 }
