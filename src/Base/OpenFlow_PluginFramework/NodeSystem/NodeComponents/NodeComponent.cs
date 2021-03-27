@@ -21,7 +21,7 @@
 
         public virtual INode ParentNode { get; set; }
 
-        public abstract IList NodeFields { get; }
+        public abstract IList VisualComponentList { get; }
 
         public Action RemoveSelf { get; private set; }
 
@@ -42,7 +42,7 @@
 
         public void SetRemoveAction(Action<NodeComponent> removeAction)
         {
-            this._removeAction = removeAction;
+            _removeAction = removeAction;
             RemoveSelf = () =>
             {
                 removeAction(this);

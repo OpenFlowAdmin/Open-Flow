@@ -32,10 +32,12 @@
 
             host.RegisterDisplay<IControl>("DefaultDisplay", typeof(DefaultDisplay));
             host.RegisterDisplay<IControl>("StringDisplay", typeof(StringDisplay));
+            host.RegisterDisplay<IControl>("ActionDisplay", typeof(ActionDisplay));
             host.RegisterEditor<IControl>("NumberEditor", typeof(NumberEditor));
             host.RegisterEditor<IControl>("StringEditor", typeof(StringEditor));
             host.RegisterEditor<IControl>("EnumEditor", typeof(EnumEditor));
             host.RegisterEditor<IControl>("SliderEditor", typeof(SliderEditor));
+
 
             host.AddNodeToMenu<NodeAdd, NodeDifference, NodeMultiply, NodeDivide, SliderTest>("Number", "Arithmetic");
             host.AddNodeToMenu<NodeSine>("Number", "Functions");

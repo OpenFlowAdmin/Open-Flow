@@ -3,13 +3,13 @@
     using System;
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeSine : INode
     {
-        private readonly ValueField inputField = new ValueField("x").WithInput<double>(0);
-        private readonly ValueField outputField = new ValueField("sin(x)").WithOutput<double>();
+        private readonly NodeField inputField = new NodeField() { Name = "x" }.WithInput<double>(0);
+        private readonly NodeField outputField = new NodeField() { Name = "sin(x)" }.WithOutput<double>();
 
         public string NodeName => "Sine";
 

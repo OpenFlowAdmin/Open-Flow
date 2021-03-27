@@ -12,7 +12,7 @@ namespace OpenFlow_Core
 {
     public class ObservableCollectionMapper<TIn, TOut>
     {
-        private readonly ITypeMapper<TIn, TOut> _mapper;
+        protected readonly ITypeMapper<TIn, TOut> _mapper;
         private readonly ObservableCollection<TOut> _mapTo;
 
         public static ReadOnlyObservableCollection<TOut> Create(INotifyCollectionChanged collection, ITypeMapper<TIn, TOut> mapper)
@@ -22,10 +22,10 @@ namespace OpenFlow_Core
             return new ReadOnlyObservableCollection<TOut>(output);
         }
 
-        private ObservableCollectionMapper(ObservableCollection<TOut> mapTo, INotifyCollectionChanged mapFrom, ITypeMapper<TIn, TOut> mapper)
+        protected ObservableCollectionMapper(ObservableCollection<TOut> mapTo, INotifyCollectionChanged mapFrom, ITypeMapper<TIn, TOut> mapper)
         {
-            this._mapper = mapper;
-            this._mapTo = mapTo;
+            _mapper = mapper;
+            _mapTo = mapTo;
             foreach (object item in (mapFrom as IList))
             {
                 if (item is TIn itemOut)

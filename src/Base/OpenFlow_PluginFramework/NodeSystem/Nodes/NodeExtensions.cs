@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
     public static class NodeExtensions
     {

@@ -5,8 +5,9 @@
 
     public abstract class Connector
     {
-        protected Connector(ConnectionTypes connectionType)
+        protected Connector(NodeBase parent, ConnectionTypes connectionType)
         {
+            Parent = parent;
             ConnectionType = connectionType;
         }
 
@@ -20,7 +21,7 @@
 
         public bool ConnectionDirty { get; private set; }
 
-        public NodeBase Parent { get; set; }
+        public NodeBase Parent { get; }
 
         public object Tag { get; set; }
 

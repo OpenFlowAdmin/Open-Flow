@@ -1,4 +1,4 @@
-﻿namespace OpenFlow_Core.Nodes
+﻿namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 {
     using System;
     using System.Collections.Generic;
@@ -9,23 +9,24 @@
     using OpenFlow_Core.Nodes.Connectors;
     using OpenFlow_PluginFramework.NodeSystem;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.Primitives;
 
-    public class DisplayNodeField : INotifyPropertyChanged
+    public class NodeFieldDisplay : INotifyPropertyChanged, IVisualNodeComponentDisplay
     {
         private readonly NodeField _baseField;
         private Connector _input;
         private Connector _output;
         private HorizontalAlignment _alignment;
 
-        public DisplayNodeField(NodeField baseField)
+        public NodeFieldDisplay(NodeField baseField, NodeBase parentNode)
         {
+            ParentNodeBase = parentNode;
             _baseField = baseField;
             baseField.GetFlowInput().SubscribeToChange(b => RefreshInput());
             baseField.GetFlowOutput().SubscribeToChange(b => RefreshOutput());
 
-            if (baseField is ValueField valField)
+            if (baseField is NodeField valField)
             {
                 valField.ValueStoreChanged += BaseField_ValueStoreChanged;
             }
@@ -33,7 +34,7 @@
             baseField.PropertyChanged += (o, e) =>
             {
                 PropertyChanged?.Invoke(this, e);
-                if (baseField is ValueField valField && e.PropertyName == nameof(ValueField.DisplayedValue))
+                if (baseField is NodeField valField && e.PropertyName == nameof(NodeField.DisplayedValue))
                 {
                     UpdateDisplayedValue();
                 }
@@ -47,6 +48,8 @@
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public NodeBase ParentNodeBase { get; set; }
 
         public Connector Input
         {
@@ -88,7 +91,7 @@
             }
         }
 
-        public OpenFlowValue DisplayedValue { get; private set; }
+        public LaminarValue DisplayedValue { get; private set; }
 
         public UIManager UIs { get; }
 
@@ -98,14 +101,14 @@
             {
                 if (Input is not FlowConnector)
                 {
-                    Input = new FlowConnector(ConnectionTypes.Input);
+                    Input = new FlowConnector(ParentNodeBase, ConnectionTypes.Input);
                 }
             }
-            else if (_baseField is ValueField valField && valField.InputDisplayValue != null)
+            else if (_baseField is NodeField valField && valField.InputDisplayValue != null)
             {
                 if (Input is not ValueConnector)
                 {
-                    Input = new ValueConnector(valField.GetDisplayValue(ValueField.InputKey), ConnectionTypes.Input);
+                    Input = new ValueConnector(valField.GetDisplayValue(NodeField.InputKey), ParentNodeBase,  ConnectionTypes.Input);
                 }
             }
             else
@@ -121,14 +124,14 @@
             {
                 if (Output is not FlowConnector)
                 {
-                    Output = new FlowConnector(ConnectionTypes.Output);
+                    Output = new FlowConnector(ParentNodeBase, ConnectionTypes.Output);
                 }
             }
-            else if (_baseField is ValueField valField && valField.OutputDisplayValue != null)
+            else if (_baseField is NodeField valField && valField.OutputDisplayValue != null)
             {
                 if (Output is not ValueConnector)
                 {
-                    Output = new ValueConnector(valField.GetDisplayValue(ValueField.OutputKey), ConnectionTypes.Output);
+                    Output = new ValueConnector(valField.GetDisplayValue(NodeField.OutputKey), ParentNodeBase, ConnectionTypes.Output);
                 }
             }
             else
@@ -148,11 +151,11 @@
 
         private void BaseField_ValueStoreChanged(object sender, object e)
         {
-            if (e as string is ValueField.InputKey)
+            if (e as string is NodeField.InputKey)
             {
                 RefreshInput();
             }
-            else if (e as string is ValueField.OutputKey)
+            else if (e as string is NodeField.OutputKey)
             {
                 RefreshOutput();
             }
@@ -160,7 +163,7 @@
 
         private void UpdateDisplayedValue()
         {
-            DisplayedValue = (_baseField as ValueField)?.DisplayedValue ?? new OpenFlowValue() { Name = _baseField.Name };
+            DisplayedValue = (_baseField as NodeField)?.DisplayedValue ?? new LaminarValue() { Name = _baseField.Name };
             UIs.SetChildValue(DisplayedValue);
             DisplayedValue.Name = _baseField.Name;
             NotifyPropertyChanged(nameof(DisplayedValue));

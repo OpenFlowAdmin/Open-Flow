@@ -37,6 +37,8 @@
 
         public UserInterfaceRegister RegisteredDisplays { get; } = new();
 
+        public bool RegisterTypeInfo(Type type, TypeInfoRecord record) => TypeInfo.TryAdd(type, record);
+
         public TypeInfoRecord GetTypeInfo(Type type)
         {
             if (TypeInfo.TryGetValue(type, out TypeInfoRecord info))

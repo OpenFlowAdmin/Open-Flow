@@ -1,5 +1,5 @@
 ﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.NodeSystem.Nodes;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ namespace OpenFlow_Inbuilt.Nodes.Maths.Comparisons
 {
     public class Equal : INode
     {
-        private readonly ValueField inputOne = new ValueField("First Input").WithInput(0.0);
-        private readonly ValueField inputTwo = new ValueField("Second Input").WithInput(0.0);
-        private readonly ValueField outputField = new ValueField("Equal").WithOutput<bool>();
+        private readonly NodeField inputOne = new NodeField() { Name = "First Input" }.WithInput(0.0);
+        private readonly NodeField inputTwo = new NodeField() { Name = "Second Input" }.WithInput(0.0);
+        private readonly NodeField outputField = new NodeField() { Name = "Equal" }.WithOutput<bool>();
 
         public string NodeName => "Equal";
 

@@ -1,7 +1,7 @@
 ﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
     using System;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeComponentAutoCloner : NodeComponentCollection
@@ -54,16 +54,16 @@
             if (_nameRule != null)
             {
                 int index = 0;
-                foreach (NodeField field in _originalClone.NodeFields)
+                foreach (VisualNodeComponent field in _originalClone.VisualComponentList)
                 {
-                    field.Name = _nameRule(NodeFields.Count + index);
+                    field.Name = _nameRule(VisualComponentList.Count + index);
                     index++;
                 }
             }
 
             ProtectedAdd(_originalClone.Clone());//To(new ValueField("") { RemoveAction = (component) => { ProtectedRemove(component); } }));
 
-            if (NodeFields.Count > 1)
+            if (VisualComponentList.Count > 1)
             {
                 this[^2].Opacity.Value = 1.0;
             }
@@ -73,7 +73,7 @@
 
         protected override bool ProtectedRemove(NodeComponent component)
         {
-            if (NodeFields.Count <= _minimumFieldCount + 1 || component == this[^1])
+            if (VisualComponentList.Count <= _minimumFieldCount + 1 || component == this[^1])
             {
                 return false;
             }
@@ -97,7 +97,7 @@
         private void UpdateNames()
         {
             int index = 0;
-            foreach (NodeField field in NodeFields)
+            foreach (VisualNodeComponent field in VisualComponentList)
             {
                 field.Name = _nameRule(index);
                 index++;

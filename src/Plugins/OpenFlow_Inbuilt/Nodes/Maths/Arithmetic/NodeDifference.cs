@@ -2,14 +2,14 @@
 {
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeDifference : INode
     {
-        private readonly ValueField firstNumber = new ValueField("Number 1").WithInput<double>(0);
-        private readonly ValueField secondNumber = new ValueField("Number 2").WithInput<double>(0);
-        private readonly ValueField outputField = new ValueField("Difference").WithOutput<double>(0);
+        private readonly NodeField firstNumber = new NodeField() { Name = "Number 1" }.WithInput<double>();
+        private readonly NodeField secondNumber = new NodeField() { Name = "Number 2" }.WithInput<double>();
+        private readonly NodeField outputField = new NodeField() { Name = "Difference" }.WithOutput<double>();
 
         public string NodeName => "Difference";
 

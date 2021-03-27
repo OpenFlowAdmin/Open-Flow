@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
     public class Node_Convert_To_String : INode
     {
-        private readonly ValueField converterField = new ValueField("Text")
+        private readonly NodeField converterField = new NodeField("Text")
             .WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider())
             .WithOutput<string>();
 

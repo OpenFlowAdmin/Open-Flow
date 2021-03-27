@@ -1,22 +1,21 @@
-﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields
+﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
     using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
-    public partial class ValueField : NodeField
+    public partial class NodeField : VisualNodeComponent
     {
         public const string InputKey = "Input";
         public const string OutputKey = "Output";
 
-        private readonly Dictionary<object, OpenFlowValue> _valueStore = new();
+        private readonly Dictionary<object, LaminarValue> _valueStore = new();
 
-        public ValueField(string name, object displayValueKey = null) : base(name)
+        public NodeField(object displayValueKey = null) : base()
         {
             SetDisplayedValue(displayValueKey);
         }
@@ -31,7 +30,7 @@
             set
             {
                 base.Name = value;
-                foreach (OpenFlowValue storedValue in _valueStore.Values)
+                foreach (LaminarValue storedValue in _valueStore.Values)
                 {
                     storedValue.Name = base.Name;
                 }
@@ -52,7 +51,7 @@
                 {
                     RemoveValue(key);
                 }
-                else if (_valueStore.TryGetValue(key, out OpenFlowValue OFVal))
+                else if (_valueStore.TryGetValue(key, out LaminarValue OFVal))
                 {
                     if (OFVal.CanSetValue(value))
                     {
@@ -71,7 +70,7 @@
             }
         }
 
-        public OpenFlowValue DisplayedValue { get; private set; }
+        public LaminarValue DisplayedValue { get; private set; }
 
         private void SetDisplayedValue(object displayValueKey)
         {
@@ -81,10 +80,10 @@
 
         private void AddValue(object key, ITypeDefinitionProvider typeDefs, bool isUserEditable)
         {
-            AddValue(key, new OpenFlowValue(typeDefs) { IsUserEditable = isUserEditable });
+            AddValue(key, new LaminarValue(typeDefs) { IsUserEditable = isUserEditable });
         }
 
-        public void AddValue(object key, OpenFlowValue newVal)
+        public void AddValue(object key, LaminarValue newVal)
         {
             _valueStore.Add(key, newVal);
             newVal.PropertyChanged += ChildValue_PropertyChanged;
@@ -97,7 +96,7 @@
 
         private bool RemoveValue(object key)
         {
-            if (_valueStore.TryGetValue(key, out OpenFlowValue val))
+            if (_valueStore.TryGetValue(key, out LaminarValue val))
             {
                 val.PropertyChanged -= ChildValue_PropertyChanged;
                 _valueStore.Remove(key);
@@ -109,35 +108,35 @@
 
         private void ChildValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(OpenFlowValue.Value))
+            if (e.PropertyName == nameof(LaminarValue.Value))
             {
                 ParentNode.TriggerEvaluate();
-                AnyValueChanged?.Invoke(this, (sender as OpenFlowValue)?.Value);
+                AnyValueChanged?.Invoke(this, (sender as LaminarValue)?.Value);
                 NotifyPropertyChanged("Child Value");
             }
         }
 
-        public override NodeComponent Clone() => CloneTo(new ValueField(Name));
+        public override NodeComponent Clone() => CloneTo(new NodeField());
 
-        protected override ValueField CloneTo(NodeComponent nodeField)
+        protected override NodeField CloneTo(NodeComponent nodeField)
         {
             base.CloneTo(nodeField);
-            foreach (KeyValuePair<object, OpenFlowValue> kvp in _valueStore)
+            foreach (KeyValuePair<object, LaminarValue> kvp in _valueStore)
             {
-                (nodeField as ValueField).AddValue(kvp.Key, kvp.Value.Clone());
+                (nodeField as NodeField).AddValue(kvp.Key, kvp.Value.Clone());
             }
 
-            return nodeField as ValueField;
+            return (nodeField as NodeField).WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput()); ;
         }
 
-        public OpenFlowValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out OpenFlowValue value) ? value : null;
+        public LaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out LaminarValue value) ? value : null;
     }
 
-    public partial class ValueField
+    public partial class NodeField
     {
-        public OpenFlowValue InputDisplayValue => GetDisplayValue(InputKey);
+        public LaminarValue InputDisplayValue => GetDisplayValue(InputKey);
 
-        public OpenFlowValue OutputDisplayValue => GetDisplayValue(OutputKey);
+        public LaminarValue OutputDisplayValue => GetDisplayValue(OutputKey);
 
         public object Input
         {
@@ -151,23 +150,23 @@
             set => this[OutputKey] = value;
         }
 
-        public ValueField WithValue<T>(object key, bool isUserEditable, T value = default, string editorName = null, string displayName = null)
+        public NodeField WithValue<T>(object key, bool isUserEditable, T value = default, string editorName = null, string displayName = null)
         {
             return WithTypeProvider(key, new TypeDefinition<T>() { DefaultValue = value, EditorName = editorName, DisplayName = displayName }, isUserEditable);
         }
 
-        public ValueField WithTypeProvider(object key, ITypeDefinitionProvider typeDefinitions, bool isUserEditable)
+        public NodeField WithTypeProvider(object key, ITypeDefinitionProvider typeDefinitions, bool isUserEditable)
         {
             AddValue(key, typeDefinitions, isUserEditable);
             return this;
         }
 
-        public ValueField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(InputKey, true, initialValue, editorName, displayName);
+        public NodeField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(InputKey, true, initialValue, editorName, displayName);
 
-        public ValueField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(InputKey, typeDefinition, true);
+        public NodeField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(InputKey, typeDefinition, true);
 
-        public ValueField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(OutputKey, false, initialValue, editorName, displayName);
+        public NodeField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(OutputKey, false, initialValue, editorName, displayName);
 
-        public ValueField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(OutputKey, typeDefinition, false);
+        public NodeField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(OutputKey, typeDefinition, false);
     }
 }

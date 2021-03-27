@@ -2,14 +2,14 @@
 {
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeAdd : INode
     {
-        private readonly NodeComponentAutoCloner addFields = new(new ValueField("Number").WithInput(0.0), 1, index => $"Number {index + 1}");
-        private readonly ValueField totalField = new ValueField("Total").WithOutput<double>();
+        private readonly NodeComponentAutoCloner addFields = new(new NodeField() { Name = "Number" }.WithInput(0.0), 1, index => $"Number {index + 1}");
+        private readonly NodeField totalField = new NodeField() { Name = "Total" }.WithOutput<double>();
 
         public string NodeName { get; } = "Add";
 
@@ -26,7 +26,7 @@
         {
             double total = 0;
 
-            foreach (ValueField field in addFields)
+            foreach (NodeField field in addFields)
             {
                 total += (double)field.Input;
             }

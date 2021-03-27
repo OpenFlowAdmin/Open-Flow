@@ -3,7 +3,7 @@
   xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:av ="using:Avalonia.Controls.Templates"
   xmlns:nds = "clr-namespace:OpenFlow_Avalonia.NodeDisplaySystem;assembly=OpenFlow_Avalonia"
-  xmlns:cn="clr-namespace:OpenFlow_Core.Nodes;assembly=OpenFlow_Core"
+  xmlns:displays="clr-namespace:OpenFlow_Core.Nodes.VisualNodeComponentDisplays;assembly=OpenFlow_Core"
   xmlns:conv = "clr-namespace:OpenFlow_Avalonia.Converters;assembly=OpenFlow_Avalonia">
 
   <Style Selector="nds|NodeDisplay">
@@ -20,6 +20,60 @@
                 CornerRadius="8"
                 BorderThickness="{DynamicResource ThemeBorderThickness}"
                 ClipToBounds="False">
+		<Border.DataTemplates>
+
+			<DataTemplate DataType="displays:NodeFieldDisplay">
+				<Panel HorizontalAlignment="Stretch" Opacity="{Binding Opacity.Value}">
+					<Panel.Styles>
+						<Style Selector="Path.Connector">
+							<Setter Property="Tag" Value="{Binding}"/>
+							<Setter Property="IsVisible" Value="{Binding Converter={StaticResource IsNotNull}, FallbackValue=false}"/>
+							<Setter Property="Fill" Value="{Binding ColourHex}"/>
+							<Setter Property="Name" Value="{Binding Index}"/>
+						</Style>
+					</Panel.Styles>
+					<Path Classes="Connector"
+						DataContext="{Binding Input}"
+						HorizontalAlignment="Left">
+						<Path.RenderTransform>
+							<TranslateTransform X="-12"/>
+						</Path.RenderTransform>
+					</Path>
+					<Path Classes="Connector"
+						DataContext="{Binding Output}"
+						HorizontalAlignment="Right">
+						<Path.RenderTransform>
+							<TranslateTransform X="15"/>
+						</Path.RenderTransform>
+					</Path>
+					<Decorator
+						HorizontalAlignment="{Binding Alignment, Converter={StaticResource AlignmentConverter}}"
+						Child="{Binding UIs[Avalonia.Controls.IControl].Observable}"
+						VerticalAlignment="Center"/>
+					<DockPanel>
+						<Button Command="{Binding RemoveSelf}"
+								Content="-"
+								IsVisible="{Binding RemoveSelf, Converter={StaticResource IsNotNull}}"
+								VerticalAlignment="Center"
+								DockPanel.Dock="Right"
+								HorizontalAlignment="Right"/>
+					</DockPanel>
+				</Panel>
+			</DataTemplate>
+
+			<DataTemplate DataType="displays:NodeLabelDisplay">
+				<TextBlock Text="{Binding LabelText}" 
+						   Opacity="{Binding Opacity.Value}"
+						   HorizontalAlignment="Center"/>
+			</DataTemplate>
+
+			<DataTemplate DataType="displays:MajorSeperator">
+				<Decorator Padding="10,0">
+					<Separator Width="{Binding $parent.Width}" Height="2" Background="{DynamicResource ThemeBorderLowBrush} " BorderBrush="White"/>
+				</Decorator>
+			</DataTemplate>
+
+		</Border.DataTemplates>
           <StackPanel ClipToBounds="False">
             <TextBlock Text="{Binding CoreNode.Name, RelativeSource={RelativeSource TemplatedParent}}"
                        VerticalAlignment="Center"
@@ -32,49 +86,6 @@
                     MinWidth="150"
                     ClipToBounds="False"
                     CornerRadius="0,0,6,6">
-              <Border.DataTemplates>
-                
-                <DataTemplate DataType="cn:DisplayNodeField">
-                  <Panel HorizontalAlignment="Stretch" Opacity="{Binding Opacity.Value}">
-					  <Panel.Styles>
-						  <Style Selector="Path.Connector">
-							  <Setter Property="Tag" Value="{Binding}"/>
-							  <Setter Property="IsVisible" Value="{Binding Converter={StaticResource IsNotNull}, FallbackValue=false}"/>
-							  <Setter Property="Fill" Value="{Binding ColourHex}"/>
-							  <Setter Property="Name" Value="{Binding Index}"/>
-						  </Style>
-					  </Panel.Styles>
-					  <Path Classes="Connector"
-							DataContext="{Binding Input}"
-							HorizontalAlignment="Left">
-						  <Path.RenderTransform>
-							  <TranslateTransform X="-12"/>
-						  </Path.RenderTransform>
-					  </Path>
-					  <Path Classes="Connector"
-							DataContext="{Binding Output}"
-							HorizontalAlignment="Right">
-						  <Path.RenderTransform>
-							  <TranslateTransform X="15"/>
-						  </Path.RenderTransform>
-					  </Path>
-					  <Decorator
-	                      HorizontalAlignment="{Binding Alignment, Converter={StaticResource AlignmentConverter}}"
-	                      Margin="8,4"
-	                      Child="{Binding UIs[Avalonia.Controls.IControl].Observable}"
-	                      VerticalAlignment="Center"/>
-					  <DockPanel>
-						  <Button Command="{Binding RemoveSelf}" 
-								  Content="-"
-								  IsVisible="{Binding RemoveSelf, Converter={StaticResource IsNotNull}}"
-								  VerticalAlignment="Center"
-								  DockPanel.Dock="Right"
-								  HorizontalAlignment="Right"/>
-					  </DockPanel>
-                  </Panel>
-                </DataTemplate>
-                
-              </Border.DataTemplates>
               <ItemsPresenter Name="PART_FieldContainer"
 				              Classes="NodeDisplay"
                               Items="{Binding CoreNode.Fields, RelativeSource={RelativeSource TemplatedParent}}"/>

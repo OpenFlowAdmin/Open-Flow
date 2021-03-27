@@ -6,8 +6,8 @@
 
     public class ValueConnector : Connector, INotifyPropertyChanged
     {
-        public ValueConnector(OpenFlowValue displayValue, ConnectionTypes connectionType)
-            : base(connectionType)
+        public ValueConnector(LaminarValue displayValue, NodeBase parent, ConnectionTypes connectionType)
+            : base(parent, connectionType)
         {
             DisplayValue = displayValue;
             DisplayValue.PropertyChanged += (o, e) =>
@@ -21,7 +21,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public OpenFlowValue DisplayValue { get; }
+        public LaminarValue DisplayValue { get; }
 
         public override bool IsExclusiveConnection => ConnectionType == ConnectionTypes.Input;
 
@@ -33,7 +33,7 @@
                     return "#FFFFFF";
                 }
 
-                return Instance.Current.TypeInfo[DisplayValue.TypeDefinition.ValueType].HexColour;
+                return Instance.Current.GetTypeInfo(DisplayValue.TypeDefinition.ValueType).HexColour;
             }
         }
 

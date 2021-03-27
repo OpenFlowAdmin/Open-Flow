@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
     public abstract class FlowNode : INode
     {
-        private readonly NodeField _flowField = new NodeField("Flow").WithFlowInput().WithFlowOutput();
+        private readonly NodeField _flowField = new NodeField() { Name = "Flow" }.WithFlowInput().WithFlowOutput();
 
         public FlowNode()
         {

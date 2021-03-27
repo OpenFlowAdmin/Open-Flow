@@ -132,16 +132,7 @@
             AddNodeToMenu<TNode8>(menuItemName, subItemName);
         }
 
-        public bool RegisterType<T>(string hexColour, string userFriendlyName, T defaultValue = default, string defaultEditorName = null, string defaultDisplayName = null)
-        {
-            if (Instance.Current.TypeInfo.ContainsKey(typeof(T)))
-            {
-                return false;
-            }
-
-            Instance.Current.TypeInfo.Add(typeof(T), new Instance.TypeInfoRecord(defaultValue, hexColour, defaultDisplayName, defaultEditorName, userFriendlyName));
-            return true;
-        }
+        public bool RegisterType<T>(string hexColour, string userFriendlyName, T defaultValue = default, string defaultEditorName = null, string defaultDisplayName = null) => Instance.Current.RegisterTypeInfo(typeof(T), new Instance.TypeInfoRecord(defaultValue, hexColour, defaultDisplayName, defaultEditorName, userFriendlyName));
 
         public bool TryAddTypeConverter<TInput, TOutput, TConverter>() where TConverter : INode
         {

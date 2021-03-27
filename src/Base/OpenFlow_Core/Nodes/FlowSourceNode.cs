@@ -3,22 +3,23 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using OpenFlow_Core.Nodes.Connectors;
+    using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class FlowSourceNode : INode
     {
-        private readonly NodeField _sourceField = new ValueField("Manual Trigger").WithValue<Action>("Displayed", false, () => { Debug.WriteLine("Button pressy pressy"); }).WithFlowOutput();
+        private readonly NodeField _sourceField = new NodeField() { Name = "Manual Trigger" }.WithValue<Action>("Displayed", false).WithFlowOutput() as NodeField;
+        private NodeBase _parentNodeBase;
 
         public FlowSourceNode()
         {
-            Debug.WriteLine((_sourceField as ValueField)?.GetDisplayValue("Displayed").IsUserEditable);
-            Debug.WriteLine((_sourceField as ValueField)?.GetDisplayValue("Displayed").TypeDefinition.DisplayName);
-            // sourceField["Trigger Button"] = new Action(() => { });
+            this.SetSpecialField(SpecialFieldFlags.FlowOutput, _sourceField);
         }
 
-        public NodeField FlowOutField => _sourceField;
+        public VisualNodeComponent FlowOutField => _sourceField;
 
         public string NodeName => "Flow Source";
 
@@ -32,6 +33,18 @@
 
         public void Evaluate()
         {
+        }
+
+        public void SetParentNode(NodeBase parent)
+        {
+            _parentNodeBase = parent;
+            _sourceField["Displayed"] = (Action)(() =>
+            {
+                if (_parentNodeBase.TryGetSpecialField(SpecialFieldFlags.FlowOutput, out NodeFieldDisplay field))
+                {
+                    (field.Output as FlowConnector).Activate();
+                }
+            });
         }
     }
 }

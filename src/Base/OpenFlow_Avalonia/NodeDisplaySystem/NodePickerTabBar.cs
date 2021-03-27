@@ -17,7 +17,6 @@
 
         public NodePickerTabBar()
         {
-            App.Instance.LoadedNodeManager.AddNodeToCatagory<FlowSourceNode>("Flow Control");
             CurrentDisplayNodes = App.Instance.LoadedNodeManager.LoadedNodes.FirstGroup();
             SelectItem = ReactiveCommand.Create<List<NodeBase>>(nodes =>
             {

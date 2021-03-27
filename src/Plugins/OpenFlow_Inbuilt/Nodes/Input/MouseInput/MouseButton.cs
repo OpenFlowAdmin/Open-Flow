@@ -1,5 +1,5 @@
 ﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.NodeSystem.Nodes;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace OpenFlow_Inbuilt.Nodes.Input.MouseInput
 {
     public class MouseButton : INode
     {
-        private readonly ValueField mouseButtonOutput = new ValueField("Mouse Button").WithValue<MouseButtonEnum>("Display", true).WithOutput<MouseButtonEnum>();
+        private readonly NodeField mouseButtonOutput = new NodeField() { Name = "Mouse Button" }.WithValue<MouseButtonEnum>("Display", true).WithOutput<MouseButtonEnum>();
 
         public string NodeName => "Mouse Button";
 

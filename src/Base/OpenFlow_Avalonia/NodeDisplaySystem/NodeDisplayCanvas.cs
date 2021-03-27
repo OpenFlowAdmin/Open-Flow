@@ -26,6 +26,11 @@
 
         public NodeDisplayCanvas()
         {
+            foreach (NodeBase node in manager.Nodes)
+            {
+                NodeAdded(node);
+            }
+
             manager.Nodes.CollectionChanged += Nodes_CollectionChanged;
         }
 
@@ -195,16 +200,21 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (object newItem in e.NewItems)
                     {
-                        NodeBase newNode = newItem as NodeBase;
-                        NodeDisplay newDisplay = new NodeDisplay() { CoreNode = newNode };
-                        SetLeft(newDisplay, newNode.X);
-                        SetTop(newDisplay, newNode.Y);
-                        newDisplay.PointerPressed += Node_PointerPressed;
-                        Children.Add(newDisplay);
+                        NodeAdded(newItem);
                     }
 
                     break;
             }
+        }
+
+        private void NodeAdded(object newItem)
+        {
+            NodeBase newNode = newItem as NodeBase;
+            NodeDisplay newDisplay = new NodeDisplay() { CoreNode = newNode };
+            SetLeft(newDisplay, newNode.X);
+            SetTop(newDisplay, newNode.Y);
+            newDisplay.PointerPressed += Node_PointerPressed;
+            Children.Add(newDisplay);
         }
 
         private void Node_PointerPressed(object sender, PointerPressedEventArgs e)

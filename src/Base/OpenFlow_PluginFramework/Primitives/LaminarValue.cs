@@ -8,12 +8,12 @@
     /// <summary>
     /// Stores a well-constrained value by managing a list of <see cref="ITypeDefinition"/>
     /// </summary>
-    public class OpenFlowValue : INotifyPropertyChanged
+    public class LaminarValue : INotifyPropertyChanged
     {
         private readonly ITypeDefinitionProvider _typeDefinitionProvider;
         private object _value;
         private bool _isEditable;
-        private OpenFlowValue _driver; 
+        private LaminarValue _driver; 
         private ITypeDefinition _currentTypeDefinition;
         private string _name;
 
@@ -21,13 +21,13 @@
         /// Creates a new instance of the OpenFlowValue class
         /// </summary>
         /// <param name="typeDefinitions">A list of possible <see cref="ITypeDefinition"/> which defines what values are allowed</param>
-        public OpenFlowValue(ITypeDefinitionProvider typeDefinitionProvider)
+        public LaminarValue(ITypeDefinitionProvider typeDefinitionProvider)
         {
             this._typeDefinitionProvider = typeDefinitionProvider;
             TypeDefinition = typeDefinitionProvider.DefaultTypeDefiniton;
         }
 
-        public OpenFlowValue()
+        public LaminarValue()
         {
             _typeDefinitionProvider = new AutoTypeDefinitionProvider();
         }
@@ -103,7 +103,7 @@
         /// <summary>
         /// If not null, the <see cref="Value"/> of the Driver will determine the value of this OpenFlowValue
         /// </summary>
-        public OpenFlowValue Driver
+        public LaminarValue Driver
         {
             get => _driver;
             set
@@ -153,7 +153,7 @@
         /// Clones this OpenFlowValue
         /// </summary>
         /// <returns>A new OpenFlowValue with the same properties as this one</returns>
-        public OpenFlowValue Clone() => new(_typeDefinitionProvider)
+        public LaminarValue Clone() => new(_typeDefinitionProvider)
         {
             Value = Value,
             IsUserEditable = IsUserEditable,

@@ -1,11 +1,11 @@
-﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields
+﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
     using System;
     using System.Collections.Generic;
 
     public static class FieldFlowHandler
     {
-        private static readonly Dictionary<NodeField, FlowState> FlowStates = new();
+        private static readonly Dictionary<VisualNodeComponent, FlowState> FlowStates = new();
 
         public static NodeField WithFlowInput(this NodeField field, bool inputState = true)
         {

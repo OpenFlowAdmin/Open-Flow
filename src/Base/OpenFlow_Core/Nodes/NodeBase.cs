@@ -8,9 +8,10 @@
     using System.Diagnostics;
     using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
 
     public class NodeBase
     {
@@ -21,13 +22,13 @@
 
         public NodeBase(INode baseNode)
         {
-            this._baseNode = baseNode;
+            _baseNode = baseNode;
             _fieldSection = new NodeComponentCollection(baseNode.Fields)
             {
                 ParentNode = baseNode
             };
 
-            Fields = ObservableCollectionMapper<NodeField, DisplayNodeField>.Create(_fieldSection.NodeFields, new NodeFieldMapper());
+            Fields = ObservableCollectionMapper<VisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualComponentList, new VisualNodeComponentMapper(this));
 
             baseNode.SubscribeToEvaluate(TryEvaluate);
 
@@ -57,15 +58,15 @@
 
         public string Name => _baseNode.NodeName;
 
-        public ReadOnlyObservableCollection<DisplayNodeField> Fields { get; }
+        public ReadOnlyObservableCollection<IVisualNodeComponentDisplay> Fields { get; }
 
         public NodeBase DuplicateNode() => new((INode)Activator.CreateInstance(_baseNode.GetType()));
 
-        public bool TryGetSpecialField(SpecialFieldFlags flag, out DisplayNodeField field)
+        public bool TryGetSpecialField(SpecialFieldFlags flag, out NodeFieldDisplay field)
         {
             if (_baseNode.TryGetSpecialField(flag, out NodeField baseField))
             {
-                field = Fields[_fieldSection.NodeFields.IndexOf(baseField)];
+                field = Fields[_fieldSection.VisualComponentList.IndexOf(baseField)] as NodeFieldDisplay;
                 return true;
             }
             else
@@ -96,7 +97,7 @@
 
         public void DeepUpdate()
         {
-            foreach (DisplayNodeField field in Fields)
+            foreach (NodeFieldDisplay field in Fields)
             {
                 if (field.Input?.ExclusiveConnection != null)
                 {

@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using OpenFlow_Core.Nodes.Connectors;
+    using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeTree
@@ -12,6 +13,15 @@
         private readonly Dictionary<Connector, Connector> _connections = new();
 
         public ObservableCollection<NodeBase> Nodes { get; private set; } = new();
+
+        public NodeTree()
+        {
+            FlowSourceNode flowSourceNode = new FlowSourceNode();
+            NodeBase flowSourceNodeBase = new NodeBase(flowSourceNode);
+            flowSourceNode.SetParentNode(flowSourceNodeBase);
+            AddNode(flowSourceNodeBase);
+            // I was drunk when I wrote this constructor it's probably dumb
+        }
 
         public bool TryConnectFields(Connector field1, Connector field2)
         {
@@ -28,7 +38,7 @@
                     out Type converterType))
                 {
                     NodeBase newNode = new((INode)Activator.CreateInstance(converterType));
-                    if (newNode.TryGetSpecialField(SpecialFieldFlags.ConvertInput, out DisplayNodeField convertInput) && newNode.TryGetSpecialField(SpecialFieldFlags.ConvertOutput, out DisplayNodeField convertOutput) &&
+                    if (newNode.TryGetSpecialField(SpecialFieldFlags.ConvertInput, out NodeFieldDisplay convertInput) && newNode.TryGetSpecialField(SpecialFieldFlags.ConvertOutput, out NodeFieldDisplay convertOutput) &&
                         NodeConnection.Construct(newConnection.Output, convertInput.Input, out NodeConnection firstConnection) && SimpleConnect(firstConnection) &&
                         NodeConnection.Construct(convertOutput.Output, newConnection.Input, out NodeConnection secondConnection) && SimpleConnect(secondConnection))
                     {
@@ -59,6 +69,7 @@
 
         public void AddNode(NodeBase newNode)
         {
+            Debug.WriteLine("Node Added");
             Nodes.Add(newNode);
         }
 

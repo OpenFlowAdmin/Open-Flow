@@ -30,7 +30,7 @@
             }
 
             _childComponents = new ObservableCollection<NodeComponent>(childComponents);
-            NodeFields = new NodeFieldList(_childComponents);
+            VisualComponentList = new NodeFieldList(_childComponents);
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
@@ -46,7 +46,7 @@
             }
         }
 
-        public override NodeFieldList NodeFields { get; }
+        public override NodeFieldList VisualComponentList { get; }
 
         public override INode ParentNode
         {

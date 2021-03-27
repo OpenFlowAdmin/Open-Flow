@@ -1,4 +1,4 @@
-﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Fields;
+﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
-    public class NodeFieldList : INotifyCollectionChanged, IList, IList<NodeField>
+    public class NodeFieldList : INotifyCollectionChanged, IList, IList<VisualNodeComponent>
     {
         private readonly ObservableCollection<NodeComponent> _components;
 
@@ -32,7 +32,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public object SyncRoot => false;
 
-        NodeField IList<NodeField>.this[int index] { get => this[index] as NodeField; set => this[index] = value; }
+        VisualNodeComponent IList<VisualNodeComponent>.this[int index] { get => this[index] as VisualNodeComponent; set => this[index] = value; }
 
         public object this[int index] 
         { 
@@ -43,7 +43,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 {
                     throw new IndexOutOfRangeException();
                 }
-                IEnumerator<NodeField> enumer = GetEnumerator();
+                IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
                 for (int i = 0; i < index; i++)
                 {
                     enumer.MoveNext();
@@ -56,7 +56,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public IEnumerator<NodeField> GetEnumerator()
+        public IEnumerator<VisualNodeComponent> GetEnumerator()
         {
             foreach (NodeComponent component in _components)
             {
@@ -65,7 +65,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                     continue;
                 }
 
-                foreach (NodeField field in component.NodeFields)
+                foreach (VisualNodeComponent field in component.VisualComponentList)
                 {
                     yield return field;
                 }
@@ -79,36 +79,23 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             return IndexOf(value) != -1;
         }
 
-        public bool Contains(NodeField item) => Contains(item);
+        public bool Contains(VisualNodeComponent item) => Contains(item);
 
-        public int IndexOf(object value)
-        {
-            IEnumerator<NodeField> enumer = GetEnumerator();
-            for (int i = 0; i < Count; i++)
-            {
-                enumer.MoveNext();
-                if (enumer.Current == value)
-                {
-                    return i;
-                }
-            }
+        public int IndexOf(object value) => GetIndexOf(value);
 
-            return -1;
-        }
-
-        public int IndexOf(NodeField item) => IndexOf(item);
+        public int IndexOf(VisualNodeComponent item) => GetIndexOf(item);
 
         public void CopyTo(Array array, int index)
         {
             throw new NotImplementedException();
         }
 
-        public void CopyTo(NodeField[] array, int arrayIndex)
+        public void CopyTo(VisualNodeComponent[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
-        public bool Remove(NodeField item) => throw new NotSupportedException();
+        public bool Remove(VisualNodeComponent item) => throw new NotSupportedException();
 
         public void Insert(int index, object value) => throw new NotSupportedException();
 
@@ -120,16 +107,16 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public void Clear() => throw new NotSupportedException();
 
-        public void Insert(int index, NodeField item) => throw new NotSupportedException();
+        public void Insert(int index, VisualNodeComponent item) => throw new NotSupportedException();
 
-        public void Add(NodeField item) => throw new NotSupportedException();
+        public void Add(VisualNodeComponent item) => throw new NotSupportedException();
 
         private int GetLinearIndexFromNested(int nested)
         {
             int output = 0;
             for (int i = 0; i < nested; i++)
             {
-                output += _components[i].NodeFields.Count;
+                output += _components[i].VisualComponentList.Count;
             }
             return output;
         }
@@ -165,11 +152,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             {
                 if (component is NodeComponentCollection componentCollection)
                 {
-                    componentCollection.NodeFields.CollectionChanged -= Child_NodeFieldsList_Changed;
+                    componentCollection.VisualComponentList.CollectionChanged -= Child_NodeFieldsList_Changed;
                 }
 
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.NodeFields, GetLinearIndexFromNested(index)));
-                Count -= component.NodeFields.Count;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.VisualComponentList, GetLinearIndexFromNested(index)));
+                Count -= component.VisualComponentList.Count;
                 component.VisibilityChanged -= NodePart_VisibilityChanged;
             }
         }
@@ -180,11 +167,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             {
                 if (component is NodeComponentCollection componentCollection)
                 {
-                    componentCollection.NodeFields.CollectionChanged += Child_NodeFieldsList_Changed;
+                    componentCollection.VisualComponentList.CollectionChanged += Child_NodeFieldsList_Changed;
                 }
 
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.NodeFields, GetLinearIndexFromNested(index)));
-                Count += component.NodeFields.Count;
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.VisualComponentList, GetLinearIndexFromNested(index)));
+                Count += component.VisualComponentList.Count;
                 component.VisibilityChanged += NodePart_VisibilityChanged;
             }
         }
@@ -195,13 +182,13 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             {
                 if (e)
                 {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.NodeFields, GetLinearIndexFromNested(_components.IndexOf(component))));
-                    Count += component.NodeFields.Count;
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.VisualComponentList, GetLinearIndexFromNested(_components.IndexOf(component))));
+                    Count += component.VisualComponentList.Count;
                 }
                 else
                 {
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.NodeFields, GetLinearIndexFromNested(_components.IndexOf(component))));
-                    Count -= component.NodeFields.Count;
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.VisualComponentList, GetLinearIndexFromNested(_components.IndexOf(component))));
+                    Count -= component.VisualComponentList.Count;
                 }
             }
         }
@@ -223,9 +210,9 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
             int i = 0;
             int startingIndex = 0;
-            while (i < _components.Count && (_components[i] as NodeComponentCollection)?.NodeFields != sender)
+            while (i < _components.Count && (_components[i] as NodeComponentCollection)?.VisualComponentList != sender)
             {
-                startingIndex += _components[i].NodeFields.Count;
+                startingIndex += _components[i].VisualComponentList.Count;
                 i++;
             }
 
@@ -244,6 +231,21 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 NotifyCollectionChangedAction.Move => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, newStartingIndex, oldStartingIndex),
                 _ => new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
             };
+        }
+
+        private int GetIndexOf(object value)
+        {
+            IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
+            for (int i = 0; i < Count; i++)
+            {
+                enumer.MoveNext();
+                if (enumer.Current == value)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
