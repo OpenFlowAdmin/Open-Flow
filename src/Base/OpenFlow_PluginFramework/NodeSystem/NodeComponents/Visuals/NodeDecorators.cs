@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
-    public class Decorators : VisualNodeComponent
+    public class NodeDecorators : VisualNodeComponent
     {
-        private Decorators(DecoratorType type)
+        private NodeDecorators(DecoratorType type)
         {
             Type = type;
         }
 
         public DecoratorType Type { get; }
 
-        public static Decorators MajorSeperator { get; } = new Decorators(DecoratorType.MajorSeperator);
+        public static NodeDecorators MajorSeperator { get; } = new NodeDecorators(DecoratorType.MajorSeperator);
 
-        public static Decorators MinorSeperator { get; } = new Decorators(DecoratorType.MinorSeperator);
+        public static NodeDecorators MinorSeperator { get; } = new NodeDecorators(DecoratorType.MinorSeperator);
 
         public enum DecoratorType
         {

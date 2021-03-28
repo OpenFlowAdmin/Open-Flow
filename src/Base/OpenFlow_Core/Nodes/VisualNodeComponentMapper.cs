@@ -29,13 +29,13 @@ namespace OpenFlow_Core.Nodes
                 return new NodeLabelDisplay((NodeLabel)toMap);
             }
 
-            if (toMap is Decorators decorator)
+            if (toMap is NodeDecorators decorator)
             {
                 switch (decorator.Type)
                 {
-                    case Decorators.DecoratorType.MajorSeperator:
+                    case NodeDecorators.DecoratorType.MajorSeperator:
                         return new MajorSeperator();
-                    case Decorators.DecoratorType.MinorSeperator:
+                    case NodeDecorators.DecoratorType.MinorSeperator:
                         return new MinorSeperator();
                 }
             }
