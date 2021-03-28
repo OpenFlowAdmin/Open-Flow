@@ -58,7 +58,7 @@
         {
             foreach (VisualNodeComponent field in flowOutputs.VisualComponentList)
             {
-                if (field is NodeField valueField && valueField.DisplayedValue.Value.Equals(valueInput.Input))
+                if ( field is NodeField valueField && valueField.DisplayedValue != null && valueField.DisplayedValue.Value.Equals(valueInput.Input))
                 {
                     this.SetSpecialField(SpecialFieldFlags.FlowOutput, valueField);
                     return;

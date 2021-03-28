@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
     public static class NodeExtensions

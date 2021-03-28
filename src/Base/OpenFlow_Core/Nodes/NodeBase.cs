@@ -64,7 +64,7 @@
 
         public bool TryGetSpecialField(SpecialFieldFlags flag, out NodeFieldDisplay field)
         {
-            if (_baseNode.TryGetSpecialField(flag, out NodeField baseField))
+            if (_baseNode.TryGetSpecialField(flag, out NodeField baseField) && _fieldSection.Contains(baseField))
             {
                 field = Fields[_fieldSection.VisualComponentList.IndexOf(baseField)] as NodeFieldDisplay;
                 return true;
@@ -97,13 +97,14 @@
 
         public void DeepUpdate()
         {
-            foreach (NodeFieldDisplay field in Fields)
+            foreach (IVisualNodeComponentDisplay field in Fields)
             {
-                if (field.Input?.ExclusiveConnection != null)
+                if (field is NodeFieldDisplay nodeField && nodeField.Input?.ExclusiveConnection != null)
                 {
-                    field.Input.ExclusiveConnection.Parent.DeepUpdate();
+                    nodeField.Input.ExclusiveConnection.Parent.DeepUpdate();
                 }
             }
+            TryEvaluate();
         }
     }
 }

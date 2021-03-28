@@ -36,14 +36,14 @@
 						DataContext="{Binding Input}"
 						HorizontalAlignment="Left">
 						<Path.RenderTransform>
-							<TranslateTransform X="-12"/>
+							<TranslateTransform X="-17"/>
 						</Path.RenderTransform>
 					</Path>
 					<Path Classes="Connector"
 						DataContext="{Binding Output}"
 						HorizontalAlignment="Right">
 						<Path.RenderTransform>
-							<TranslateTransform X="15"/>
+							<TranslateTransform X="20"/>
 						</Path.RenderTransform>
 					</Path>
 					<Decorator
@@ -99,6 +99,7 @@
   <Style Selector="ItemsPresenter.NodeDisplay">
     <Setter Property="ClipToBounds" Value="False"/>
 	<Setter Property="HorizontalAlignment" Value="Stretch"/>
+	<Setter Property="Margin" Value="5,0"/>
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
         <StackPanel Spacing="6"/>
