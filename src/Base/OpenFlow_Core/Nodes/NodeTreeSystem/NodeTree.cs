@@ -16,11 +16,10 @@
 
         public NodeTree()
         {
-            FlowSourceNode flowSourceNode = new FlowSourceNode();
-            NodeBase flowSourceNodeBase = new NodeBase(flowSourceNode);
+            FlowSourceNode flowSourceNode = new();
+            NodeBase flowSourceNodeBase = new(flowSourceNode);
             flowSourceNode.SetParentNode(flowSourceNodeBase);
             AddNode(flowSourceNodeBase);
-            // I was drunk when I wrote this constructor it's probably dumb
         }
 
         public bool TryConnectFields(Connector field1, Connector field2)

@@ -10,7 +10,7 @@ namespace OpenFlow_Core.Nodes
 {
     class VisualNodeComponentMapper : ITypeMapper<VisualNodeComponent, IVisualNodeComponentDisplay>
     {
-        private NodeBase _parentNode;
+        private readonly NodeBase _parentNode;
 
         public VisualNodeComponentMapper(NodeBase parentNode)
         {

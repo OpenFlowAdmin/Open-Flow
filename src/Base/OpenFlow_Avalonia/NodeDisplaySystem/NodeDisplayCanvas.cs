@@ -16,9 +16,9 @@
 
     public class NodeDisplayCanvas : Canvas
     {
-        private readonly Pen pen = new Pen(Brushes.LightGray);
-        private readonly NodeTree manager = new NodeTree();
-        private List<NodeDisplay> selectedNodes = new List<NodeDisplay>();
+        private readonly Pen pen = new(Brushes.LightGray);
+        private readonly NodeTree manager = new();
+        private List<NodeDisplay> selectedNodes = new();
         private Point originalClickPoint;
         private DragType dragType = DragType.None;
         private Control selectedField;
@@ -44,7 +44,7 @@
 
         public double FlatSize { get; set; } = 1;
 
-        private Rect SelectionRect => new Rect(
+        private Rect SelectionRect => new(
             Math.Min(originalClickPoint.X, currentMousePos.X),
             Math.Min(originalClickPoint.Y, currentMousePos.Y),
             Math.Abs(originalClickPoint.X - currentMousePos.X),
@@ -61,7 +61,7 @@
 
             foreach (Line connectionLine in GetConnectionLines())
             {
-                StreamGeometry curve = new StreamGeometry();
+                StreamGeometry curve = new();
                 using (StreamGeometryContext streamContext = curve.Open())
                 {
                     int count = 0;
@@ -210,7 +210,7 @@
         private void NodeAdded(object newItem)
         {
             NodeBase newNode = newItem as NodeBase;
-            NodeDisplay newDisplay = new NodeDisplay() { CoreNode = newNode };
+            NodeDisplay newDisplay = new() { CoreNode = newNode };
             SetLeft(newDisplay, newNode.X);
             SetTop(newDisplay, newNode.Y);
             newDisplay.PointerPressed += Node_PointerPressed;
