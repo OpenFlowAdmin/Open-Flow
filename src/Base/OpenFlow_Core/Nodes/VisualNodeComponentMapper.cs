@@ -33,9 +33,9 @@ namespace OpenFlow_Core.Nodes
             {
                 switch (decorator.Type)
                 {
-                    case NodeDecorators.DecoratorType.MajorSeperator:
+                    case NodeDecorators.DecoratorType.MajorSeparator:
                         return new MajorSeperator();
-                    case NodeDecorators.DecoratorType.MinorSeperator:
+                    case NodeDecorators.DecoratorType.MinorSeparator:
                         return new MinorSeperator();
                 }
             }

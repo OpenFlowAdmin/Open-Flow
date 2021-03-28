@@ -15,14 +15,14 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 
         public DecoratorType Type { get; }
 
-        public static NodeDecorators MajorSeperator { get; } = new NodeDecorators(DecoratorType.MajorSeperator);
+        public static NodeDecorators MajorSeparator { get; } = new NodeDecorators(DecoratorType.MajorSeparator);
 
-        public static NodeDecorators MinorSeperator { get; } = new NodeDecorators(DecoratorType.MinorSeperator);
+        public static NodeDecorators MinorSeparator { get; } = new NodeDecorators(DecoratorType.MinorSeparator);
 
         public enum DecoratorType
         {
-            MajorSeperator,
-            MinorSeperator,
+            MajorSeparator,
+            MinorSeparator,
         }
     }
 }
