@@ -10,7 +10,7 @@
 
     public class NodeTree
     {
-        private readonly Dictionary<Connector, Connector> _connections = new();
+        private readonly Dictionary<IConnector, IConnector> _connections = new();
 
         public ObservableCollection<NodeBase> Nodes { get; private set; } = new();
 
@@ -22,7 +22,7 @@
             AddNode(flowSourceNodeBase);
         }
 
-        public bool TryConnectFields(Connector field1, Connector field2)
+        public bool TryConnectFields(IConnector field1, IConnector field2)
         {
             if (NodeConnection.Construct(field1, field2, out NodeConnection newConnection))
             {
@@ -31,6 +31,9 @@
                     return true;
                 }
 
+                /*
+                 * 
+                 * This code is for automatic type converting and is not currently implemented
                 if (TypeConverter.TryGetConverter(
                     (newConnection.Output as ValueConnector)?.DisplayValue.TypeDefinition.ValueType,
                     (newConnection.Input as ValueConnector)?.DisplayValue.TypeDefinition.ValueType,
@@ -38,25 +41,26 @@
                 {
                     NodeBase newNode = new((INode)Activator.CreateInstance(converterType));
                     if (newNode.TryGetSpecialField(SpecialFieldFlags.ConvertInput, out NodeFieldDisplay convertInput) && newNode.TryGetSpecialField(SpecialFieldFlags.ConvertOutput, out NodeFieldDisplay convertOutput) &&
-                        NodeConnection.Construct(newConnection.Output, convertInput.Input, out NodeConnection firstConnection) && SimpleConnect(firstConnection) &&
-                        NodeConnection.Construct(convertOutput.Output, newConnection.Input, out NodeConnection secondConnection) && SimpleConnect(secondConnection))
+                        NodeConnection.Construct(newConnection.Output, convertInput.InputConnector.Value, out NodeConnection firstConnection) && SimpleConnect(firstConnection) &&
+                        NodeConnection.Construct(convertOutput.OutputConnector.Value, newConnection.Input, out NodeConnection secondConnection) && SimpleConnect(secondConnection))
                     {
-                        newNode.X = (field1.Parent.X + field2.Parent.X) / 2;
-                        newNode.Y = (field1.Parent.Y + field2.Parent.Y) / 2;
+                        //newNode.X = (field1.Parent.X + field2.Parent.X) / 2;
+                        //newNode.Y = (field1.Parent.Y + field2.Parent.Y) / 2;
 
                         AddNode(newNode);
                     }
 
                     return true;
                 }
+                */
             }
 
             return false;
         }
 
-        public Connector ConnectionChanged(Connector interacted)
+        public IConnector ConnectionChanged(IConnector interacted)
         {
-            if (_connections.TryGetValue(interacted, out Connector value))
+            if (_connections.TryGetValue(interacted, out IConnector value))
             {
                 _connections.Remove(interacted);
                 interacted.TryRemoveConnection(value);
@@ -74,7 +78,7 @@
 
         public IEnumerable<NodeConnection> GetConnections()
         {
-            Dictionary<Connector, Connector>.Enumerator enumerator = _connections.GetEnumerator();
+            Dictionary<IConnector, IConnector>.Enumerator enumerator = _connections.GetEnumerator();
             while (enumerator.MoveNext())
             {
                 if (NodeConnection.Construct(enumerator.Current.Key, enumerator.Current.Value, out NodeConnection connection))

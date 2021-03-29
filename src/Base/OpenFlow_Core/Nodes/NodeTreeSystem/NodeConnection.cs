@@ -2,11 +2,11 @@
 {
     using OpenFlow_Core.Nodes.Connectors;
 
-    public record NodeConnection(Connector Output, Connector Input)
+    public record NodeConnection(IConnector Output, IConnector Input)
     {
-        public static bool Construct(Connector connector1, Connector connector2, out NodeConnection connection)
+        public static bool Construct(IConnector connector1, IConnector connector2, out NodeConnection connection)
         {
-            static bool CheckCompat(Connector output, Connector input) => input.ConnectionType == ConnectionTypes.Input && output.ConnectionType == ConnectionTypes.Output;
+            static bool CheckCompat(IConnector output, IConnector input) => input.ConnectionType == ConnectionType.Input && output.ConnectionType == ConnectionType.Output;
 
             if (CheckCompat(connector1, connector2))
             {

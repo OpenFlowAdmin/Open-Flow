@@ -20,34 +20,34 @@
                 CornerRadius="8"
                 BorderThickness="{DynamicResource ThemeBorderThickness}"
                 ClipToBounds="False">
+		<Border.Styles>
+			<Style Selector="Path.Connector">
+				<Setter Property="Tag" Value="{Binding}"/>
+				<Setter Property="IsVisible" Value="{Binding Converter={StaticResource IsNotNull}, FallbackValue=false}"/>
+				<Setter Property="Fill" Value="{Binding ColourHex}"/>
+				<Setter Property="Name" Value="{Binding Index}"/>
+			</Style>
+		</Border.Styles>
 		<Border.DataTemplates>
 
 			<DataTemplate DataType="displays:NodeFieldDisplay">
 				<Panel HorizontalAlignment="Stretch" Opacity="{Binding Opacity.Value}">
-					<Panel.Styles>
-						<Style Selector="Path.Connector">
-							<Setter Property="Tag" Value="{Binding}"/>
-							<Setter Property="IsVisible" Value="{Binding Converter={StaticResource IsNotNull}, FallbackValue=false}"/>
-							<Setter Property="Fill" Value="{Binding ColourHex}"/>
-							<Setter Property="Name" Value="{Binding Index}"/>
-						</Style>
-					</Panel.Styles>
 					<Path Classes="Connector"
-						DataContext="{Binding Input}"
+						DataContext="{Binding InputConnector.Value}"
 						HorizontalAlignment="Left">
 						<Path.RenderTransform>
 							<TranslateTransform X="-17"/>
 						</Path.RenderTransform>
 					</Path>
 					<Path Classes="Connector"
-						DataContext="{Binding Output}"
+						DataContext="{Binding OutputConnector.Value}"
 						HorizontalAlignment="Right">
 						<Path.RenderTransform>
 							<TranslateTransform X="20"/>
 						</Path.RenderTransform>
 					</Path>
 					<Decorator
-						HorizontalAlignment="{Binding Alignment, Converter={StaticResource AlignmentConverter}}"
+						HorizontalAlignment="{Binding Alignment.Value, Converter={StaticResource AlignmentConverter}}"
 						Child="{Binding UIs[Avalonia.Controls.IControl].Observable}"
 						VerticalAlignment="Center"/>
 					<DockPanel>
@@ -62,9 +62,25 @@
 			</DataTemplate>
 
 			<DataTemplate DataType="displays:NodeLabelDisplay">
-				<TextBlock Text="{Binding LabelText}" 
-						   Opacity="{Binding Opacity.Value}"
-						   HorizontalAlignment="Center"/>
+				<Panel>
+					<Path Classes="Connector"
+						DataContext="{Binding InputConnector.Value}"
+						HorizontalAlignment="Left">
+						<Path.RenderTransform>
+							<TranslateTransform X="-17"/>
+						</Path.RenderTransform>
+					</Path>
+					<Path Classes="Connector"
+						DataContext="{Binding OutputConnector.Value}"
+						HorizontalAlignment="Right">
+						<Path.RenderTransform>
+							<TranslateTransform X="20"/>
+						</Path.RenderTransform>
+					</Path>
+					<TextBlock Text="{Binding LabelText.Value}"
+							   Opacity="{Binding Opacity.Value}"
+							   HorizontalAlignment="Center"/>
+				</Panel>
 			</DataTemplate>
 
 			<DataTemplate DataType="displays:MajorSeperator">
@@ -74,6 +90,7 @@
 			</DataTemplate>
 
 		</Border.DataTemplates>
+			
           <StackPanel ClipToBounds="False">
             <TextBlock Text="{Binding CoreNode.Name, RelativeSource={RelativeSource TemplatedParent}}"
                        VerticalAlignment="Center"

@@ -8,6 +8,7 @@
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_PluginFramework.Primitives;
 
     public class VisualNodeComponent : NodeComponent
     {
@@ -39,7 +40,7 @@
         {
             base.CloneTo(nodeField);
             (nodeField as VisualNodeComponent).Name = Name;
-            return (nodeField as VisualNodeComponent);
+            return (nodeField as VisualNodeComponent).WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput());
         }
     }
 }

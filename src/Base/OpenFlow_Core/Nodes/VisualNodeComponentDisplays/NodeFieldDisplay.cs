@@ -12,140 +12,55 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.Primitives;
 
-    public class NodeFieldDisplay : INotifyPropertyChanged, IVisualNodeComponentDisplay
+    public class NodeFieldDisplay : VisualNodeComponentDisplay<NodeField>, INotifyPropertyChanged
     {
-        private readonly NodeField _baseField;
-        private Connector _input;
-        private Connector _output;
-        private HorizontalAlignment _alignment;
-
-        public NodeFieldDisplay(NodeField baseField, NodeBase parentNode)
+        public NodeFieldDisplay(NodeField childField, NodeBase parentNode) : base(parentNode, childField)
         {
-            ParentNodeBase = parentNode;
-            _baseField = baseField;
-            baseField.GetFlowInput().SubscribeToChange(b => RefreshInput());
-            baseField.GetFlowOutput().SubscribeToChange(b => RefreshOutput());
+            ChildComponent.ValueStoreChanged += BaseField_ValueStoreChanged;
 
-            if (baseField is NodeField valField)
+            ChildComponent.PropertyChanged += (o, e) =>
             {
-                valField.ValueStoreChanged += BaseField_ValueStoreChanged;
-            }
-
-            baseField.PropertyChanged += (o, e) =>
-            {
-                PropertyChanged?.Invoke(this, e);
-                if (baseField is NodeField valField && e.PropertyName == nameof(NodeField.DisplayedValue))
+                if (e.PropertyName == nameof(NodeField.DisplayedValue))
                 {
                     UpdateDisplayedValue();
                 }
             };
 
             UIs = new UIManager();
-
-            RefreshInput();
-            RefreshOutput();
             UpdateDisplayedValue();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public NodeBase ParentNodeBase { get; set; }
+        public Action RemoveSelf => ChildComponent.RemoveSelf;
 
-        public Connector Input
-        {
-            get => _input;
-            set
-            {
-                if (value != _input)
-                {
-                    _input = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Input)));
-                }
-            }
-        }
-
-        public Connector Output
-        {
-            get => _output;
-            set
-            {
-                if (value != _output)
-                {
-                    _output = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Output)));
-                }
-            }
-        }
-
-        public Opacity Opacity => _baseField.Opacity;
-
-        public Action RemoveSelf => _baseField.RemoveSelf;
-
-        public HorizontalAlignment Alignment
-        {
-            get => _alignment;
-            set
-            {
-                _alignment = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public LaminarValue DisplayedValue { get; private set; }
+        public LaminarValue DisplayedValue => ChildComponent.DisplayedValue;
 
         public UIManager UIs { get; }
 
-        private void RefreshInput()
+        protected override bool TryUpdateConnector(IConnector connector, ConnectionType connectionType, out IConnector newConnector)
         {
-            if (_baseField.GetFlowInput().Val)
+            if (base.TryUpdateConnector(connector, connectionType, out newConnector))
             {
-                if (Input is not FlowConnector)
-                {
-                    Input = new FlowConnector(ParentNodeBase, ConnectionTypes.Input);
-                }
+                return true;
             }
-            else if (_baseField is NodeField valField && valField.InputDisplayValue != null)
+
+            LaminarValue relevantValue = connectionType == ConnectionType.Input ? ChildComponent.InputDisplayValue : ChildComponent.OutputDisplayValue;
+            if (relevantValue != null && connector is not ValueConnector)
             {
-                if (Input is not ValueConnector)
-                {
-                    Input = new ValueConnector(valField.GetDisplayValue(NodeField.InputKey), ParentNodeBase,  ConnectionTypes.Input);
-                }
+                newConnector = new ValueConnector(relevantValue, ParentNode, connectionType);
+                return true;
             }
-            else
-            {
-                Input = null;
-            }
-            RecalculateAlignment();
+
+            newConnector = default;
+            return false;
         }
 
-        private void RefreshOutput()
+        protected override HorizontalAlignment CalculateAlignment()
         {
-            if (_baseField.GetFlowOutput().Val)
-            {
-                if (Output is not FlowConnector)
-                {
-                    Output = new FlowConnector(ParentNodeBase, ConnectionTypes.Output);
-                }
-            }
-            else if (_baseField is NodeField valField && valField.OutputDisplayValue != null)
-            {
-                if (Output is not ValueConnector)
-                {
-                    Output = new ValueConnector(valField.GetDisplayValue(NodeField.OutputKey), ParentNodeBase, ConnectionTypes.Output);
-                }
-            }
-            else
-            {
-                Output = null;
-            }
-            RecalculateAlignment();
-        }
-
-        private void RecalculateAlignment()
-        {
-            Alignment =
-                Input is null && Output is not null ? HorizontalAlignment.Right : (
-                Input is not null && Output is null ? HorizontalAlignment.Left : 
+            return
+                InputConnector.Value is null && OutputConnector.Value is not null ? HorizontalAlignment.Right : (
+                InputConnector.Value is not null && OutputConnector.Value is null ? HorizontalAlignment.Left : 
                 HorizontalAlignment.Middle);
         }
 
@@ -153,19 +68,18 @@
         {
             if (e as string is NodeField.InputKey)
             {
-                RefreshInput();
+                UpdateInput();
             }
             else if (e as string is NodeField.OutputKey)
             {
-                RefreshOutput();
+                UpdateOutput();
             }
         }
 
         private void UpdateDisplayedValue()
         {
-            DisplayedValue = (_baseField as NodeField)?.DisplayedValue ?? new LaminarValue() { Name = _baseField.Name };
             UIs.SetChildValue(DisplayedValue);
-            DisplayedValue.Name = _baseField.Name;
+            DisplayedValue.Name = ChildComponent.Name;
             NotifyPropertyChanged(nameof(DisplayedValue));
         }
 

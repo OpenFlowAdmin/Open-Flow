@@ -28,7 +28,7 @@ namespace OpenFlow_Core.Management.UserInterface
 
                 if (_userInterfaceType != key)
                 {
-                    throw new Exception("UIManager cannot handle multiple types of interface at once!");
+                    throw new Exception($"{nameof(UIManager)} cannot handle multiple types of interface at once!");
                 }
 
                 ObservableObject newObject = new(GetUIOfType(key));

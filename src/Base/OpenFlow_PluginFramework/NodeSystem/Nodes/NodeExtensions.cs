@@ -7,9 +7,10 @@
 
     public static class NodeExtensions
     {
-        private static readonly Dictionary<INode, NodeField[]> FlaggedNodeFields = new();
+        // private static readonly Dictionary<INode, NodeField[]> FlaggedNodeFields = new();
         private static readonly Dictionary<INode, Action> TriggerNodeEvaluate = new();
 
+        /*
         public static void SetSpecialField(this INode node, SpecialFieldFlags flag, NodeField field)
         {
             if (!FlaggedNodeFields.ContainsKey(node))
@@ -38,6 +39,7 @@
                 return false;
             }
         }
+        */
 
         public static void SubscribeToEvaluate(this INode node, Action onEvaluate)
         {

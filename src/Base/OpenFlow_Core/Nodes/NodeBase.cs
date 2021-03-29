@@ -12,6 +12,8 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
+    using OpenFlow_PluginFramework.Primitives;
+    using OpenFlow_Core.Nodes.Connectors;
 
     public class NodeBase
     {
@@ -62,6 +64,7 @@
 
         public NodeBase DuplicateNode() => new((INode)Activator.CreateInstance(_baseNode.GetType()));
 
+        /*
         public bool TryGetSpecialField(SpecialFieldFlags flag, out NodeFieldDisplay field)
         {
             if (_baseNode.TryGetSpecialField(flag, out NodeField baseField) && _fieldSection.Contains(baseField))
@@ -74,6 +77,23 @@
                 field = default;
                 return false;
             }
+        }
+        */
+
+        public FlowConnector GetFlowOutDisplayConnector()
+        {
+            if (_baseNode is IFlowNode flowNode && _fieldSection.VisualComponentList.Contains(flowNode.FlowOutField))
+            {
+                int index = _fieldSection.VisualComponentList.IndexOf(flowNode.FlowOutField);
+                return Fields[index].OutputConnector.Value as FlowConnector;
+            }
+
+            return null;
+        }
+
+        public VisualNodeComponentDisplay<T> GetDisplayForComponent<T>(T component) where T : VisualNodeComponent
+        {
+            return Fields[_fieldSection.VisualComponentList.IndexOf(component)] as VisualNodeComponentDisplay<T>;
         }
 
         public void TryEvaluate()
@@ -99,9 +119,9 @@
         {
             foreach (IVisualNodeComponentDisplay field in Fields)
             {
-                if (field is NodeFieldDisplay nodeField && nodeField.Input?.ExclusiveConnection != null)
+                if (field.InputConnector.Value is ValueConnector connector && connector.ExclusiveConnection != null)
                 {
-                    nodeField.Input.ExclusiveConnection.Parent.DeepUpdate();
+                    connector.ExclusiveConnection.ParentNode.DeepUpdate();
                 }
             }
             TryEvaluate();

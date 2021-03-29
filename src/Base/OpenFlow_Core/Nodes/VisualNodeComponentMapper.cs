@@ -26,7 +26,7 @@ namespace OpenFlow_Core.Nodes
 
             if (typeof(NodeLabel).IsAssignableFrom(toMap.GetType()))
             {
-                return new NodeLabelDisplay((NodeLabel)toMap);
+                return new NodeLabelDisplay(_parentNode, (NodeLabel)toMap);
             }
 
             if (toMap is NodeDecorators decorator)
@@ -34,9 +34,9 @@ namespace OpenFlow_Core.Nodes
                 switch (decorator.Type)
                 {
                     case NodeDecorators.DecoratorType.MajorSeparator:
-                        return new MajorSeperator();
+                        return new MajorSeperator(_parentNode);
                     case NodeDecorators.DecoratorType.MinorSeparator:
-                        return new MinorSeperator();
+                        return new MinorSeperator(_parentNode);
                 }
             }
 

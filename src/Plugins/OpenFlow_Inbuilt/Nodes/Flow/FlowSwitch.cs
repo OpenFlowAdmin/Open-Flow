@@ -13,15 +13,15 @@
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
     using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
-    public class FlowSwitch : INode
+    public class FlowSwitch : IFlowNode
     {
-        private readonly NodeField flowInput = new NodeField() { Name = "Flow Input" }.WithFlowInput(true);
+        private readonly NodeLabel flowInput = new NodeLabel("Flow Input").WithFlowInput(true);
 
         private readonly NodeField valueInput = new NodeField() { Name = "Switch Value" }.WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider());
 
         private readonly NodeLabel OutputsLabel = new("Possible Values");
 
-        private readonly NodeField defaultOutput = new NodeField() { Name = "Default" }.WithFlowOutput();
+        private readonly NodeLabel defaultOutput = new NodeLabel("Default").WithFlowOutput();
 
         private readonly NodeComponentDictionary flowOutputs = new()
         {
@@ -54,18 +54,22 @@
             }
         }
 
+        public VisualNodeComponent FlowOutField { get; private set; }
+
         public void Evaluate()
         {
             foreach (VisualNodeComponent field in flowOutputs.VisualComponentList)
             {
-                if ( field is NodeField valueField && valueField.DisplayedValue != null && valueField.DisplayedValue.Value.Equals(valueInput.Input))
+                if (field is NodeField valueField && valueField.DisplayedValue != null && valueField.DisplayedValue.Value.Equals(valueInput.Input))
                 {
-                    this.SetSpecialField(SpecialFieldFlags.FlowOutput, valueField);
+                    FlowOutField = valueField;
+                    // this.SetSpecialField(SpecialFieldFlags.FlowOutput, valueField);
                     return;
                 }
             }
 
-            this.SetSpecialField(SpecialFieldFlags.FlowOutput, defaultOutput);
+            FlowOutField = defaultOutput;
+            // this.SetSpecialField(SpecialFieldFlags.FlowOutput, defaultOutput);
         }
 
         private void FlowSwitch_OnTypeDefinitionChanged(object sender, PropertyChangedEventArgs e)

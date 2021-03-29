@@ -126,7 +126,7 @@
                 (nodeField as NodeField).AddValue(kvp.Key, kvp.Value.Clone());
             }
 
-            return (nodeField as NodeField).WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput()); ;
+            return (nodeField as NodeField);
         }
 
         public LaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out LaminarValue value) ? value : null;

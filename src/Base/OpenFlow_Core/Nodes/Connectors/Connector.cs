@@ -3,25 +3,18 @@
     using System.Collections.Generic;
     using OpenFlow_Core.Nodes;
 
-    public abstract class Connector
+    public abstract class Connector<T> : IConnector 
+        where T : Connector<T>
     {
-        protected Connector(NodeBase parent, ConnectionTypes connectionType)
+        protected Connector(NodeBase parent, ConnectionType connectionType)
         {
-            Parent = parent;
+            ParentNode = parent;
             ConnectionType = connectionType;
-        }
-
-        private enum ConnectionStatus
-        {
-            NeutralStatus,
-            MyUpdateTurn,
-            UpdatesComplete,
-            Cleanup,
         }
 
         public bool ConnectionDirty { get; private set; }
 
-        public NodeBase Parent { get; }
+        public NodeBase ParentNode { get; }
 
         public object Tag { get; set; }
 
@@ -29,88 +22,99 @@
 
         public abstract string ColourHex { get; }
 
-        public Connector ExclusiveConnection
+        public IConnector ExclusiveConnection
+        {
+            get => TypedExclusiveConnection;
+        }
+
+        public T TypedExclusiveConnection
         {
             get => IsExclusiveConnection && Connections.Count > 0 ? Connections[0] : null;
-            set => Connections = new List<Connector>() { value };
+            set => Connections = new() { value };
         }
 
-        public ConnectionTypes ConnectionType { get; }
+        public ConnectionType ConnectionType { get; }
 
-        protected List<Connector> Connections { get; private set; } = new List<Connector>();
+        protected List<T> Connections { get; private set; } = new();
 
-        public bool TryAddConnection(Connector toAdd)
+        public bool TryAddConnection(IConnector toAdd)
         {
-            switch (GetConnectionStatus(toAdd))
+            if (toAdd is T typedToAdd)
             {
-                case ConnectionStatus.NeutralStatus:
-                    if (CanAddConnection(toAdd))
-                    {
-                        goto case ConnectionStatus.MyUpdateTurn;
-                    }
+                switch (GetConnectionStatus(typedToAdd))
+                {
+                    case ConnectionStatus.NeutralStatus:
+                        if (CanAddConnection(typedToAdd))
+                        {
+                            goto case ConnectionStatus.MyUpdateTurn;
+                        }
 
-                    break;
-                case ConnectionStatus.MyUpdateTurn:
-                    AddConnection(toAdd);
-                    ConnectorAdded(toAdd);
-                    ConnectionDirty = true;
-                    toAdd.TryAddConnection(this);
-                    return true;
-                case ConnectionStatus.UpdatesComplete:
-                    ConnectionDirty = false;
-                    toAdd.TryAddConnection(this);
-                    break;
-                case ConnectionStatus.Cleanup:
-                    ConnectionDirty = false;
-                    break;
+                        break;
+                    case ConnectionStatus.MyUpdateTurn:
+                        AddConnection(typedToAdd);
+                        ConnectorAdded(typedToAdd);
+                        ConnectionDirty = true;
+                        typedToAdd.TryAddConnection(this);
+                        return true;
+                    case ConnectionStatus.UpdatesComplete:
+                        ConnectionDirty = false;
+                        typedToAdd.TryAddConnection(this);
+                        break;
+                    case ConnectionStatus.Cleanup:
+                        ConnectionDirty = false;
+                        break;
+                }
             }
 
             return false;
         }
 
-        public bool TryRemoveConnection(Connector toRemove)
+        public bool TryRemoveConnection(IConnector toRemove)
         {
-            switch (GetConnectionStatus(toRemove))
+            if (toRemove is T typedToRemove)
             {
-                case ConnectionStatus.NeutralStatus:
-                    if (Connections.Contains(toRemove))
-                    {
-                        goto case ConnectionStatus.MyUpdateTurn;
-                    }
+                switch (GetConnectionStatus(typedToRemove))
+                {
+                    case ConnectionStatus.NeutralStatus:
+                        if (Connections.Contains(typedToRemove))
+                        {
+                            goto case ConnectionStatus.MyUpdateTurn;
+                        }
 
-                    break;
-                case ConnectionStatus.MyUpdateTurn:
-                    Connections.Remove(toRemove);
-                    ConnectorRemoved(toRemove);
-                    ConnectionDirty = true;
-                    toRemove.TryRemoveConnection(this);
-                    return true;
-                case ConnectionStatus.UpdatesComplete:
-                    ConnectionDirty = false;
-                    toRemove.TryRemoveConnection(this);
-                    return true;
-                case ConnectionStatus.Cleanup:
-                    ConnectionDirty = false;
-                    return true;
+                        break;
+                    case ConnectionStatus.MyUpdateTurn:
+                        Connections.Remove(typedToRemove);
+                        ConnectorRemoved(typedToRemove);
+                        ConnectionDirty = true;
+                        typedToRemove.TryRemoveConnection(this);
+                        return true;
+                    case ConnectionStatus.UpdatesComplete:
+                        ConnectionDirty = false;
+                        typedToRemove.TryRemoveConnection(this);
+                        return true;
+                    case ConnectionStatus.Cleanup:
+                        ConnectionDirty = false;
+                        return true;
+                }
             }
 
             return false;
         }
-
-        protected virtual bool CanAddConnection(Connector toConnect)
+        
+        protected virtual bool CanAddConnection(T toConnect)
         {
             return (int)toConnect.ConnectionType + (int)ConnectionType == 3 && toConnect.GetType() == GetType();
         }
 
-        protected virtual void ConnectorRemoved(Connector e)
+        protected virtual void ConnectorRemoved(T e)
         {
         }
 
-        protected virtual void ConnectorAdded(Connector e)
+        protected virtual void ConnectorAdded(T e)
         {
         }
 
-        private ConnectionStatus GetConnectionStatus(Connector toConnect) => (ConnectionDirty, toConnect.ConnectionDirty) switch
+        private ConnectionStatus GetConnectionStatus(T toConnect) => (ConnectionDirty, toConnect.ConnectionDirty) switch
         {
             (true, true) => ConnectionStatus.UpdatesComplete,
             (false, true) => ConnectionStatus.MyUpdateTurn,
@@ -118,16 +122,25 @@
             (false, false) => ConnectionStatus.NeutralStatus,
         };
 
-        private void AddConnection(Connector connector)
+        private void AddConnection(T connector)
         {
             if (IsExclusiveConnection)
             {
-                ExclusiveConnection = connector;
+                TypedExclusiveConnection = connector;
             }
             else
             {
                 Connections.Add(connector);
             }
+        }
+
+
+        private enum ConnectionStatus
+        {
+            NeutralStatus,
+            MyUpdateTurn,
+            UpdatesComplete,
+            Cleanup,
         }
     }
 }

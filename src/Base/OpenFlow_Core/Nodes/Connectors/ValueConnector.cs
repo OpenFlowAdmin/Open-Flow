@@ -4,9 +4,9 @@
     using OpenFlow_PluginFramework.NodeSystem;
     using OpenFlow_PluginFramework.Primitives;
 
-    public class ValueConnector : Connector, INotifyPropertyChanged
+    public class ValueConnector : Connector<ValueConnector>, INotifyPropertyChanged
     {
-        public ValueConnector(LaminarValue displayValue, NodeBase parent, ConnectionTypes connectionType)
+        public ValueConnector(LaminarValue displayValue, NodeBase parent, ConnectionType connectionType)
             : base(parent, connectionType)
         {
             DisplayValue = displayValue;
@@ -23,41 +23,27 @@
 
         public LaminarValue DisplayValue { get; }
 
-        public override bool IsExclusiveConnection => ConnectionType == ConnectionTypes.Input;
+        public override bool IsExclusiveConnection => ConnectionType == ConnectionType.Input;
 
-        public override string ColourHex {
-            get 
+        public override string ColourHex => DisplayValue.TypeDefinition != null ? Instance.Current.GetTypeInfo(DisplayValue.TypeDefinition.ValueType).HexColour : "#FFFFFF";
+
+        protected override bool CanAddConnection(ValueConnector connector) => base.CanAddConnection(connector) && DisplayValue.CanSetValue(connector.DisplayValue.Value);
+
+        protected override void ConnectorAdded(ValueConnector e)
+        {
+            if (ConnectionType == ConnectionType.Input)
             {
-                if (DisplayValue.TypeDefinition is null)
-                {
-                    return "#FFFFFF";
-                }
-
-                return Instance.Current.GetTypeInfo(DisplayValue.TypeDefinition.ValueType).HexColour;
+                DisplayValue.Driver = e.DisplayValue;
+                ParentNode?.TryEvaluate();
             }
         }
 
-        protected override bool CanAddConnection(Connector connector)
-            => base.CanAddConnection(connector) &&
-            connector is ValueConnector valueConnector &&
-            valueConnector.DisplayValue.TypeDefinition != null &&
-            DisplayValue.CanSetValue(valueConnector.DisplayValue.Value);
-
-        protected override void ConnectorAdded(Connector e)
+        protected override void ConnectorRemoved(ValueConnector e)
         {
-            if (ConnectionType == ConnectionTypes.Input)
-            {
-                DisplayValue.Driver = (e as ValueConnector).DisplayValue;
-                Parent?.TryEvaluate();
-            }
-        }
-
-        protected override void ConnectorRemoved(Connector e)
-        {
-            if (ConnectionType == ConnectionTypes.Input)
+            if (ConnectionType == ConnectionType.Input)
             {
                 DisplayValue.Driver = null;
-                Parent?.TryEvaluate();
+                ParentNode?.TryEvaluate();
             }
         }
     }

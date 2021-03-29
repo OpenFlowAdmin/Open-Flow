@@ -23,7 +23,7 @@
         /// <param name="typeDefinitions">A list of possible <see cref="ITypeDefinition"/> which defines what values are allowed</param>
         public LaminarValue(ITypeDefinitionProvider typeDefinitionProvider)
         {
-            this._typeDefinitionProvider = typeDefinitionProvider;
+            _typeDefinitionProvider = typeDefinitionProvider;
             TypeDefinition = typeDefinitionProvider.DefaultTypeDefiniton;
         }
 

@@ -5,25 +5,25 @@
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using System.Diagnostics;
 
-    public class FlowConnector : Connector
+    public class FlowConnector : Connector<FlowConnector>
     {
-        public FlowConnector(NodeBase parent,  ConnectionTypes connectionType)
+        public FlowConnector(NodeBase parent,  ConnectionType connectionType)
             : base(parent, connectionType)
         {
         }
 
-        public override bool IsExclusiveConnection => ConnectionType == ConnectionTypes.Output;
+        public override bool IsExclusiveConnection => ConnectionType == ConnectionType.Output;
 
         public override string ColourHex => "#800080";
 
         public void Activate()
         {
-            Debug.WriteLine("A flow was chained");
-            Parent.DeepUpdate();
-            if (Parent.TryGetSpecialField(SpecialFieldFlags.FlowOutput, out NodeFieldDisplay field) && field.Output is FlowConnector flowOutput)
-            {
-                (flowOutput.ExclusiveConnection as FlowConnector)?.Activate();
-            }
+            Debug.WriteLine("Flowingggg");
+            ParentNode.DeepUpdate();
+
+            FlowConnector NodeFlowOutput = ParentNode.GetFlowOutDisplayConnector();
+
+            NodeFlowOutput?.TypedExclusiveConnection?.Activate();
         }
     }
 }

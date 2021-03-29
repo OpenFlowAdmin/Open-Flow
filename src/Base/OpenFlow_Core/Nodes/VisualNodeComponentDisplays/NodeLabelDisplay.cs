@@ -9,26 +9,20 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 {
-    public class NodeLabelDisplay : IVisualNodeComponentDisplay, INotifyPropertyChanged
+    public class NodeLabelDisplay : VisualNodeComponentDisplay<NodeLabel>
     {
-        private readonly NodeLabel _child;
-
-        public NodeLabelDisplay(NodeLabel child)
+        public NodeLabelDisplay(NodeBase parent, NodeLabel child) : base(parent, child)
         {
-            _child = child;
-            child.PropertyChanged += (o, e) =>
+            LabelText = new(child.Name);
+            ChildComponent.PropertyChanged += (o, e) =>
             {
                 if (e.PropertyName is nameof(NodeLabel.Name))
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LabelText)));
+                    LabelText.Value = ChildComponent.Name;
                 }
             };
         }
 
-        public string LabelText => _child.Name;
-
-        public Opacity Opacity => _child.Opacity;
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableValue<string> LabelText { get; }
     }
 }

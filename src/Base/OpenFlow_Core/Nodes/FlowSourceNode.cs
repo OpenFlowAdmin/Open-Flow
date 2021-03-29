@@ -9,14 +9,14 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
-    public class FlowSourceNode : INode
+    public class FlowSourceNode : IFlowNode
     {
-        private readonly NodeField _sourceField = new NodeField() { Name = "Manual Trigger" }.WithValue<Action>("Displayed", false).WithFlowOutput() as NodeField;
+        private readonly NodeField _sourceField = new NodeField() { Name = "Manual Trigger" }.WithValue<Action>("Displayed", false).WithFlowOutput();
         private NodeBase _parentNodeBase;
 
         public FlowSourceNode()
         {
-            this.SetSpecialField(SpecialFieldFlags.FlowOutput, _sourceField);
+            // this.SetSpecialField(SpecialFieldFlags.FlowOutput, _sourceField);
         }
 
         public VisualNodeComponent FlowOutField => _sourceField;
@@ -40,10 +40,7 @@
             _parentNodeBase = parent;
             _sourceField["Displayed"] = (Action)(() =>
             {
-                if (_parentNodeBase.TryGetSpecialField(SpecialFieldFlags.FlowOutput, out NodeFieldDisplay field))
-                {
-                    (field.Output as FlowConnector).Activate();
-                }
+                (_parentNodeBase.GetDisplayForComponent(_sourceField).OutputConnector.Value as FlowConnector)?.Activate();
             });
         }
     }

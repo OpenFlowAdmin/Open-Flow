@@ -76,23 +76,30 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public bool Contains(object value)
         {
-            return IndexOf(value) != -1;
+            if (value is not VisualNodeComponent)
+            {
+                throw new InvalidCastException($"{nameof(NodeFieldList)} only stores valus of type {nameof(VisualNodeComponent)}");
+            }
+            return Contains(value as VisualNodeComponent);
         }
 
-        public bool Contains(VisualNodeComponent item) => Contains(item);
+        public bool Contains(VisualNodeComponent item) => IndexOf(item) != -1;
 
         public int IndexOf(object value) => GetIndexOf(value);
 
         public int IndexOf(VisualNodeComponent item) => GetIndexOf(item);
 
-        public void CopyTo(Array array, int index)
-        {
-            throw new NotImplementedException();
-        }
+        public void CopyTo(Array array, int index) => CopyTo(array as VisualNodeComponent[], index);
 
         public void CopyTo(VisualNodeComponent[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
+            int i = 0;
+            while (enumer.MoveNext())
+            {
+                array[i + arrayIndex] = enumer.Current;
+                i++;
+            }
         }
 
         public bool Remove(VisualNodeComponent item) => throw new NotSupportedException();

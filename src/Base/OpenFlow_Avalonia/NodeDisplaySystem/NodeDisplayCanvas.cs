@@ -134,10 +134,10 @@
                     break;
                 case DragType.CreatingCurve:
                     IVisual visualUnderPointer = VisualRoot.Renderer.HitTestFirst(e.GetCurrentPoint(VisualRoot).Position, VisualRoot, null);
-                    if (visualUnderPointer is Control controlUnderPointer && controlUnderPointer.Tag is Connector endField)
+                    if (visualUnderPointer is Control controlUnderPointer && controlUnderPointer.Tag is IConnector endConnector)
                     {
-                        endField.Tag = controlUnderPointer;
-                        manager.TryConnectFields(selectedField.Tag as Connector, endField);
+                        endConnector.Tag = controlUnderPointer;
+                        manager.TryConnectFields(selectedField.Tag as IConnector, endConnector);
                     }
 
                     break;
@@ -176,7 +176,7 @@
                     break;
                 case DragType.CreatingCurve:
                     currentMousePos = e.GetPosition(this);
-                    if (VisualRoot.Renderer.HitTestFirst(e.GetPosition(VisualRoot), VisualRoot, null) is Control controlUnderPointer && controlUnderPointer.Tag is Connector)
+                    if (VisualRoot.Renderer.HitTestFirst(e.GetPosition(VisualRoot), VisualRoot, null) is Control controlUnderPointer && controlUnderPointer.Tag is IConnector)
                     {
                         currentMousePos = GetCenterInLocal(controlUnderPointer);
                     }
@@ -222,9 +222,9 @@
             PointerPoint click = e.GetCurrentPoint(this);
             if (click.Properties.IsLeftButtonPressed == true)
             {
-                if (e.Source is Control sourceControl && sourceControl.Tag is Connector interactedField)
+                if (e.Source is Control sourceControl && sourceControl.Tag is IConnector interactedField)
                 {
-                    Connector dragField = manager.ConnectionChanged(interactedField);
+                    IConnector dragField = manager.ConnectionChanged(interactedField);
                     if (dragField.Tag == null)
                     {
                         dragField.Tag = e.Source;
@@ -271,7 +271,7 @@
         private Point GetCenterInLocal(IVisual visual)
             => visual.VisualParent.TranslatePoint(visual.Bounds.Center, this).Value + new Point(visual.RenderTransform.Value.M31, visual.RenderTransform.Value.M32);
 
-        private bool GetConnectorLocation(Connector connector, out Point location)
+        private bool GetConnectorLocation(IConnector connector, out Point location)
         {
             if (connector.Tag is Control control && control.Tag == connector)
             {
@@ -282,7 +282,7 @@
             {
                 foreach (IVisual visual in this.GetVisualChildren())
                 {
-                    if (visual is NodeDisplay nodeDisplay && nodeDisplay.CoreNode == connector.Parent)
+                    if (visual is NodeDisplay nodeDisplay && nodeDisplay.CoreNode == connector.ParentNode)
                     {
                         foreach (IVisual nodeVisual in nodeDisplay.GetVisualDescendants())
                         {
@@ -305,11 +305,11 @@
         {
             if (dragType == DragType.CreatingCurve)
             {
-                if (selectedField.Tag is Connector connector && connector.ConnectionType == ConnectionTypes.Input)
+                if (selectedField.Tag is IConnector connector && connector.ConnectionType == ConnectionType.Input)
                 {
                     yield return new Line(currentMousePos, originalClickPoint, (selectedField as Shape).Fill);
                 }
-                else if (selectedField.Tag is Connector connector1 && connector1.ConnectionType == ConnectionTypes.Output)
+                else if (selectedField.Tag is IConnector connector1 && connector1.ConnectionType == ConnectionType.Output)
                 {
                     yield return new Line(originalClickPoint, currentMousePos, (selectedField as Shape).Fill);
                 }

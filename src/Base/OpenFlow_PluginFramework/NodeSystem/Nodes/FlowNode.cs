@@ -7,11 +7,11 @@
 
     public abstract class FlowNode : INode
     {
-        private readonly NodeField _flowField = new NodeField() { Name = "Flow" }.WithFlowInput().WithFlowOutput();
+        private readonly VisualNodeComponent _flowField = new NodeLabel("Flow").WithFlowInput().WithFlowOutput();
 
         public FlowNode()
         {
-            this.SetSpecialField(SpecialFieldFlags.FlowOutput, _flowField);
+            this.SetFlowOutput(_flowField);
         }
 
         public abstract string NodeName { get; }
