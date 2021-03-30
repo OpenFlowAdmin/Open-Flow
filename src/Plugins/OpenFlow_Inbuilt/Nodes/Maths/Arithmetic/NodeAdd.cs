@@ -3,12 +3,12 @@
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class NodeAdd : INode
     {
-        private readonly NodeComponentAutoCloner addFields = new(NodeComponentBuilder.NodeField("Input").WithInput(0.0).Build, 1, index => $"Number {index + 1}");
+        private readonly INodeComponentAutoCloner addFields = NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Input").WithInput(0.0).Build, 1, index => $"Number {index + 1}").Build;
         private readonly INodeField totalField = NodeComponentBuilder.NodeField("Output").WithOutput(0.0).Build;
 
         public string NodeName { get; } = "Add";

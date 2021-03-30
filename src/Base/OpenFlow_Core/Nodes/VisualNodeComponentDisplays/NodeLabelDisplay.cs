@@ -1,4 +1,4 @@
-﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
+﻿using OpenFlow_Core.Nodes.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
 using System;
 using System.Collections.Generic;

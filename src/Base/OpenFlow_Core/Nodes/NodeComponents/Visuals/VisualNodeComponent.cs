@@ -1,4 +1,4 @@
-﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
+﻿namespace OpenFlow_Core.Nodes.NodeComponents.Visuals
 {
     using System;
     using System.Collections;
@@ -7,6 +7,8 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
 

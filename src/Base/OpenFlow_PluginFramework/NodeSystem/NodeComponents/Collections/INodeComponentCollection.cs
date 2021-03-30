@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
+namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections
 {
     public interface INodeComponentCollection : INotifyCollectionChanged, INodeComponent, IEnumerable<INodeComponent>
     {

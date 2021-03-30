@@ -1,18 +1,20 @@
-﻿using System;
+﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
+namespace OpenFlow_Core.Nodes.NodeComponents.Collections
 {
-    public class NodeComponentList : NodeComponentCollection, IList<INodeComponent>
+    public class NodeComponentList : NodeComponentCollection, INodeComponentList
     {
         public INodeComponent this[int index] { get => base[index]; set => base[index] = value; }
 
         public bool IsReadOnly => false;
 
-        public int Count => base.ComponentCount;
+        public int Count => ComponentCount;
 
         public void Clear() => ProtectedReset();
 

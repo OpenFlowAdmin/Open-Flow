@@ -2,8 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using OpenFlow_Core.Nodes.NodeComponents.Collections;
     using OpenFlow_Core.Nodes.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
@@ -14,7 +16,11 @@
             NodeComponentBuilder.Factory = new NodeComponentFactory()
                 .RegisterImplementation<INodeField, NodeField>()
                 .RegisterImplementation<INodeLabel, NodeLabel>()
-                .RegisterImplementation<INodeDecorator, NodeDecorator>();
+                .RegisterImplementation<INodeDecorator, NodeDecorator>()
+                .RegisterImplementation<INodeComponentList, NodeComponentList>()
+                .RegisterImplementation<INodeComponentAutoCloner, NodeComponentAutoCloner>()
+                .RegisterImplementation<INodeComponentDictionary, NodeComponentDictionary>()
+                .RegisterImplementation<INodeComponentCollection, NodeComponentCollection>();
         }
 
         public NodeCatagories LoadedNodes { get; } = new();

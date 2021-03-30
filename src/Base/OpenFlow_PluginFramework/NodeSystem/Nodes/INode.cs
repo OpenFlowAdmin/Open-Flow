@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
 
     public interface INode
     {

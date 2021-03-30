@@ -1,12 +1,10 @@
-﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
+﻿namespace OpenFlow_Core.Nodes.NodeComponents
 {
     using System;
     using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
 

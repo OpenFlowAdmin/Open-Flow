@@ -1,11 +1,13 @@
-﻿using System;
+﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
+namespace OpenFlow_Core.Nodes.NodeComponents.Collections
 {
-    public class NodeComponentDictionary : NodeComponentCollection, IDictionary<object, INodeComponent>
+    public class NodeComponentDictionary : NodeComponentCollection, IDictionary<object, INodeComponent>, INodeComponentDictionary
     {
         private readonly Dictionary<object, INodeComponent> _subComponents = new();
 

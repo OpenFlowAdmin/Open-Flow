@@ -3,12 +3,12 @@
     using System.Collections.Generic;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class Node_Join_Strings : INode
     {
-        private readonly NodeComponentAutoCloner combineStrings = new(NodeComponentBuilder.NodeField("Text").WithInput("").Build, 2, (x) => $"Text {x}");
+        private readonly INodeComponentAutoCloner combineStrings = NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Text").WithInput("").Build, 2, (x) => $"Text {x}").Build;
         private readonly INodeField combinedString = NodeComponentBuilder.NodeField("Combined").WithOutput("").Build;
 
         public string NodeName => "Join Strings";

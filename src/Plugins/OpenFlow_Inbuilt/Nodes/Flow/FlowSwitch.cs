@@ -7,7 +7,7 @@
     using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
@@ -23,16 +23,11 @@
 
         private readonly INodeLabel defaultOutput = NodeComponentBuilder.NodeLabel("Default").WithFlowOutput().Build;
 
-        private readonly NodeComponentDictionary flowOutputs = new()
-        {
-            {
+        private readonly INodeComponentDictionary flowOutputs = NodeComponentBuilder.NodeComponentDictionary().Add(
                 typeof(bool),
-                    new NodeComponentCollection(new[] {
-                        NodeComponentBuilder.NodeField("True").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}, false).WithFlowOutput().Build,
-                        NodeComponentBuilder.NodeField("False").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false}, false).WithFlowOutput().Build,
-                    })
-            },
-        };
+                NodeComponentBuilder.NodeComponentList(
+                    NodeComponentBuilder.NodeField("True").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}, false).WithFlowOutput().Build,
+                    NodeComponentBuilder.NodeField("False").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false }, false).WithFlowOutput().Build).Build).Build;
 
         public FlowSwitch()
         {
@@ -89,17 +84,17 @@
             flowOutputs.ShowSectionByKey(typeDef.ValueType);
         }
 
-        private NodeComponent GenerateSwitchesFor(ITypeDefinition typeDef)
+        private INodeComponent GenerateSwitchesFor(ITypeDefinition typeDef)
         {
             if (typeDef.ValueType.IsEnum)
             {
-                return new NodeComponentCollection(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x))));
+                return NodeComponentBuilder.NodeComponentList(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x)))).Build;
             }
 
-            return new NodeComponentCollection(
-                new NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Case").WithInputTypeProvider(typeDef).WithFlowOutput().Build, 0, (x) => $"Case {x + 1}"),
+            return NodeComponentBuilder.NodeComponentList(
+                NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Case").WithInputTypeProvider(typeDef).WithFlowOutput().Build, 0, (x) => $"Case {x + 1}").Build,
                 defaultOutput
-            );
+            ).Build;
         }
 
         private static INodeField ValueDisplay(ITypeDefinition typeDef, object x)

@@ -9,11 +9,12 @@
     using System.Linq;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
-    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_Core.Nodes.Connectors;
+    using OpenFlow_Core.Nodes.NodeComponents.Collections;
 
     public class NodeBase
     {

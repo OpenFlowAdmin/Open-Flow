@@ -1,37 +1,16 @@
-﻿namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
+﻿namespace OpenFlow_Core.Nodes.NodeComponents.Collections
 {
     using System;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
-    public class NodeComponentAutoCloner : NodeComponentCollection
+    public class NodeComponentAutoCloner : NodeComponentCollection, INodeComponentAutoCloner
     {
-        private readonly INodeComponent _originalClone;
-        private readonly Func<int, string> _nameRule;
-        private readonly int _minimumFieldCount;
-
-        public NodeComponentAutoCloner(INodeComponent clone, int minimumFieldCount, Func<int, string> nameRule = null)
-            : base()
-        {
-            _nameRule = nameRule;
-            _originalClone = clone;
-            _minimumFieldCount = minimumFieldCount;
-
-            _originalClone.ParentNode = ParentNode;
-            _originalClone.Opacity.Value = 0.5;
-            _originalClone.SetRemoveAction((component) => 
-            {
-                ProtectedRemove(component);
-                //UpdateNames();
-            });
-
-            for (int i = 0; i < minimumFieldCount + 1; i++)
-            {
-                CloneComponent();
-            }
-
-            this[^1].PropertyChanged += LastField_PropertyChanged;
-        }
+        private INodeComponent _originalClone;
+        private Func<int, string> _nameRule;
+        private int _minimumFieldCount;
 
         public override INode ParentNode
         {
@@ -40,6 +19,50 @@
                 base.ParentNode = value;
                 _originalClone.ParentNode = value;
             }
+        }
+
+        public void ResetWith(INodeComponent originalClone, int minimumFieldCount, Func<int, string> nameRule)
+        {
+            _originalClone = originalClone;
+            _minimumFieldCount = minimumFieldCount;
+            _nameRule = nameRule;
+
+            _originalClone.ParentNode = ParentNode;
+            _originalClone.Opacity.Value = 0.5;
+            _originalClone.SetRemoveAction((component) =>
+            {
+                ProtectedRemove(component);
+                //UpdateNames();
+            });
+
+            ProtectedReset();
+        }
+
+        protected override void ProtectedReset()
+        {
+            base.ProtectedReset();
+
+            for (int i = 0; i < _minimumFieldCount + 1; i++)
+            {
+                CloneComponent();
+            }
+
+            this[^1].PropertyChanged += LastField_PropertyChanged;
+        }
+
+        protected override bool ProtectedRemove(INodeComponent component)
+        {
+            if (VisualComponentList.Count <= _minimumFieldCount + 1 || component == this[^1])
+            {
+                return false;
+            }
+
+            if (base.ProtectedRemove(component))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void LastField_PropertyChanged(object sender, object value)
@@ -61,7 +84,7 @@
                 }
             }
 
-            ProtectedAdd(_originalClone.Clone());//To(new ValueField("") { RemoveAction = (component) => { ProtectedRemove(component); } }));
+            ProtectedAdd(_originalClone.Clone());
 
             if (VisualComponentList.Count > 1)
             {
@@ -70,29 +93,6 @@
         }
 
         private void RemoveComponent(INodeComponent component) => ProtectedRemove(component);
-
-        protected override bool ProtectedRemove(INodeComponent component)
-        {
-            if (VisualComponentList.Count <= _minimumFieldCount + 1 || component == this[^1])
-            {
-                return false;
-            }
-            
-            if (base.ProtectedRemove(component))
-            {
-                /*
-                int index = 0;
-                foreach (NodeField field in NodeFields)
-                {
-                    field.Name = nameRule(index);
-                    index++;
-                }
-                */
-                return true;
-            }
-
-            return false;
-        }
 
         private void UpdateNames()
         {
