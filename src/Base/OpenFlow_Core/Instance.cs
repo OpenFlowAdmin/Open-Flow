@@ -17,6 +17,7 @@
         public Instance()
         {
             Current = this;
+            //Factory = new();
             _pluginManager = new PluginManager();
             if (_configs.Valid && _configs.PluginPaths != null)
             {
@@ -28,6 +29,10 @@
         }
 
         public static Instance Current { get; private set; }
+
+        public static ObjectFactory Factory { get; } = new();
+
+        // public ObjectFactory Factory { get; }// = new();
 
         public Dictionary<Type, TypeInfoRecord> TypeInfo { get; } = new ();
 

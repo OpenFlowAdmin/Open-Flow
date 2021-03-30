@@ -15,15 +15,7 @@
     {
         public LoadedNodeManager()
         {
-            NodeComponentBuilder.Factory = new NodeComponentFactory()
-                .RegisterImplementation<IOpacity, Opacity>()
-                .RegisterImplementation<INodeField, NodeField>()
-                .RegisterImplementation<INodeLabel, NodeLabel>()
-                .RegisterImplementation<INodeDecorator, NodeDecorator>()
-                .RegisterImplementation<INodeComponentList, NodeComponentList>()
-                .RegisterImplementation<INodeComponentAutoCloner, NodeComponentAutoCloner>()
-                .RegisterImplementation<INodeComponentDictionary, NodeComponentDictionary>()
-                .RegisterImplementation<INodeComponentCollection, NodeComponentCollection>();
+            NodeComponentBuilder.Factory = Instance.Factory;
         }
 
         public NodeCatagories LoadedNodes { get; } = new();

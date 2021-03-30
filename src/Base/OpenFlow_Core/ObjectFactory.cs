@@ -1,4 +1,10 @@
-﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
+﻿using OpenFlow_Core.Nodes.NodeComponents.Collections;
+using OpenFlow_Core.Nodes.NodeComponents.Visuals;
+using OpenFlow_Core.Primitives;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
+using OpenFlow_PluginFramework.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,18 +12,30 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
+namespace OpenFlow_Core
 {
-    public class NodeComponentFactory
+    public class ObjectFactory : IObjectFactory
     {
         private readonly Dictionary<Type, Type> interfaceImplementations = new();
+
+        public ObjectFactory()
+        {
+            RegisterImplementation<IOpacity, Opacity>();
+            RegisterImplementation<INodeField, NodeField>();
+            RegisterImplementation<INodeLabel, NodeLabel>();
+            RegisterImplementation<INodeDecorator, NodeDecorator>();
+            RegisterImplementation<INodeComponentList, NodeComponentList>();
+            RegisterImplementation<INodeComponentAutoCloner, NodeComponentAutoCloner>();
+            RegisterImplementation<INodeComponentDictionary, NodeComponentDictionary>();
+            RegisterImplementation<INodeComponentCollection, NodeComponentCollection>();
+        }
 
         public T GetImplementation<T>()
         {
             return (T)GetLooseTypedImplementation(typeof(T));
         }
 
-        public NodeComponentFactory RegisterImplementation<TInterface, TImplementation>() 
+        public IObjectFactory RegisterImplementation<TInterface, TImplementation>()
             where TImplementation : class, TInterface
         {
             interfaceImplementations.Add(typeof(TInterface), typeof(TImplementation));

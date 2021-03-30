@@ -13,7 +13,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 {
     public static class NodeComponentBuilder
     {
-        public static NodeComponentFactory Factory { get; set; } = new();
+        public static IObjectFactory Factory { get; set; }
 
         public static NodeComponentBuilderInstance<T> GetInstance<T>() => new(Factory);
 
@@ -116,7 +116,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 
         public class NodeComponentBuilderInstance<T>
         {
-            public NodeComponentBuilderInstance(NodeComponentFactory factory)
+            public NodeComponentBuilderInstance(IObjectFactory factory)
             {
                 Build = factory.GetImplementation<T>();
             }
