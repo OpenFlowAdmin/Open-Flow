@@ -5,9 +5,9 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
-    public abstract class FlowNode : INode
+    public abstract class FlowNode : IFlowNode
     {
-        private readonly VisualNodeComponent _flowField = new NodeLabel("Flow").WithFlowInput().WithFlowOutput();
+        private readonly INodeLabel _flowField = NodeComponentBuilder.NodeLabel("Flow").WithFlowInput().WithFlowOutput().Build;
 
         public FlowNode()
         {
@@ -27,6 +27,8 @@
                 }
             }
         }
+
+        public IVisualNodeComponent FlowOutField => _flowField;
 
         protected abstract IEnumerable<INodeComponent> FlowNodeFields { get; }
 

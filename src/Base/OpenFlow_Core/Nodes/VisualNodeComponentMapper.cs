@@ -1,10 +1,11 @@
 ﻿using OpenFlow_Core.Nodes.VisualNodeComponentDisplays;
-using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
+using OpenFlow_Core.Nodes.NodeComponents.Visuals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
 namespace OpenFlow_Core.Nodes
 {

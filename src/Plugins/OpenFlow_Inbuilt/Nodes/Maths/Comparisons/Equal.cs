@@ -11,9 +11,9 @@ namespace OpenFlow_Inbuilt.Nodes.Maths.Comparisons
 {
     public class Equal : INode
     {
-        private readonly NodeField inputOne = new NodeField() { Name = "First Input" }.WithInput(0.0);
-        private readonly NodeField inputTwo = new NodeField() { Name = "Second Input" }.WithInput(0.0);
-        private readonly NodeField outputField = new NodeField() { Name = "Equal" }.WithOutput<bool>();
+        private readonly INodeField inputOne = NodeComponentBuilder.NodeField("First Input").WithInput(0.0).Build;
+        private readonly INodeField inputTwo = NodeComponentBuilder.NodeField("Second Input").WithInput(0.0).Build;
+        private readonly INodeField outputField = NodeComponentBuilder.NodeField("Equal").WithInput(false).Build;
 
         public string NodeName => "Equal";
 

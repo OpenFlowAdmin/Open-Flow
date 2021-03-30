@@ -7,6 +7,7 @@
     using System.Runtime.CompilerServices;
     using OpenFlow_Core.Management.UserInterface;
     using OpenFlow_Core.Nodes.Connectors;
+    using OpenFlow_Core.Nodes.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
@@ -45,7 +46,7 @@
                 return true;
             }
 
-            LaminarValue relevantValue = connectionType == ConnectionType.Input ? ChildComponent.InputDisplayValue : ChildComponent.OutputDisplayValue;
+            LaminarValue relevantValue = connectionType == ConnectionType.Input ? ChildComponent.GetDisplayValue(INodeField.InputKey) : ChildComponent.GetDisplayValue(INodeField.OutputKey);
             if (relevantValue != null && connector is not ValueConnector)
             {
                 newConnector = new ValueConnector(relevantValue, ParentNode, connectionType);

@@ -7,9 +7,9 @@
 
     public class NodeDifference : INode
     {
-        private readonly NodeField firstNumber = new NodeField { Name = "Number 1" }.WithInput<double>();
-        private readonly NodeField secondNumber = new NodeField { Name = "Number 2" }.WithInput<double>();
-        private readonly NodeField outputField = new NodeField { Name = "Difference" }.WithOutput<double>();
+        private readonly INodeField firstNumber = NodeComponentBuilder.NodeField("Number 1").WithInput(0.0).Build;
+        private readonly INodeField secondNumber = NodeComponentBuilder.NodeField("Number 2").WithInput(0.0).Build;
+        private readonly INodeField outputField = NodeComponentBuilder.NodeField("Difference").WithOutput(0.0).Build;
 
         public string NodeName => "Difference";
 

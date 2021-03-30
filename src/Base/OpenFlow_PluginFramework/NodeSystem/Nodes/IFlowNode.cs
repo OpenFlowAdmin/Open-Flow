@@ -4,6 +4,6 @@
 
     public interface IFlowNode : INode
     {
-        public VisualNodeComponent FlowOutField { get; }
+        public IVisualNodeComponent FlowOutField { get; }
     }
 }

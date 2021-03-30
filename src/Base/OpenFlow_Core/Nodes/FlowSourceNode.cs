@@ -11,7 +11,7 @@
 
     public class FlowSourceNode : IFlowNode
     {
-        private readonly NodeField _sourceField = new NodeField() { Name = "Manual Trigger" }.WithValue<Action>("Displayed", false).WithFlowOutput();
+        private readonly INodeField _sourceField = NodeComponentBuilder.NodeField("Manual Trigger").WithValue<INodeField, Action>("Displayed", null, false).WithFlowOutput().Build;
         private NodeBase _parentNodeBase;
 
         public FlowSourceNode()
@@ -19,7 +19,7 @@
             // this.SetSpecialField(SpecialFieldFlags.FlowOutput, _sourceField);
         }
 
-        public VisualNodeComponent FlowOutField => _sourceField;
+        public IVisualNodeComponent FlowOutField => _sourceField;
 
         public string NodeName => "Flow Source";
 

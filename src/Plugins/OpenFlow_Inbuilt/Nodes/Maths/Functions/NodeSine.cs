@@ -8,8 +8,8 @@
 
     public class NodeSine : INode
     {
-        private readonly NodeField inputField = new NodeField() { Name = "x" }.WithInput<double>(0);
-        private readonly NodeField outputField = new NodeField() { Name = "sin(x)" }.WithOutput<double>();
+        private readonly INodeField inputField = NodeComponentBuilder.NodeField("x").WithInput(0.0).Build;
+        private readonly INodeField outputField = NodeComponentBuilder.NodeField("sin(x)").WithOutput(0.0).Build;
 
         public string NodeName => "Sine";
 

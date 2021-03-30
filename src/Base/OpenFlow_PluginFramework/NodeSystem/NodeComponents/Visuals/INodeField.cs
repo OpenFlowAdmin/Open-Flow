@@ -5,7 +5,7 @@ using System;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
-    public interface INodeField : INodeComponent
+    public interface INodeField : IVisualNodeComponent
     {
         public const string InputKey = "Input";
         public const string OutputKey = "Output";
@@ -15,17 +15,11 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 
         object this[object key] { get; set; }
 
-        string Name { get; set; }
-
         LaminarValue DisplayedValue { get; }
 
         object Input { get; set; }
 
-        LaminarValue InputDisplayValue { get; }
-
         object Output { get; set; }
-
-        LaminarValue OutputDisplayValue { get; }
 
         void AddValue(object key, LaminarValue newVal);
 

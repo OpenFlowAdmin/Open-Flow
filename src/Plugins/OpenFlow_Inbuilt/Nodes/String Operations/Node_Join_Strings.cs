@@ -8,8 +8,8 @@
 
     public class Node_Join_Strings : INode
     {
-        private readonly NodeComponentAutoCloner combineStrings = new(new NodeField() { Name = "Text" }.WithInput<string>(), 2, (x) => $"Text {x}");
-        private readonly NodeField combinedString = new NodeField() { Name = "Combined String" }.WithOutput<string>();
+        private readonly NodeComponentAutoCloner combineStrings = new(NodeComponentBuilder.NodeField("Text").WithInput("").Build, 2, (x) => $"Text {x}");
+        private readonly INodeField combinedString = NodeComponentBuilder.NodeField("Combined").WithOutput("").Build;
 
         public string NodeName => "Join Strings";
 
@@ -25,7 +25,7 @@
         public void Evaluate()
         {
             string output = string.Empty;
-            foreach (NodeField field in combineStrings)
+            foreach (INodeField field in combineStrings)
             {
                 output += (string)field.Input;
             }

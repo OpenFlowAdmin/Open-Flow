@@ -8,8 +8,8 @@
 
     public class NodeMultiply : INode
     {
-        private readonly NodeComponentAutoCloner multiplyFields = new(new NodeField() { Name = "Number" }.WithInput(1.0), 1, index => $"Number {index + 1}");
-        private readonly NodeField outputField = new NodeField() { Name = "Product" }.WithOutput<double>();
+        private readonly NodeComponentAutoCloner multiplyFields = new(NodeComponentBuilder.NodeField("Number").WithInput(0.0).Build, 1, index => $"Number {index + 1}");
+        private readonly INodeField outputField = NodeComponentBuilder.NodeField("Product").WithOutput(0.0).Build;
 
         public string NodeName => "Multiply";
 
@@ -26,7 +26,7 @@
         {
             double output = 1.0;
 
-            foreach (NodeField field in multiplyFields)
+            foreach (INodeField field in multiplyFields)
             {
                 output *= (double)field.Input;
             }

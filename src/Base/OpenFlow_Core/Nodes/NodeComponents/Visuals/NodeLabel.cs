@@ -8,9 +8,5 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
     public class NodeLabel : VisualNodeComponent, INodeLabel
     {
-        public NodeLabel(string label)
-        {
-            Name = label;
-        }
     }
 }

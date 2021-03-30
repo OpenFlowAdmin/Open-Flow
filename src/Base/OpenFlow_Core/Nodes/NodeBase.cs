@@ -91,7 +91,7 @@
             return null;
         }
 
-        public VisualNodeComponentDisplay<T> GetDisplayForComponent<T>(T component) where T : VisualNodeComponent
+        public VisualNodeComponentDisplay<T> GetDisplayForComponent<T>(T component) where T : IVisualNodeComponent
         {
             return Fields[_fieldSection.VisualComponentList.IndexOf(component)] as VisualNodeComponentDisplay<T>;
         }

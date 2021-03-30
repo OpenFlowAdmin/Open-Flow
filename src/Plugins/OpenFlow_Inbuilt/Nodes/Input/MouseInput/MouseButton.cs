@@ -12,7 +12,7 @@ namespace OpenFlow_Inbuilt.Nodes.Input.MouseInput
 {
     public class MouseButton : INode
     {
-        private readonly NodeField mouseButtonOutput = new NodeField() { Name = "Mouse Button" }.WithValue<MouseButtonEnum>("Display", true).WithOutput<MouseButtonEnum>();
+        private readonly INodeField mouseButtonOutput = NodeComponentBuilder.NodeField("Mouse Button ").WithValue("Display", MouseButtonEnum.LeftButton, true).WithOutput(MouseButtonEnum.LeftButton).Build;
 
         public string NodeName => "Mouse Button";
 

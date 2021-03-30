@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 {
     public abstract class VisualNodeComponentDisplay<T> : IVisualNodeComponentDisplay
-        where T : VisualNodeComponent
+        where T : IVisualNodeComponent
     {
         public VisualNodeComponentDisplay(NodeBase parentNode, T childComponent)
         {
