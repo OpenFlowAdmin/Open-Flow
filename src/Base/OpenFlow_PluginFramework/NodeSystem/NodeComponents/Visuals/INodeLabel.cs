@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 {
-    public class NodeLabel : VisualNodeComponent, INodeLabel
+    public interface INodeLabel : IVisualNodeComponent
     {
-        public NodeLabel(string label)
-        {
-            Name = label;
-        }
     }
 }

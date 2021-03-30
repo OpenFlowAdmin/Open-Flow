@@ -23,6 +23,15 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return output;
         }
 
+        public static NodeComponentBuilderInstance<INodeLabel> NodeLabel(string labelText)
+        {
+            NodeComponentBuilderInstance<INodeLabel> output = new(Factory);
+
+            output.Build.Name = labelText;
+
+            return output;
+        }
+
         public static NodeComponentBuilderInstance<T> WithFlowInput<T>(this NodeComponentBuilderInstance<T> builder, bool HasFlowInput = true) where T : IVisualNodeComponent
         {
             builder.Build.WithFlowInput(HasFlowInput);
@@ -58,15 +67,16 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 
         public static NodeComponentBuilderInstance<TComponent> WithOutputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionProvider typeDefinition) where TComponent : INodeField
             => builder.WithValueTypeProvider<TComponent>(INodeField.OutputKey, typeDefinition, false);
-    }
 
-    public class NodeComponentBuilderInstance<T> where T : INodeComponent
-    {
-        public NodeComponentBuilderInstance(NodeComponentFactory factory)
+
+        public class NodeComponentBuilderInstance<T> where T : INodeComponent
         {
-            Build = factory.GetImplementation<T>();
-        }
+            public NodeComponentBuilderInstance(NodeComponentFactory factory)
+            {
+                Build = factory.GetImplementation<T>();
+            }
 
-        public T Build { get; }
+            public T Build { get; }
+        }
     }
 }
