@@ -33,6 +33,15 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return output;
         }
 
+        public static NodeComponentBuilderInstance<INodeDecorator> NodeDecorator(NodeDecoratorType DecoratorType)
+        {
+            NodeComponentBuilderInstance<INodeDecorator> output = new(Factory);
+
+            output.Build.DecoratorType = DecoratorType;
+
+            return output;
+        }
+
         public static NodeComponentBuilderInstance<T> WithFlowInput<T>(this NodeComponentBuilderInstance<T> builder, bool HasFlowInput = true) where T : IVisualNodeComponent
         {
             builder.Build.SetFlowInput(HasFlowInput);

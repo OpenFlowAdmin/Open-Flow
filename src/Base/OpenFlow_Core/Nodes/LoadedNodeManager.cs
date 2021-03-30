@@ -13,7 +13,8 @@
         {
             NodeComponentBuilder.Factory = new NodeComponentFactory()
                 .RegisterImplementation<INodeField, NodeField>()
-                .RegisterImplementation<INodeLabel, NodeLabel>();
+                .RegisterImplementation<INodeLabel, NodeLabel>()
+                .RegisterImplementation<INodeDecorator, NodeDecorator>();
         }
 
         public NodeCatagories LoadedNodes { get; } = new();

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 {
-    public class MajorSeperator : VisualNodeComponentDisplay<NodeDecorators>
+    public class MajorSeperator : VisualNodeComponentDisplay<INodeDecorator>
     {
-        public MajorSeperator(NodeBase parent) : base(parent, NodeDecorators.MajorSeparator) { }
+        public MajorSeperator(NodeBase parent, INodeDecorator child) : base(parent, child) { }
     }
 }

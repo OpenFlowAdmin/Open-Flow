@@ -47,9 +47,9 @@
             {
                 yield return flowInput;
                 yield return valueInput;
-                yield return NodeDecorators.MajorSeparator;
+                yield return NodeComponentBuilder.NodeDecorator(NodeDecoratorType.MajorSeparator).Build;
                 yield return OutputsLabel;
-                yield return NodeDecorators.MajorSeparator;
+                yield return NodeComponentBuilder.NodeDecorator(NodeDecoratorType.MajorSeparator).Build;
                 yield return flowOutputs;
             }
         }

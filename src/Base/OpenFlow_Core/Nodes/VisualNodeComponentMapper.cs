@@ -30,14 +30,14 @@ namespace OpenFlow_Core.Nodes
                 return new NodeLabelDisplay(_parentNode, (NodeLabel)toMap);
             }
 
-            if (toMap is NodeDecorators decorator)
+            if (toMap is INodeDecorator decorator)
             {
-                switch (decorator.Type)
+                switch (decorator.DecoratorType)
                 {
-                    case NodeDecorators.DecoratorType.MajorSeparator:
-                        return new MajorSeperator(_parentNode);
-                    case NodeDecorators.DecoratorType.MinorSeparator:
-                        return new MinorSeperator(_parentNode);
+                    case NodeDecoratorType.MajorSeparator:
+                        return new MajorSeperator(_parentNode, decorator);
+                    case NodeDecoratorType.MinorSeparator:
+                        return new MinorSeperator(_parentNode, decorator);
                 }
             }
 
