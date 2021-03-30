@@ -13,23 +13,23 @@
     /// <summary>
     /// Defines a read only collection of NodeComponents, with protected list methods for children to make public
     /// </summary>
-    public class NodeComponentCollection : NodeComponent, IEnumerable<NodeComponent>, INotifyCollectionChanged
+    public class NodeComponentCollection : NodeComponent, IEnumerable<INodeComponent>, INotifyCollectionChanged
     {
         private INode parentNode;
-        private readonly ObservableCollection<NodeComponent> _childComponents;
+        private readonly ObservableCollection<INodeComponent> _childComponents;
 
-        public NodeComponentCollection() : this(Enumerable.Empty<NodeComponent>()) { }
+        public NodeComponentCollection() : this(Enumerable.Empty<INodeComponent>()) { }
 
-        public NodeComponentCollection(params NodeComponent[] childComponents) : this(childComponents.AsEnumerable()) { }
+        public NodeComponentCollection(params INodeComponent[] childComponents) : this(childComponents.AsEnumerable()) { }
 
-        public NodeComponentCollection(IEnumerable<NodeComponent> childComponents)
+        public NodeComponentCollection(IEnumerable<INodeComponent> childComponents)
         {
-            foreach (NodeComponent component in childComponents)
+            foreach (INodeComponent component in childComponents)
             {
                 component.Opacity.AddOpacityFactor(Opacity);
             }
 
-            _childComponents = new ObservableCollection<NodeComponent>(childComponents);
+            _childComponents = new ObservableCollection<INodeComponent>(childComponents);
             VisualComponentList = new NodeFieldList(_childComponents);
         }
 
@@ -54,7 +54,7 @@
             set
             {
                 parentNode = value;
-                foreach (NodeComponent component in _childComponents)
+                foreach (INodeComponent component in _childComponents)
                 {
                     component.ParentNode = parentNode;
                 }
@@ -63,7 +63,7 @@
 
         public int ComponentCount => _childComponents.Count;
 
-        protected NodeComponent this[Index index]
+        protected INodeComponent this[Index index]
         {
             get => _childComponents[index];
             set 
@@ -77,22 +77,22 @@
             }
         }
 
-        public IEnumerator<NodeComponent> GetEnumerator() => _childComponents.GetEnumerator();
+        public IEnumerator<INodeComponent> GetEnumerator() => _childComponents.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public int IndexOf(NodeComponent component) => _childComponents.IndexOf(component);
+        public int IndexOf(INodeComponent component) => _childComponents.IndexOf(component);
 
-        public bool Contains(NodeComponent component) => _childComponents.Contains(component);
+        public bool Contains(INodeComponent component) => _childComponents.Contains(component);
 
         public override NodeComponent Clone() => CloneTo(new NodeComponentCollection(_childComponents.Select(x => x.Clone())));
 
-        protected virtual void ProtectedAdd(NodeComponent newComponent)
+        protected virtual void ProtectedAdd(INodeComponent newComponent)
         {
             ProtectedInsert(_childComponents.Count, newComponent);
         }
 
-        protected virtual void ProtectedInsert(int index, NodeComponent newComponent)
+        protected virtual void ProtectedInsert(int index, INodeComponent newComponent)
         {
             _childComponents.Insert(index, newComponent);
             newComponent.Opacity.AddOpacityFactor(Opacity);
@@ -107,7 +107,7 @@
             }
         }
 
-        protected virtual bool ProtectedRemove(NodeComponent component)
+        protected virtual bool ProtectedRemove(INodeComponent component)
         {
             component.Opacity.RemoveOpacityFactor(Opacity);
             return _childComponents.Remove(component);

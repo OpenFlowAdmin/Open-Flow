@@ -13,7 +13,7 @@
 
         public string NodeName => "Sine";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {

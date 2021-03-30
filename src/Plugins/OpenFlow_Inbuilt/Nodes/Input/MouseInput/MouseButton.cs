@@ -16,7 +16,7 @@ namespace OpenFlow_Inbuilt.Nodes.Input.MouseInput
 
         public string NodeName => "Mouse Button";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {

@@ -16,19 +16,19 @@
 
         public abstract string NodeName { get; }
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {
                 yield return _flowField;
-                foreach (NodeComponent field in FlowNodeFields)
+                foreach (INodeComponent field in FlowNodeFields)
                 {
                     yield return field;
                 }
             }
         }
 
-        protected abstract IEnumerable<NodeComponent> FlowNodeFields { get; }
+        protected abstract IEnumerable<INodeComponent> FlowNodeFields { get; }
 
         public abstract void Evaluate();
     }

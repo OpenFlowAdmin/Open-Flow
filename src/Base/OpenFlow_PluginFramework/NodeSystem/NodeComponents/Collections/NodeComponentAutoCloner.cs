@@ -6,16 +6,16 @@
 
     public class NodeComponentAutoCloner : NodeComponentCollection
     {
-        private readonly NodeComponent _originalClone;
+        private readonly INodeComponent _originalClone;
         private readonly Func<int, string> _nameRule;
         private readonly int _minimumFieldCount;
 
-        public NodeComponentAutoCloner(NodeComponent clone, int minimumFieldCount, Func<int, string> nameRule = null)
+        public NodeComponentAutoCloner(INodeComponent clone, int minimumFieldCount, Func<int, string> nameRule = null)
             : base()
         {
-            this._nameRule = nameRule;
+            _nameRule = nameRule;
             _originalClone = clone;
-            this._minimumFieldCount = minimumFieldCount;
+            _minimumFieldCount = minimumFieldCount;
 
             _originalClone.ParentNode = ParentNode;
             _originalClone.Opacity.Value = 0.5;
@@ -54,7 +54,7 @@
             if (_nameRule != null)
             {
                 int index = 0;
-                foreach (VisualNodeComponent field in _originalClone.VisualComponentList)
+                foreach (IVisualNodeComponent field in _originalClone.VisualComponentList)
                 {
                     field.Name = _nameRule(VisualComponentList.Count + index);
                     index++;
@@ -69,9 +69,9 @@
             }
         }
 
-        private void RemoveComponent(NodeComponent component) => ProtectedRemove(component);
+        private void RemoveComponent(INodeComponent component) => ProtectedRemove(component);
 
-        protected override bool ProtectedRemove(NodeComponent component)
+        protected override bool ProtectedRemove(INodeComponent component)
         {
             if (VisualComponentList.Count <= _minimumFieldCount + 1 || component == this[^1])
             {
@@ -97,7 +97,7 @@
         private void UpdateNames()
         {
             int index = 0;
-            foreach (VisualNodeComponent field in VisualComponentList)
+            foreach (IVisualNodeComponent field in VisualComponentList)
             {
                 field.Name = _nameRule(index);
                 index++;

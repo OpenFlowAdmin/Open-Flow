@@ -17,7 +17,7 @@ namespace OpenFlow_Inbuilt.Nodes.Maths.Comparisons
 
         public string NodeName => "Equal";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {

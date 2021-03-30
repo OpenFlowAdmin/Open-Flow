@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
-    public class NodeComponentList : NodeComponentCollection, IList<NodeComponent>
+    public class NodeComponentList : NodeComponentCollection, IList<INodeComponent>
     {
-        public NodeComponent this[int index] { get => base[index]; set => base[index] = value; }
+        public INodeComponent this[int index] { get => base[index]; set => base[index] = value; }
 
         public bool IsReadOnly => false;
 
@@ -16,16 +16,16 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public void Clear() => ProtectedReset();
 
-        public void CopyTo(NodeComponent[] array, int arrayIndex)
+        public void CopyTo(INodeComponent[] array, int arrayIndex)
         {
             throw new NotImplementedException();
         }
 
-        public void Add(NodeComponent item) => ProtectedAdd(item);
+        public void Add(INodeComponent item) => ProtectedAdd(item);
 
-        public void Insert(int index, NodeComponent item) => ProtectedInsert(index, item);
+        public void Insert(int index, INodeComponent item) => ProtectedInsert(index, item);
 
-        public bool Remove(NodeComponent item) => ProtectedRemove(item);
+        public bool Remove(INodeComponent item) => ProtectedRemove(item);
 
         public void RemoveAt(int index) => ProtectedRemoveAt(index);
     }

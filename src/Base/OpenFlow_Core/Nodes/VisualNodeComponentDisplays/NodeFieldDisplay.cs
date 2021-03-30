@@ -66,11 +66,11 @@
 
         private void BaseField_ValueStoreChanged(object sender, object e)
         {
-            if (e as string is NodeField.InputKey)
+            if (e as string is INodeField.InputKey)
             {
                 UpdateInput();
             }
-            else if (e as string is NodeField.OutputKey)
+            else if (e as string is INodeField.OutputKey)
             {
                 UpdateOutput();
             }

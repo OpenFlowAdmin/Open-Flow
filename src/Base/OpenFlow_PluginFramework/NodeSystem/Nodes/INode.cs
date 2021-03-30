@@ -8,7 +8,7 @@
     {
         string NodeName { get; }
 
-        IEnumerable<NodeComponent> Fields { get; }
+        IEnumerable<INodeComponent> Fields { get; }
 
         void Evaluate();
     }

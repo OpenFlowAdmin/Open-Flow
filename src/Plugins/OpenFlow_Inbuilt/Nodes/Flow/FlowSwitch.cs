@@ -41,7 +41,7 @@
 
         public string NodeName => "Switch";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {

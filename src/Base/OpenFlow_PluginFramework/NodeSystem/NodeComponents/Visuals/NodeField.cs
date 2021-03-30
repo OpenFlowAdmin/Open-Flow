@@ -8,17 +8,9 @@
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
     using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
-    public partial class NodeField : VisualNodeComponent
+    public partial class NodeField : VisualNodeComponent, INodeField
     {
-        public const string InputKey = "Input";
-        public const string OutputKey = "Output";
-
         private readonly Dictionary<object, LaminarValue> _valueStore = new();
-
-        public NodeField(object displayValueKey = null) : base()
-        {
-            SetDisplayedValue(displayValueKey);
-        }
 
         public event EventHandler<object> ValueStoreChanged;
 
@@ -78,7 +70,7 @@
             NotifyPropertyChanged(nameof(DisplayedValue));
         }
 
-        private void AddValue(object key, ITypeDefinitionProvider typeDefs, bool isUserEditable)
+        public void AddValue(object key, ITypeDefinitionProvider typeDefs, bool isUserEditable)
         {
             AddValue(key, new LaminarValue(typeDefs) { IsUserEditable = isUserEditable });
         }
@@ -134,20 +126,20 @@
 
     public partial class NodeField
     {
-        public LaminarValue InputDisplayValue => GetDisplayValue(InputKey);
+        public LaminarValue InputDisplayValue => GetDisplayValue(INodeField.InputKey);
 
-        public LaminarValue OutputDisplayValue => GetDisplayValue(OutputKey);
+        public LaminarValue OutputDisplayValue => GetDisplayValue(INodeField.OutputKey);
 
         public object Input
         {
             get => InputDisplayValue?.Value;
-            set => this[InputKey] = value;
+            set => this[INodeField.InputKey] = value;
         }
 
         public object Output
         {
             get => OutputDisplayValue?.Value;
-            set => this[OutputKey] = value;
+            set => this[INodeField.OutputKey] = value;
         }
 
         public NodeField WithValue<T>(object key, bool isUserEditable, T value = default, string editorName = null, string displayName = null)
@@ -161,12 +153,12 @@
             return this;
         }
 
-        public NodeField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(InputKey, true, initialValue, editorName, displayName);
+        public NodeField WithInput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(INodeField.InputKey, true, initialValue, editorName, displayName);
 
-        public NodeField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(InputKey, typeDefinition, true);
+        public NodeField WithInputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(INodeField.InputKey, typeDefinition, true);
 
-        public NodeField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(OutputKey, false, initialValue, editorName, displayName);
+        public NodeField WithOutput<T>(T initialValue = default, string editorName = null, string displayName = null) => WithValue(INodeField.OutputKey, false, initialValue, editorName, displayName);
 
-        public NodeField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(OutputKey, typeDefinition, false);
+        public NodeField WithOutputTypeProvider(ITypeDefinitionProvider typeDefinition) => WithTypeProvider(INodeField.OutputKey, typeDefinition, false);
     }
 }

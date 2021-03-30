@@ -7,13 +7,13 @@
 
     public class NodeDifference : INode
     {
-        private readonly NodeField firstNumber = new NodeField() { Name = "Number 1" }.WithInput<double>();
-        private readonly NodeField secondNumber = new NodeField() { Name = "Number 2" }.WithInput<double>();
-        private readonly NodeField outputField = new NodeField() { Name = "Difference" }.WithOutput<double>();
+        private readonly NodeField firstNumber = new NodeField { Name = "Number 1" }.WithInput<double>();
+        private readonly NodeField secondNumber = new NodeField { Name = "Number 2" }.WithInput<double>();
+        private readonly NodeField outputField = new NodeField { Name = "Difference" }.WithOutput<double>();
 
         public string NodeName => "Difference";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {

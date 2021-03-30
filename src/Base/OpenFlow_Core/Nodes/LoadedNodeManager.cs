@@ -2,10 +2,17 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+    using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
 
     public class LoadedNodeManager
     {
+        public LoadedNodeManager()
+        {
+            NodeComponentBuilder.Factory = new NodeComponentFactory().RegisterImplementation<INodeField, NodeField>();
+        }
+
         public NodeCatagories LoadedNodes { get; } = new();
 
         public void AddNodeToCatagory<TNode>(string catagoryName, string subCatagoryName = null)

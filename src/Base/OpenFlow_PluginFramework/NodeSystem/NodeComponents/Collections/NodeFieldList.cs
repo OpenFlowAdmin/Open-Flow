@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 {
-    public class NodeFieldList : INotifyCollectionChanged, IList, IList<VisualNodeComponent>
+    public class NodeFieldList : INotifyCollectionChanged, IList, IList<IVisualNodeComponent>
     {
-        private readonly ObservableCollection<NodeComponent> _components;
+        private readonly ObservableCollection<INodeComponent> _components;
 
-        public NodeFieldList(ObservableCollection<NodeComponent> nodeComponents)
+        public NodeFieldList(ObservableCollection<INodeComponent> nodeComponents)
         {
             nodeComponents.CollectionChanged += Components_CollectionChanged;
             _components = nodeComponents;
@@ -32,7 +32,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public object SyncRoot => false;
 
-        VisualNodeComponent IList<VisualNodeComponent>.this[int index] { get => this[index] as VisualNodeComponent; set => this[index] = value; }
+        IVisualNodeComponent IList<IVisualNodeComponent>.this[int index] { get => this[index] as IVisualNodeComponent; set => this[index] = value; }
 
         public object this[int index] 
         { 
@@ -43,7 +43,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
                 {
                     throw new IndexOutOfRangeException();
                 }
-                IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
+                IEnumerator<IVisualNodeComponent> enumer = GetEnumerator();
                 for (int i = 0; i < index; i++)
                 {
                     enumer.MoveNext();
@@ -56,16 +56,16 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public IEnumerator<VisualNodeComponent> GetEnumerator()
+        public IEnumerator<IVisualNodeComponent> GetEnumerator()
         {
-            foreach (NodeComponent component in _components)
+            foreach (INodeComponent component in _components)
             {
                 if (!component.IsVisible)
                 {
                     continue;
                 }
 
-                foreach (VisualNodeComponent field in component.VisualComponentList)
+                foreach (IVisualNodeComponent field in component.VisualComponentList)
                 {
                     yield return field;
                 }
@@ -76,24 +76,24 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public bool Contains(object value)
         {
-            if (value is not VisualNodeComponent)
+            if (value is not IVisualNodeComponent)
             {
-                throw new InvalidCastException($"{nameof(NodeFieldList)} only stores valus of type {nameof(VisualNodeComponent)}");
+                throw new InvalidCastException($"{nameof(NodeFieldList)} only stores valus of type {nameof(IVisualNodeComponent)}");
             }
-            return Contains(value as VisualNodeComponent);
+            return Contains(value as IVisualNodeComponent);
         }
 
-        public bool Contains(VisualNodeComponent item) => IndexOf(item) != -1;
+        public bool Contains(IVisualNodeComponent item) => IndexOf(item) != -1;
 
         public int IndexOf(object value) => GetIndexOf(value);
 
-        public int IndexOf(VisualNodeComponent item) => GetIndexOf(item);
+        public int IndexOf(IVisualNodeComponent item) => GetIndexOf(item);
 
-        public void CopyTo(Array array, int index) => CopyTo(array as VisualNodeComponent[], index);
+        public void CopyTo(Array array, int index) => CopyTo(array as IVisualNodeComponent[], index);
 
-        public void CopyTo(VisualNodeComponent[] array, int arrayIndex)
+        public void CopyTo(IVisualNodeComponent[] array, int arrayIndex)
         {
-            IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
+            IEnumerator<IVisualNodeComponent> enumer = GetEnumerator();
             int i = 0;
             while (enumer.MoveNext())
             {
@@ -102,7 +102,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
             }
         }
 
-        public bool Remove(VisualNodeComponent item) => throw new NotSupportedException();
+        public bool Remove(IVisualNodeComponent item) => throw new NotSupportedException();
 
         public void Insert(int index, object value) => throw new NotSupportedException();
 
@@ -114,9 +114,9 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public void Clear() => throw new NotSupportedException();
 
-        public void Insert(int index, VisualNodeComponent item) => throw new NotSupportedException();
+        public void Insert(int index, IVisualNodeComponent item) => throw new NotSupportedException();
 
-        public void Add(VisualNodeComponent item) => throw new NotSupportedException();
+        public void Add(IVisualNodeComponent item) => throw new NotSupportedException();
 
         private int GetLinearIndexFromNested(int nested)
         {
@@ -155,7 +155,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void ComponentsRemoved(IList components, int index)
         {
-            foreach (NodeComponent component in components)
+            foreach (INodeComponent component in components)
             {
                 if (component is NodeComponentCollection componentCollection)
                 {
@@ -170,7 +170,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void ComponentsAdded(IList components, int index = -1)
         {
-            foreach (NodeComponent component in components)
+            foreach (INodeComponent component in components)
             {
                 if (component is NodeComponentCollection componentCollection)
                 {
@@ -185,7 +185,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private void NodePart_VisibilityChanged(object sender, bool e)
         {
-            if (sender is NodeComponent component)
+            if (sender is INodeComponent component)
             {
                 if (e)
                 {
@@ -242,7 +242,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         private int GetIndexOf(object value)
         {
-            IEnumerator<VisualNodeComponent> enumer = GetEnumerator();
+            IEnumerator<IVisualNodeComponent> enumer = GetEnumerator();
             for (int i = 0; i < Count; i++)
             {
                 enumer.MoveNext();

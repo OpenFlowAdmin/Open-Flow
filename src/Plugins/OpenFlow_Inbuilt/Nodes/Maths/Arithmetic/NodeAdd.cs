@@ -8,12 +8,12 @@
 
     public class NodeAdd : INode
     {
-        private readonly NodeComponentAutoCloner addFields = new(new NodeField() { Name = "Number" }.WithInput(0.0), 1, index => $"Number {index + 1}");
-        private readonly NodeField totalField = new NodeField() { Name = "Total" }.WithOutput<double>();
+        private readonly NodeComponentAutoCloner addFields = new(NodeComponentBuilder.NodeField("Input").WithInput(0.0).Build, 1, index => $"Number {index + 1}");
+        private readonly INodeField totalField = NodeComponentBuilder.NodeField("Output").WithOutput(0.0).Build;
 
         public string NodeName { get; } = "Add";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {
@@ -26,7 +26,7 @@
         {
             double total = 0;
 
-            foreach (NodeField field in addFields)
+            foreach (INodeField field in addFields)
             {
                 total += (double)field.Input;
             }

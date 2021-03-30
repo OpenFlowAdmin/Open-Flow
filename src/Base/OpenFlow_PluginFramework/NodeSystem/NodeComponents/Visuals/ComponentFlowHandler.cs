@@ -7,16 +7,16 @@
 
     public static class ComponentFlowHandler
     {
-        private static readonly Dictionary<VisualNodeComponent, FlowState> FlowStates = new();
-        private static readonly Dictionary<INode, VisualNodeComponent> NodeFlowOuts = new();
+        private static readonly Dictionary<IVisualNodeComponent, FlowState> FlowStates = new();
+        private static readonly Dictionary<INode, IVisualNodeComponent> NodeFlowOuts = new();
 
-        public static void SetFlowOutput(this INode node, VisualNodeComponent nodeComponent) => NodeFlowOuts[node] = nodeComponent;
+        public static void SetFlowOutput(this INode node, IVisualNodeComponent nodeComponent) => NodeFlowOuts[node] = nodeComponent;
 
-        public static VisualNodeComponent GetFlowOutput(this INode node) => NodeFlowOuts[node];
+        public static IVisualNodeComponent GetFlowOutput(this INode node) => NodeFlowOuts[node];
 
         public static bool HasFlowOutput(this INode node) => NodeFlowOuts.ContainsKey(node);
 
-        public static T WithFlowInput<T>(this T field, bool inputState = true) where T : VisualNodeComponent
+        public static T WithFlowInput<T>(this T field, bool inputState = true) where T : IVisualNodeComponent
         {
             if (FlowStates.TryGetValue(field, out FlowState _))
             {
@@ -30,7 +30,7 @@
             return field;
         }
 
-        public static T WithFlowOutput<T>(this T field, bool outputState = true) where T : VisualNodeComponent
+        public static T WithFlowOutput<T>(this T field, bool outputState = true) where T : IVisualNodeComponent
         {
             if (FlowStates.TryGetValue(field, out FlowState _))
             {
@@ -44,7 +44,7 @@
             return field;
         }
 
-        public static ObservableValue<bool> GetFlowInput(this VisualNodeComponent field)
+        public static ObservableValue<bool> GetFlowInput(this IVisualNodeComponent field)
         {
             if (!FlowStates.ContainsKey(field))
             {
@@ -54,7 +54,7 @@
             return FlowStates[field].Input;
         }
 
-        public static ObservableValue<bool> GetFlowOutput(this VisualNodeComponent field)
+        public static ObservableValue<bool> GetFlowOutput(this IVisualNodeComponent field)
         {
             if (!FlowStates.ContainsKey(field))
             {

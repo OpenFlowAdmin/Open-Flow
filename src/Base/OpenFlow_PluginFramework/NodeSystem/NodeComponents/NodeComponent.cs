@@ -10,7 +10,7 @@
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
 
-    public abstract class  NodeComponent : INotifyPropertyChanged
+    public abstract class NodeComponent : INotifyPropertyChanged, INodeComponent
     {
         private bool _isVisible = true;
         private Action<NodeComponent> _removeAction;

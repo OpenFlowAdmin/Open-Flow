@@ -10,7 +10,7 @@
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
 
-    public class VisualNodeComponent : NodeComponent
+    public class VisualNodeComponent : NodeComponent, IVisualNodeComponent
     {
         private string _name;
 

@@ -15,7 +15,7 @@ namespace OpenFlow_Inbuilt.Nodes.Maths.Arithmetic
 
         public string NodeName { get; } = "Slider Test";
 
-        public IEnumerable<NodeComponent> Fields
+        public IEnumerable<INodeComponent> Fields
         {
             get
             {
