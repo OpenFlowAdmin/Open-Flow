@@ -22,7 +22,7 @@
             _originalClone.SetRemoveAction((component) => 
             {
                 ProtectedRemove(component);
-                UpdateNames();
+                //UpdateNames();
             });
 
             for (int i = 0; i < minimumFieldCount + 1; i++)

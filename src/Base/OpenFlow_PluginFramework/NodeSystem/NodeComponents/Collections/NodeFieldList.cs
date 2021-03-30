@@ -217,7 +217,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
             int i = 0;
             int startingIndex = 0;
-            while (i < _components.Count && (_components[i] as INodeComponentCollection)?.VisualComponentList != sender)
+            while (i < _components.Count && _components[i].VisualComponentList != sender)
             {
                 startingIndex += _components[i].VisualComponentList.Count;
                 i++;
