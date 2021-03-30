@@ -6,7 +6,7 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 {
     public interface IVisualNodeComponentDisplay
     {
-        public Opacity Opacity { get; }
+        public IOpacity Opacity { get; }
 
         public ObservableValue<IConnector> InputConnector { get; }
 

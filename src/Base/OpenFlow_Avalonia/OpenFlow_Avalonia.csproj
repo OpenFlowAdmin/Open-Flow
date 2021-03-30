@@ -49,4 +49,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenFlow_Core\OpenFlow_Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OpenFlow_Core\" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace OpenFlow_Core
+﻿namespace OpenFlow_Core.Primitives
 {
     public enum HorizontalAlignment
     {

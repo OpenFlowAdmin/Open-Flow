@@ -16,7 +16,7 @@
     {
         private string _name;
 
-        public VisualNodeComponent()
+        public VisualNodeComponent(IOpacity opacity) : base(opacity)
         {
             VisualComponentList = new List<VisualNodeComponent>() { this };
         }
@@ -36,9 +36,9 @@
 
         public override IList VisualComponentList { get; }
 
-        public override NodeComponent Clone() => CloneTo(new VisualNodeComponent());
+        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.GetInstance<IVisualNodeComponent>().Build);
 
-        protected override VisualNodeComponent CloneTo(NodeComponent nodeField)
+        protected override IVisualNodeComponent CloneTo(INodeComponent nodeField)
         {
             base.CloneTo(nodeField);
             (nodeField as VisualNodeComponent).Name = Name;

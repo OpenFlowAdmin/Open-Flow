@@ -4,16 +4,19 @@
     using System.Linq;
     using OpenFlow_Core.Nodes.NodeComponents.Collections;
     using OpenFlow_Core.Nodes.NodeComponents.Visuals;
+    using OpenFlow_Core.Primitives;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_PluginFramework.Primitives;
 
     public class LoadedNodeManager
     {
         public LoadedNodeManager()
         {
             NodeComponentBuilder.Factory = new NodeComponentFactory()
+                .RegisterImplementation<IOpacity, Opacity>()
                 .RegisterImplementation<INodeField, NodeField>()
                 .RegisterImplementation<INodeLabel, NodeLabel>()
                 .RegisterImplementation<INodeDecorator, NodeDecorator>()

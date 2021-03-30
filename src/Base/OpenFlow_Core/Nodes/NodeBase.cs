@@ -26,10 +26,8 @@
         public NodeBase(INode baseNode)
         {
             _baseNode = baseNode;
-            _fieldSection = new NodeComponentCollection(baseNode.Fields)
-            {
-                ParentNode = baseNode
-            };
+            _fieldSection = NodeComponentBuilder.NodeComponentList(baseNode.Fields).Build;
+            _fieldSection.ParentNode = baseNode;
 
             Fields = ObservableCollectionMapper<IVisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualNodeComponentsObservable, new VisualNodeComponentMapper(this));
 

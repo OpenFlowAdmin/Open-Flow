@@ -14,6 +14,8 @@
     {
         private readonly Dictionary<object, LaminarValue> _valueStore = new();
 
+        public NodeField(IOpacity opacity) : base(opacity) { }
+
         public event EventHandler<object> ValueStoreChanged;
 
         public event EventHandler<object> AnyValueChanged;
@@ -96,9 +98,9 @@
 
         public LaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out LaminarValue value) ? value : null;
 
-        public override NodeComponent Clone() => CloneTo(new NodeField());
+        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.NodeField(Name).Build);
 
-        protected override NodeField CloneTo(NodeComponent nodeField)
+        protected override INodeField CloneTo(INodeComponent nodeField)
         {
             base.CloneTo(nodeField);
             foreach (KeyValuePair<object, LaminarValue> kvp in _valueStore)

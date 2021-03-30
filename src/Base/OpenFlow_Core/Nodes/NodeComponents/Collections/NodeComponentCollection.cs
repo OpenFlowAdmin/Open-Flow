@@ -11,6 +11,7 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_PluginFramework.Primitives;
 
     /// <summary>
     /// Defines a read only collection of NodeComponents, with protected list methods for children to make public
@@ -18,20 +19,10 @@
     public class NodeComponentCollection : NodeComponent, INodeComponentCollection
     {
         private INode _parentNode;
-        private readonly ObservableCollection<INodeComponent> _childComponents;
+        private readonly ObservableCollection<INodeComponent> _childComponents = new();
 
-        public NodeComponentCollection() : this(Enumerable.Empty<INodeComponent>()) { }
-
-        public NodeComponentCollection(params INodeComponent[] childComponents) : this(childComponents.AsEnumerable()) { }
-
-        public NodeComponentCollection(IEnumerable<INodeComponent> childComponents)
+        public NodeComponentCollection(IOpacity opacity) : base(opacity) 
         {
-            foreach (INodeComponent component in childComponents)
-            {
-                component.Opacity.AddOpacityFactor(Opacity);
-            }
-
-            _childComponents = new ObservableCollection<INodeComponent>(childComponents);
             VisualComponentList = new NodeFieldList(_childComponents);
         }
 
@@ -89,7 +80,7 @@
 
         public bool Contains(INodeComponent component) => _childComponents.Contains(component);
 
-        public override NodeComponent Clone() => CloneTo(new NodeComponentCollection(_childComponents.Select(x => x.Clone())));
+        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.NodeComponentList(_childComponents.Select(x => x.Clone())).Build);
 
         protected virtual void ProtectedAdd(INodeComponent newComponent)
         {

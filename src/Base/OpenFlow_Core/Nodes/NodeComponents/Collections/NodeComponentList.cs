@@ -1,5 +1,6 @@
 ﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
+using OpenFlow_PluginFramework.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace OpenFlow_Core.Nodes.NodeComponents.Collections
 {
     public class NodeComponentList : NodeComponentCollection, INodeComponentList
     {
+        public NodeComponentList(IOpacity opacity) : base(opacity) { }
+
         public INodeComponent this[int index] { get => base[index]; set => base[index] = value; }
 
         public bool IsReadOnly => false;

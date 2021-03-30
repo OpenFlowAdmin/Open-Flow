@@ -15,6 +15,8 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
     {
         public static NodeComponentFactory Factory { get; set; } = new();
 
+        public static NodeComponentBuilderInstance<T> GetInstance<T>() => new(Factory);
+
         public static NodeComponentBuilderInstance<INodeField> NodeField(string fieldName) 
         {
             NodeComponentBuilderInstance<INodeField> output = new(Factory);
@@ -112,7 +114,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return builder;
         }
 
-        public class NodeComponentBuilderInstance<T> where T : INodeComponent
+        public class NodeComponentBuilderInstance<T>
         {
             public NodeComponentBuilderInstance(NodeComponentFactory factory)
             {

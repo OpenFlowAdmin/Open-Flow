@@ -9,7 +9,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
     public interface INodeComponent
     {
         bool IsVisible { get; set; }
-        Opacity Opacity { get; }
+        IOpacity Opacity { get; }
         INode ParentNode { get; set; }
         Action RemoveSelf { get; }
         IList VisualComponentList { get; }

@@ -8,6 +8,7 @@
     using OpenFlow_Core.Management.UserInterface;
     using OpenFlow_Core.Nodes.Connectors;
     using OpenFlow_Core.Nodes.NodeComponents.Visuals;
+    using OpenFlow_Core.Primitives;
     using OpenFlow_PluginFramework.NodeSystem;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;

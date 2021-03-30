@@ -13,6 +13,11 @@
         private bool _isVisible = true;
         private Action<INodeComponent> _removeAction;
 
+        public NodeComponent(IOpacity opacity)
+        {
+            Opacity = opacity;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler<bool> VisibilityChanged;
@@ -23,7 +28,7 @@
 
         public Action RemoveSelf { get; private set; }
 
-        public Opacity Opacity { get; } = new();
+        public IOpacity Opacity { get; }
 
         public virtual bool IsVisible
         {
@@ -50,7 +55,7 @@
 
         public abstract INodeComponent Clone();
 
-        protected virtual NodeComponent CloneTo(NodeComponent component)
+        protected virtual INodeComponent CloneTo(INodeComponent component)
         {
             component.ParentNode = ParentNode;
             component.SetRemoveAction(_removeAction);

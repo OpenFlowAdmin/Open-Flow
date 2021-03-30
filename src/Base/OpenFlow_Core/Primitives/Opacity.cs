@@ -1,18 +1,19 @@
-﻿using System;
+﻿using OpenFlow_PluginFramework.Primitives;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenFlow_PluginFramework.Primitives
+namespace OpenFlow_Core.Primitives
 {
     /// <summary>
     /// Defines the opacity of a displayed object
     /// </summary>
-    public class Opacity : INotifyPropertyChanged
+    public class Opacity : IOpacity
     {
-        private readonly List<Opacity> _opacityFactors = new();
+        private readonly List<IOpacity> _opacityFactors = new();
         private double _myValue = 1.0;
         private double _factorValue = 1.0;
 
@@ -35,7 +36,7 @@ namespace OpenFlow_PluginFramework.Primitives
         /// Adds another opacity as a factor to this opacity
         /// </summary>
         /// <param name="factor">The Opacity class that provides the factor</param>
-        public void AddOpacityFactor(Opacity factor)
+        public void AddOpacityFactor(IOpacity factor)
         {
             factor.PropertyChanged += Factor_PropertyChanged;
             _opacityFactors.Add(factor);
@@ -46,7 +47,7 @@ namespace OpenFlow_PluginFramework.Primitives
         /// Removes an opacity factor from this opacity
         /// </summary>
         /// <param name="factor">The factor to remove</param>
-        public bool RemoveOpacityFactor(Opacity factor)
+        public bool RemoveOpacityFactor(IOpacity factor)
         {
             if (_opacityFactors.Remove(factor))
             {
@@ -74,7 +75,7 @@ namespace OpenFlow_PluginFramework.Primitives
         private void UpdateFactor()
         {
             _factorValue = 1.0;
-            foreach (Opacity factor in _opacityFactors)
+            foreach (IOpacity factor in _opacityFactors)
             {
                 _factorValue *= factor.Value;
             }

@@ -5,12 +5,15 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_PluginFramework.Primitives;
 
     public class NodeComponentAutoCloner : NodeComponentCollection, INodeComponentAutoCloner
     {
         private INodeComponent _originalClone;
         private Func<int, string> _nameRule;
         private int _minimumFieldCount;
+
+        public NodeComponentAutoCloner(IOpacity opacity) : base(opacity) { }
 
         public override INode ParentNode
         {

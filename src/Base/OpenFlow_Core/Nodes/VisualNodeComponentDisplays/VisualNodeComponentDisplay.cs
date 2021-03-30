@@ -1,4 +1,5 @@
 ﻿using OpenFlow_Core.Nodes.Connectors;
+using OpenFlow_Core.Primitives;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
 using System.ComponentModel;
@@ -19,7 +20,7 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
             UpdateOutput();
         }
 
-        public Opacity Opacity => ChildComponent.Opacity;
+        public IOpacity Opacity => ChildComponent.Opacity;
 
         public virtual ObservableValue<IConnector> InputConnector { get; } = new(null);
 
