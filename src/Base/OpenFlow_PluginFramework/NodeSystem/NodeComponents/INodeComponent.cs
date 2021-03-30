@@ -17,8 +17,8 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
         event PropertyChangedEventHandler PropertyChanged;
         event EventHandler<bool> VisibilityChanged;
 
-        public void SetRemoveAction(Action<NodeComponent> removeAction);
+        public void SetRemoveAction(Action<INodeComponent> removeAction);
 
-        NodeComponent Clone();
+        INodeComponent Clone();
     }
 }

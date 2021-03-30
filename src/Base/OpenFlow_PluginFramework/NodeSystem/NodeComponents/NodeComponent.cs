@@ -13,7 +13,7 @@
     public abstract class NodeComponent : INotifyPropertyChanged, INodeComponent
     {
         private bool _isVisible = true;
-        private Action<NodeComponent> _removeAction;
+        private Action<INodeComponent> _removeAction;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,7 +40,7 @@
             }
         }
 
-        public void SetRemoveAction(Action<NodeComponent> removeAction)
+        public void SetRemoveAction(Action<INodeComponent> removeAction)
         {
             _removeAction = removeAction;
             RemoveSelf = () =>
@@ -50,7 +50,7 @@
             };
         }
 
-        public abstract NodeComponent Clone();
+        public abstract INodeComponent Clone();
 
         protected virtual NodeComponent CloneTo(NodeComponent component)
         {

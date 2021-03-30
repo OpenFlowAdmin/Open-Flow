@@ -157,9 +157,9 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             foreach (INodeComponent component in components)
             {
-                if (component is NodeComponentCollection componentCollection)
+                if (component is INodeComponentCollection componentCollection)
                 {
-                    componentCollection.VisualComponentList.CollectionChanged -= Child_NodeFieldsList_Changed;
+                    componentCollection.VisualNodeComponentsObservable.CollectionChanged -= Child_NodeFieldsList_Changed;
                 }
 
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, component.VisualComponentList, GetLinearIndexFromNested(index)));
@@ -172,9 +172,9 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
         {
             foreach (INodeComponent component in components)
             {
-                if (component is NodeComponentCollection componentCollection)
+                if (component is INodeComponentCollection componentCollection)
                 {
-                    componentCollection.VisualComponentList.CollectionChanged += Child_NodeFieldsList_Changed;
+                    componentCollection.VisualNodeComponentsObservable.CollectionChanged += Child_NodeFieldsList_Changed;
                 }
 
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, component.VisualComponentList, GetLinearIndexFromNested(index)));
@@ -217,7 +217,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
             int i = 0;
             int startingIndex = 0;
-            while (i < _components.Count && (_components[i] as NodeComponentCollection)?.VisualComponentList != sender)
+            while (i < _components.Count && (_components[i] as INodeComponentCollection)?.VisualComponentList != sender)
             {
                 startingIndex += _components[i].VisualComponentList.Count;
                 i++;

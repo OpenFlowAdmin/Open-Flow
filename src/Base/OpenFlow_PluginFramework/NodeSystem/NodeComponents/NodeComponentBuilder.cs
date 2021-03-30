@@ -1,4 +1,5 @@
-﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
+﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
 using OpenFlow_PluginFramework.Primitives.TypeDefinition;
 using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
@@ -67,7 +68,6 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 
         public static NodeComponentBuilderInstance<TComponent> WithOutputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionProvider typeDefinition) where TComponent : INodeField
             => builder.WithValueTypeProvider<TComponent>(INodeField.OutputKey, typeDefinition, false);
-
 
         public class NodeComponentBuilderInstance<T> where T : INodeComponent
         {

@@ -18,7 +18,7 @@
     public class NodeBase
     {
         private readonly INode _baseNode;
-        private readonly NodeComponentCollection _fieldSection;
+        private readonly INodeComponentCollection _fieldSection;
         private bool _errorState;
         private bool _evaluating;
 
@@ -30,7 +30,7 @@
                 ParentNode = baseNode
             };
 
-            Fields = ObservableCollectionMapper<VisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualComponentList, new VisualNodeComponentMapper(this));
+            Fields = ObservableCollectionMapper<VisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualNodeComponentsObservable, new VisualNodeComponentMapper(this));
 
             baseNode.SubscribeToEvaluate(TryEvaluate);
 

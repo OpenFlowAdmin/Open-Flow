@@ -12,7 +12,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Sections
 
         public bool IsReadOnly => false;
 
-        public int Count => ComponentCount;
+        public int Count => base.ComponentCount;
 
         public void Clear() => ProtectedReset();
 

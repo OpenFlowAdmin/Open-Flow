@@ -13,9 +13,9 @@
     /// <summary>
     /// Defines a read only collection of NodeComponents, with protected list methods for children to make public
     /// </summary>
-    public class NodeComponentCollection : NodeComponent, IEnumerable<INodeComponent>, INotifyCollectionChanged
+    public class NodeComponentCollection : NodeComponent, INodeComponentCollection
     {
-        private INode parentNode;
+        private INode _parentNode;
         private readonly ObservableCollection<INodeComponent> _childComponents;
 
         public NodeComponentCollection() : this(Enumerable.Empty<INodeComponent>()) { }
@@ -39,7 +39,7 @@
             {
                 _childComponents.CollectionChanged += value;
             }
-            
+
             remove
             {
                 _childComponents.CollectionChanged -= value;
@@ -48,25 +48,27 @@
 
         public override NodeFieldList VisualComponentList { get; }
 
+        public INotifyCollectionChanged VisualNodeComponentsObservable => VisualComponentList;
+
         public override INode ParentNode
         {
-            get => parentNode;
+            get => _parentNode;
             set
             {
-                parentNode = value;
+                _parentNode = value;
                 foreach (INodeComponent component in _childComponents)
                 {
-                    component.ParentNode = parentNode;
+                    component.ParentNode = _parentNode;
                 }
             }
         }
 
         public int ComponentCount => _childComponents.Count;
 
-        protected INodeComponent this[Index index]
+        public INodeComponent this[Index index]
         {
             get => _childComponents[index];
-            set 
+            protected set
             {
                 if (GetIndex(index) >= _childComponents.Count)
                 {
