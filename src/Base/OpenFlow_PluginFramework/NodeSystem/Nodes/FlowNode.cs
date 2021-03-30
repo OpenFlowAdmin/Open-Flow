@@ -9,11 +9,6 @@
     {
         private readonly INodeLabel _flowField = NodeComponentBuilder.NodeLabel("Flow").WithFlowInput().WithFlowOutput().Build;
 
-        public FlowNode()
-        {
-            this.SetFlowOutput(_flowField);
-        }
-
         public abstract string NodeName { get; }
 
         public IEnumerable<INodeComponent> Fields

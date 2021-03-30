@@ -35,13 +35,13 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 
         public static NodeComponentBuilderInstance<T> WithFlowInput<T>(this NodeComponentBuilderInstance<T> builder, bool HasFlowInput = true) where T : IVisualNodeComponent
         {
-            builder.Build.WithFlowInput(HasFlowInput);
+            builder.Build.SetFlowInput(HasFlowInput);
             return builder;
         }
 
         public static NodeComponentBuilderInstance<T> WithFlowOutput<T>(this NodeComponentBuilderInstance<T> builder, bool HasFlowOutput = true) where T : IVisualNodeComponent
         {
-            builder.Build.WithFlowOutput(HasFlowOutput);
+            builder.Build.SetFlowOutput(HasFlowOutput);
             return builder;
         }
 

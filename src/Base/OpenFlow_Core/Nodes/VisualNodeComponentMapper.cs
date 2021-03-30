@@ -9,7 +9,7 @@ using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 
 namespace OpenFlow_Core.Nodes
 {
-    class VisualNodeComponentMapper : ITypeMapper<VisualNodeComponent, IVisualNodeComponentDisplay>
+    class VisualNodeComponentMapper : ITypeMapper<IVisualNodeComponent, IVisualNodeComponentDisplay>
     {
         private readonly NodeBase _parentNode;
 
@@ -18,7 +18,7 @@ namespace OpenFlow_Core.Nodes
             _parentNode = parentNode;
         }
 
-        public IVisualNodeComponentDisplay MapType(VisualNodeComponent toMap)
+        public IVisualNodeComponentDisplay MapType(IVisualNodeComponent toMap)
         {
             if (typeof(NodeField).IsAssignableFrom(toMap.GetType()))
             {

@@ -8,15 +8,8 @@
     public static class ComponentFlowHandler
     {
         private static readonly Dictionary<IVisualNodeComponent, FlowState> FlowStates = new();
-        private static readonly Dictionary<INode, IVisualNodeComponent> NodeFlowOuts = new();
 
-        public static void SetFlowOutput(this INode node, IVisualNodeComponent nodeComponent) => NodeFlowOuts[node] = nodeComponent;
-
-        public static IVisualNodeComponent GetFlowOutput(this INode node) => NodeFlowOuts[node];
-
-        public static bool HasFlowOutput(this INode node) => NodeFlowOuts.ContainsKey(node);
-
-        public static T WithFlowInput<T>(this T field, bool inputState = true) where T : IVisualNodeComponent
+        public static void SetFlowInput(this IVisualNodeComponent field, bool inputState = true)
         {
             if (FlowStates.TryGetValue(field, out FlowState _))
             {
@@ -26,11 +19,9 @@
             {
                 FlowStates[field] = new FlowState(new ObservableValue<bool>(inputState), new ObservableValue<bool>(false));
             }
-
-            return field;
         }
 
-        public static T WithFlowOutput<T>(this T field, bool outputState = true) where T : IVisualNodeComponent
+        public static void SetFlowOutput(this IVisualNodeComponent field, bool outputState = true)
         {
             if (FlowStates.TryGetValue(field, out FlowState _))
             {
@@ -40,8 +31,6 @@
             {
                 FlowStates[field] = new FlowState(new ObservableValue<bool>(false), new ObservableValue<bool>(outputState));
             }
-
-            return field;
         }
 
         public static ObservableValue<bool> GetFlowInput(this IVisualNodeComponent field)

@@ -30,7 +30,7 @@
                 ParentNode = baseNode
             };
 
-            Fields = ObservableCollectionMapper<VisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualNodeComponentsObservable, new VisualNodeComponentMapper(this));
+            Fields = ObservableCollectionMapper<IVisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualNodeComponentsObservable, new VisualNodeComponentMapper(this));
 
             baseNode.SubscribeToEvaluate(TryEvaluate);
 

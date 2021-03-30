@@ -4,8 +4,8 @@
 
     public interface ITypeConverterNode : INode
     {
-        VisualNodeComponent ConvertInput { get; }
+        IVisualNodeComponent ConvertInput { get; }
 
-        VisualNodeComponent ConvertOutput { get; }
+        IVisualNodeComponent ConvertOutput { get; }
     }
 }

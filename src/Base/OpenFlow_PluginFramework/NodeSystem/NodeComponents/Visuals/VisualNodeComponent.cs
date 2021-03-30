@@ -40,7 +40,9 @@
         {
             base.CloneTo(nodeField);
             (nodeField as VisualNodeComponent).Name = Name;
-            return (nodeField as VisualNodeComponent).WithFlowInput(this.GetFlowInput()).WithFlowOutput(this.GetFlowOutput());
+            (nodeField as VisualNodeComponent).SetFlowOutput(this.GetFlowOutput());
+            (nodeField as VisualNodeComponent).SetFlowInput(this.GetFlowInput());
+            return nodeField as VisualNodeComponent;
         }
     }
 }

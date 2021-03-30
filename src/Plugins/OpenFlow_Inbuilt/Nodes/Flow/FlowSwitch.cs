@@ -93,7 +93,7 @@
         {
             if (typeDef.ValueType.IsEnum)
             {
-                return new NodeComponentCollection(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x)).WithFlowOutput()));
+                return new NodeComponentCollection(Enum.GetNames(typeDef.ValueType).Select(x => ValueDisplay(typeDef, Enum.Parse(typeDef.ValueType, x))));
             }
 
             return new NodeComponentCollection(
@@ -106,6 +106,7 @@
         {
             INodeField output = NodeComponentBuilder.NodeField(x.ToString()).WithValueTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" }, false).Build;
             output.DisplayedValue.Value = x;
+            output.SetFlowOutput();
             return output;
         }
     }
