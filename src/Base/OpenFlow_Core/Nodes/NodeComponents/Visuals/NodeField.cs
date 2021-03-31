@@ -11,7 +11,7 @@
 
     public class NodeField : VisualNodeComponent, INodeField
     {
-        private readonly Dictionary<object, LaminarValue> _valueStore = new();
+        private readonly Dictionary<object, ILaminarValue> _valueStore = new();
 
         public NodeField(IOpacity opacity) : base(opacity) { }
 
@@ -25,7 +25,7 @@
             set
             {
                 base.Name = value;
-                foreach (LaminarValue storedValue in _valueStore.Values)
+                foreach (ILaminarValue storedValue in _valueStore.Values)
                 {
                     storedValue.Name = base.Name;
                 }
@@ -58,7 +58,7 @@
                 {
                     RemoveValue(key);
                 }
-                else if (_valueStore.TryGetValue(key, out LaminarValue OFVal))
+                else if (_valueStore.TryGetValue(key, out ILaminarValue OFVal))
                 {
                     if (OFVal.CanSetValue(value))
                     {
@@ -77,14 +77,17 @@
             }
         }
 
-        public LaminarValue DisplayedValue { get; private set; }
+        public ILaminarValue DisplayedValue { get; private set; }
 
         public void AddValue(object key, ITypeDefinitionManager typeDefs, bool isUserEditable)
         {
-            AddValue(key, new LaminarValue(typeDefs) { IsUserEditable = isUserEditable });
+            ILaminarValue newVal = Instance.Factory.GetImplementation<ILaminarValue>();
+            newVal.TypeDefinitionManager = typeDefs;
+            newVal.IsUserEditable = isUserEditable;
+            AddValue(key, newVal);
         }
 
-        public void AddValue(object key, LaminarValue newVal)
+        public void AddValue(object key, ILaminarValue newVal)
         {
             _valueStore.Add(key, newVal);
             newVal.PropertyChanged += ChildValue_PropertyChanged;
@@ -95,14 +98,14 @@
             ValueStoreChanged?.Invoke(this, key);
         }
 
-        public LaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out LaminarValue value) ? value : null;
+        public ILaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out ILaminarValue value) ? value : null;
 
         public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.NodeField(Name).Build);
 
         protected override INodeField CloneTo(INodeComponent nodeField)
         {
             base.CloneTo(nodeField);
-            foreach (KeyValuePair<object, LaminarValue> kvp in _valueStore)
+            foreach (KeyValuePair<object, ILaminarValue> kvp in _valueStore)
             {
                 (nodeField as NodeField).AddValue(kvp.Key, kvp.Value.Clone());
             }
@@ -118,7 +121,7 @@
 
         private bool RemoveValue(object key)
         {
-            if (_valueStore.TryGetValue(key, out LaminarValue val))
+            if (_valueStore.TryGetValue(key, out ILaminarValue val))
             {
                 val.PropertyChanged -= ChildValue_PropertyChanged;
                 _valueStore.Remove(key);
@@ -130,10 +133,10 @@
 
         private void ChildValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(LaminarValue.Value))
+            if (e.PropertyName == nameof(ILaminarValue.Value))
             {
                 ParentNode.TriggerEvaluate();
-                AnyValueChanged?.Invoke(this, (sender as LaminarValue)?.Value);
+                AnyValueChanged?.Invoke(this, (sender as ILaminarValue)?.Value);
                 NotifyPropertyChanged("Child Value");
             }
         }

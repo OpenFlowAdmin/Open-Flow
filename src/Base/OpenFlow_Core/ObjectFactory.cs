@@ -33,6 +33,7 @@ namespace OpenFlow_Core
             RegisterImplementation<ITypeDefinitionManager, TypeDefinitionManager>();
             RegisterImplementation<IRigidTypeDefinitionManager, RigidTypeDefinitionManager>();
             RegisterImplementation<IManualTypeDefinitionManager, ManualTypeDefinitionManager>();
+            RegisterImplementation<ILaminarValue, LaminarValue>();
         }
 
         public T GetImplementation<T>()

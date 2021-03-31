@@ -6,7 +6,7 @@
 
     public class ValueConnector : Connector<ValueConnector>, INotifyPropertyChanged
     {
-        public ValueConnector(LaminarValue displayValue, NodeBase parent, ConnectionType connectionType)
+        public ValueConnector(ILaminarValue displayValue, NodeBase parent, ConnectionType connectionType)
             : base(parent, connectionType)
         {
             DisplayValue = displayValue;
@@ -21,7 +21,7 @@
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LaminarValue DisplayValue { get; }
+        public ILaminarValue DisplayValue { get; }
 
         public override bool IsExclusiveConnection => ConnectionType == ConnectionType.Input;
 

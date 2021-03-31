@@ -1,5 +1,6 @@
-﻿namespace OpenFlow_PluginFramework.Primitives
+﻿namespace OpenFlow_Core.Primitives
 {
+    using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
     using System.ComponentModel;
     using System.Diagnostics;
@@ -7,24 +8,14 @@
     /// <summary>
     /// Stores a well-constrained value by managing a list of <see cref="ITypeDefinition"/>
     /// </summary>
-    public class LaminarValue : INotifyPropertyChanged
+    public class LaminarValue : INotifyPropertyChanged, ILaminarValue
     {
-        private readonly ITypeDefinitionManager _typeDefinitionProvider;
         private object _value;
         private bool _isEditable;
-        private LaminarValue _driver; 
+        private ILaminarValue _driver;
         private ITypeDefinition _currentTypeDefinition;
         private string _name;
-
-        /// <summary>
-        /// Creates a new instance of the OpenFlowValue class
-        /// </summary>
-        /// <param name="typeDefinitions">A list of possible <see cref="ITypeDefinition"/> which defines what values are allowed</param>
-        public LaminarValue(ITypeDefinitionManager typeDefinitionProvider)
-        {
-            _typeDefinitionProvider = typeDefinitionProvider;
-            TypeDefinition = typeDefinitionProvider.DefaultDefinition;
-        }
+        private ITypeDefinitionManager _typeDefinitionProvider;
 
         public LaminarValue()
         {
@@ -73,7 +64,7 @@
             get => _driver == null ? _value : _driver.Value;
             set
             {
-                _currentTypeDefinition ??= _typeDefinitionProvider.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
+                _currentTypeDefinition ??= TypeDefinitionManager.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
 
                 if (_currentTypeDefinition != null && _currentTypeDefinition.TryConstraintValue(value, out object outputVal) && !outputVal.Equals(Value))
                 {
@@ -102,7 +93,7 @@
         /// <summary>
         /// If not null, the <see cref="Value"/> of the Driver will determine the value of this OpenFlowValue
         /// </summary>
-        public LaminarValue Driver
+        public ILaminarValue Driver
         {
             get => _driver;
             set
@@ -127,6 +118,16 @@
             }
         }
 
+        public ITypeDefinitionManager TypeDefinitionManager
+        {
+            get => _typeDefinitionProvider;
+            set
+            {
+                _typeDefinitionProvider = value;
+                TypeDefinition = _typeDefinitionProvider.DefaultDefinition;
+            }
+        }
+
         /// <summary>
         /// Determines whether this OpenFlowValue can take a value. Will change <see cref="TypeDefinition"/> if required
         /// </summary>
@@ -139,7 +140,7 @@
                 return true;
             }
 
-            if (_typeDefinitionProvider.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition))
+            if (TypeDefinitionManager.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition))
             {
                 TypeDefinition = typeDefinition;
                 return true;
@@ -152,8 +153,9 @@
         /// Clones this OpenFlowValue
         /// </summary>
         /// <returns>A new OpenFlowValue with the same properties as this one</returns>
-        public LaminarValue Clone() => new(_typeDefinitionProvider)
+        public ILaminarValue Clone() => new LaminarValue()
         {
+            TypeDefinitionManager = TypeDefinitionManager,
             Value = Value,
             IsUserEditable = IsUserEditable,
             Name = Name,

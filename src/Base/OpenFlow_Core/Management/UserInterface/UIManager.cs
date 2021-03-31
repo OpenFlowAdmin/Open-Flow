@@ -12,7 +12,7 @@ namespace OpenFlow_Core.Management.UserInterface
 {
     public class UIManager
     {
-        private LaminarValue _childValue;
+        private ILaminarValue _childValue;
         private string _userInterfaceType;
         private readonly List<ObservableObject> _userInterfaces = new();
 
@@ -37,7 +37,7 @@ namespace OpenFlow_Core.Management.UserInterface
             }
         }
 
-        public void SetChildValue(LaminarValue childValue)
+        public void SetChildValue(ILaminarValue childValue)
         {
             if (_childValue != null)
             {
@@ -51,7 +51,7 @@ namespace OpenFlow_Core.Management.UserInterface
 
         private void ChildValue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(LaminarValue.IsUserEditable) or nameof(LaminarValue.TypeDefinition))
+            if (e.PropertyName is nameof(ILaminarValue.IsUserEditable) or nameof(ILaminarValue.TypeDefinition))
             {
                 RefreshUserInterfaces();
             }

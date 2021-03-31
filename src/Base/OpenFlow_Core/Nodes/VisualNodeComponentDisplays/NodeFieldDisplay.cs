@@ -36,7 +36,7 @@
 
         public Action RemoveSelf => ChildComponent.RemoveSelf;
 
-        public LaminarValue DisplayedValue => ChildComponent.DisplayedValue;
+        public ILaminarValue DisplayedValue => ChildComponent.DisplayedValue;
 
         public UIManager UIs { get; }
 
@@ -47,7 +47,7 @@
                 return true;
             }
 
-            LaminarValue relevantValue = connectionType == ConnectionType.Input ? ChildComponent.GetDisplayValue(INodeField.InputKey) : ChildComponent.GetDisplayValue(INodeField.OutputKey);
+            ILaminarValue relevantValue = connectionType == ConnectionType.Input ? ChildComponent.GetDisplayValue(INodeField.InputKey) : ChildComponent.GetDisplayValue(INodeField.OutputKey);
             if (relevantValue != null && connector is not ValueConnector)
             {
                 newConnector = new ValueConnector(relevantValue, ParentNode, connectionType);

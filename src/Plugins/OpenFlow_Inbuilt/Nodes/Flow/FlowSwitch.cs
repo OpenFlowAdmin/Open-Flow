@@ -66,9 +66,9 @@
 
         private void FlowSwitch_OnTypeDefinitionChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(LaminarValue.TypeDefinition))
+            if (e.PropertyName == nameof(ILaminarValue.TypeDefinition))
             {
-                ChangeSwitchTypeTo((sender as LaminarValue).TypeDefinition);
+                ChangeSwitchTypeTo((sender as ILaminarValue).TypeDefinition);
             }
         }
 

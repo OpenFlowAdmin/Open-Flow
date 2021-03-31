@@ -14,16 +14,14 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 
         object this[object key] { get; set; }
 
-        LaminarValue DisplayedValue { get; }
+        ILaminarValue DisplayedValue { get; }
 
         object Input { get; set; }
 
         object Output { get; set; }
 
-        void AddValue(object key, LaminarValue newVal);
-
         void AddValue(object key, ITypeDefinitionManager typeDef, bool isUserEditable);
 
-        LaminarValue GetDisplayValue(object key);
+        ILaminarValue GetDisplayValue(object key);
     }
 }
