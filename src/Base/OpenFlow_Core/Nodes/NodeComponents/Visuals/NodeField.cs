@@ -8,7 +8,6 @@
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-    using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
     public class NodeField : VisualNodeComponent, INodeField
     {
@@ -68,19 +67,19 @@
                     else
                     {
                         RemoveValue(key);
-                        AddValue(key, new AutoTypeDefinition(value), true);
+                        AddValue(key, NodeComponentBuilder.RigidTypeDefinitionManager(value).Build, true);
                     }
                 }
                 else
                 {
-                    AddValue(key, new AutoTypeDefinition(value), true);
+                    AddValue(key, NodeComponentBuilder.RigidTypeDefinitionManager(value).Build, true);
                 }
             }
         }
 
         public LaminarValue DisplayedValue { get; private set; }
 
-        public void AddValue(object key, ITypeDefinitionProvider typeDefs, bool isUserEditable)
+        public void AddValue(object key, ITypeDefinitionManager typeDefs, bool isUserEditable)
         {
             AddValue(key, new LaminarValue(typeDefs) { IsUserEditable = isUserEditable });
         }

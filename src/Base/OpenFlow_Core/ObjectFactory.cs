@@ -1,10 +1,12 @@
 ﻿using OpenFlow_Core.Nodes.NodeComponents.Collections;
 using OpenFlow_Core.Nodes.NodeComponents.Visuals;
 using OpenFlow_Core.Primitives;
+using OpenFlow_Core.Primitives.TypeDefinitionManagers;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
+using OpenFlow_PluginFramework.Primitives.TypeDefinition;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +30,9 @@ namespace OpenFlow_Core
             RegisterImplementation<INodeComponentAutoCloner, NodeComponentAutoCloner>();
             RegisterImplementation<INodeComponentDictionary, NodeComponentDictionary>();
             RegisterImplementation<INodeComponentCollection, NodeComponentCollection>();
+            RegisterImplementation<ITypeDefinitionManager, TypeDefinitionManager>();
+            RegisterImplementation<IRigidTypeDefinitionManager, RigidTypeDefinitionManager>();
+            RegisterImplementation<IManualTypeDefinitionManager, ManualTypeDefinitionManager>();
         }
 
         public T GetImplementation<T>()

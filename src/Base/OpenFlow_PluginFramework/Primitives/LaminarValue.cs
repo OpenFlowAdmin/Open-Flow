@@ -1,7 +1,6 @@
 ﻿namespace OpenFlow_PluginFramework.Primitives
 {
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-    using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
     using System.ComponentModel;
     using System.Diagnostics;
 
@@ -10,7 +9,7 @@
     /// </summary>
     public class LaminarValue : INotifyPropertyChanged
     {
-        private readonly ITypeDefinitionProvider _typeDefinitionProvider;
+        private readonly ITypeDefinitionManager _typeDefinitionProvider;
         private object _value;
         private bool _isEditable;
         private LaminarValue _driver; 
@@ -21,15 +20,15 @@
         /// Creates a new instance of the OpenFlowValue class
         /// </summary>
         /// <param name="typeDefinitions">A list of possible <see cref="ITypeDefinition"/> which defines what values are allowed</param>
-        public LaminarValue(ITypeDefinitionProvider typeDefinitionProvider)
+        public LaminarValue(ITypeDefinitionManager typeDefinitionProvider)
         {
             _typeDefinitionProvider = typeDefinitionProvider;
-            TypeDefinition = typeDefinitionProvider.DefaultTypeDefiniton;
+            TypeDefinition = typeDefinitionProvider.DefaultDefinition;
         }
 
         public LaminarValue()
         {
-            _typeDefinitionProvider = new AutoTypeDefinitionProvider();
+            // _typeDefinitionProvider = new AutoTypeDefinitionProvider();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -74,7 +73,7 @@
             get => _driver == null ? _value : _driver.Value;
             set
             {
-                _currentTypeDefinition ??= _typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
+                _currentTypeDefinition ??= _typeDefinitionProvider.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition) ? typeDefinition : null;
 
                 if (_currentTypeDefinition != null && _currentTypeDefinition.TryConstraintValue(value, out object outputVal) && !outputVal.Equals(Value))
                 {
@@ -140,7 +139,7 @@
                 return true;
             }
 
-            if (_typeDefinitionProvider.TryGetTypeDefinitionFor(value, out ITypeDefinition typeDefinition))
+            if (_typeDefinitionProvider.TryGetDefinitionFor(value, out ITypeDefinition typeDefinition))
             {
                 TypeDefinition = typeDefinition;
                 return true;

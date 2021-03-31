@@ -2,7 +2,7 @@
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
 using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
+using OpenFlow_PluginFramework.Primitives.ValueConstraints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,10 +67,23 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return output;
         }
 
-        public static NodeComponentBuilderInstance<INodeComponentDictionary> NodeComponentDictionary()
+        public static NodeComponentBuilderInstance<ITypeDefinitionManager> TypeDefinitionManager()
         {
             return new(Factory);
         }
+
+        public static NodeComponentBuilderInstance<IRigidTypeDefinitionManager> RigidTypeDefinitionManager(object value, string editorName = null, string displayName = null)
+        {
+            NodeComponentBuilderInstance<IRigidTypeDefinitionManager> output = new(Factory);
+
+            output.Build.RegisterTypeDefinition(value, editorName, displayName);
+
+            return output;
+        }
+
+        public static NodeComponentBuilderInstance<IManualTypeDefinitionManager> ManualTypeDefinitionManager() => new(Factory);
+
+        public static NodeComponentBuilderInstance<INodeComponentDictionary> NodeComponentDictionary() => new(Factory);
 
         public static NodeComponentBuilderInstance<T> WithFlowInput<T>(this NodeComponentBuilderInstance<T> builder, bool HasFlowInput = true) where T : IVisualNodeComponent
         {
@@ -86,31 +99,55 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
 
         public static NodeComponentBuilderInstance<TComponent> WithValue<TComponent, TValue>(this NodeComponentBuilderInstance<TComponent> builder, string valueKey, TValue defaultValue, bool isUserEditable = false) where TComponent : INodeField
         {
-            builder.Build.AddValue(valueKey, new TypeDefinition<TValue>() { DefaultValue = defaultValue }, isUserEditable);
+            builder.Build.AddValue(valueKey, ManualTypeDefinitionManager().AddAcceptedDefinition<TValue>(defaultValue).Build, isUserEditable);
             return builder;
         }
 
-        public static NodeComponentBuilderInstance<TComponent> WithValueTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, string valueKey, ITypeDefinitionProvider typeDefinition, bool isUserEditable = false) where TComponent : INodeField
+        public static NodeComponentBuilderInstance<TComponent> WithValueTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, string valueKey, ITypeDefinitionManager typeDefinition, bool isUserEditable = false) where TComponent : INodeField
         {
             builder.Build.AddValue(valueKey, typeDefinition, isUserEditable);
+            return builder;
+        }
+
+        public static NodeComponentBuilderInstance<TComponent> WithValueType<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, string valueKey, ITypeDefinition typeDefinition, bool isUserEditable = false) where TComponent : INodeField
+        {
+            builder.Build.AddValue(valueKey, ManualTypeDefinitionManager().AddAcceptedDefinition(typeDefinition).Build, isUserEditable);
             return builder;
         }
 
         public static NodeComponentBuilderInstance<TComponent> WithInput<TComponent, TValue>(this NodeComponentBuilderInstance<TComponent> builder, TValue defaultValue) where TComponent : INodeField
             => builder.WithValue<TComponent, TValue>(INodeField.InputKey, defaultValue, true);
 
-        public static NodeComponentBuilderInstance<TComponent> WithInputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionProvider typeDefinition) where TComponent : INodeField
+        public static NodeComponentBuilderInstance<TComponent> WithInputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionManager typeDefinition) where TComponent : INodeField
             => builder.WithValueTypeProvider<TComponent>(INodeField.InputKey, typeDefinition, true);
+
+        public static NodeComponentBuilderInstance<TComponent> WithInputType<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinition typeDefinition) where TComponent : INodeField
+    => builder.WithValueType<TComponent>(INodeField.InputKey, typeDefinition, true);
 
         public static NodeComponentBuilderInstance<TComponent> WithOutput<TComponent, TValue>(this NodeComponentBuilderInstance<TComponent> builder, TValue defaultValue) where TComponent : INodeField
             => builder.WithValue<TComponent, TValue>(INodeField.OutputKey, defaultValue, false);
 
-        public static NodeComponentBuilderInstance<TComponent> WithOutputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionProvider typeDefinition) where TComponent : INodeField
+        public static NodeComponentBuilderInstance<TComponent> WithOutputTypeProvider<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinitionManager typeDefinition) where TComponent : INodeField
             => builder.WithValueTypeProvider<TComponent>(INodeField.OutputKey, typeDefinition, false);
+
+        public static NodeComponentBuilderInstance<TComponent> WithOutputType<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, ITypeDefinition typeDefinition) where TComponent : INodeField
+            => builder.WithValueType<TComponent>(INodeField.OutputKey, typeDefinition, true);
 
         public static NodeComponentBuilderInstance<TComponent> Add<TComponent>(this NodeComponentBuilderInstance<TComponent> builder, object key, INodeComponent value) where TComponent : INodeComponentDictionary
         {
             builder.Build.Add(key, value);
+            return builder;
+        }
+
+        public static NodeComponentBuilderInstance<IManualTypeDefinitionManager> AddAcceptedDefinition<T>(this NodeComponentBuilderInstance<IManualTypeDefinitionManager> builder, T defaultValue, string editorName = null, string displayName = null, ValueConstraintChain<T> constraints = null)
+        {
+            builder.Build.RegisterTypeDefinition(defaultValue, editorName, displayName, constraints);
+            return builder;
+        }
+
+        public static NodeComponentBuilderInstance<IManualTypeDefinitionManager> AddAcceptedDefinition(this NodeComponentBuilderInstance<IManualTypeDefinitionManager> builder, ITypeDefinition typeDefinition)
+        {
+            builder.Build.RegisterTypeDefinition(typeDefinition);
             return builder;
         }
 

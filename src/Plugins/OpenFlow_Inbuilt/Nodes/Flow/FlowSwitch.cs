@@ -11,13 +11,12 @@
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-    using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
     public class FlowSwitch : IFlowNode
     {
         private readonly INodeLabel flowInput = NodeComponentBuilder.NodeLabel("Flow Input").WithFlowInput().Build;
 
-        private readonly INodeField valueInput = NodeComponentBuilder.NodeField("Switch Value").WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider()).Build;
+        private readonly INodeField valueInput = NodeComponentBuilder.NodeField("Switch Value").WithInputTypeProvider(NodeComponentBuilder.TypeDefinitionManager().Build).Build;
 
         private readonly INodeLabel OutputsLabel = NodeComponentBuilder.NodeLabel("Possible Values").Build;
 
@@ -26,8 +25,8 @@
         private readonly INodeComponentDictionary flowOutputs = NodeComponentBuilder.NodeComponentDictionary().Add(
                 typeof(bool),
                 NodeComponentBuilder.NodeComponentList(
-                    NodeComponentBuilder.NodeField("True").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = true}, false).WithFlowOutput().Build,
-                    NodeComponentBuilder.NodeField("False").WithValueTypeProvider("Displayed", new TypeDefinition<double>() { DisplayName = "DefaultDisplay", DefaultValue = false }, false).WithFlowOutput().Build).Build).Build;
+                    NodeComponentBuilder.NodeField("True").WithValueTypeProvider("Displayed", NodeComponentBuilder.ManualTypeDefinitionManager().AddAcceptedDefinition<bool>(true, "DefaultDisplay").Build, false).WithFlowOutput().Build,
+                    NodeComponentBuilder.NodeField("False").WithValueTypeProvider("Displayed", NodeComponentBuilder.ManualTypeDefinitionManager().AddAcceptedDefinition<bool>(false, "DefaultDisplay").Build, false).WithFlowOutput().Build).Build).Build;
 
         public FlowSwitch()
         {
@@ -92,14 +91,14 @@
             }
 
             return NodeComponentBuilder.NodeComponentList(
-                NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Case").WithInputTypeProvider(typeDef).WithFlowOutput().Build, 0, (x) => $"Case {x + 1}").Build,
+                NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Case").WithInputType(typeDef).WithFlowOutput().Build, 0, (x) => $"Case {x + 1}").Build,
                 defaultOutput
             ).Build;
         }
 
         private static INodeField ValueDisplay(ITypeDefinition typeDef, object x)
         {
-            INodeField output = NodeComponentBuilder.NodeField(x.ToString()).WithValueTypeProvider("Displayed", new CopiedTypeDefinition(typeDef) { DisplayName = "DefaultDisplay" }, false).Build;
+            INodeField output = NodeComponentBuilder.NodeField(x.ToString()).WithValueTypeProvider("Displayed", NodeComponentBuilder.RigidTypeDefinitionManager(typeDef.DefaultValue, null, "DefaultDisplay").Build, false).Build;
             output.DisplayedValue.Value = x;
             output.SetFlowOutput();
             return output;

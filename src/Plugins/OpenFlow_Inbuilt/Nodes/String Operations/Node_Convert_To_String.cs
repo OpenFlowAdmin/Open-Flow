@@ -4,12 +4,11 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
-    using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 
     public class Node_Convert_To_String : INode
     {
         private readonly INodeField converterField = NodeComponentBuilder.NodeField("Text")
-            .WithInputTypeProvider(new AcceptsAllTypeDefinitionProvider())
+            .WithInputTypeProvider(NodeComponentBuilder.TypeDefinitionManager().Build)
             .WithOutput("").Build;
 
         public string NodeName => "Convert to Text";

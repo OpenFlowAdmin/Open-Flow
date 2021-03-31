@@ -1,12 +1,11 @@
 ﻿namespace OpenFlow_PluginFramework.Primitives.TypeDefinition
 {
-    using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
     using System;
 
     /// <summary>
     /// Immmutable type that defines how a value can behave and how to display it
     /// </summary>
-    public interface ITypeDefinition : ITypeDefinitionProvider
+    public interface ITypeDefinition
     {
         /// <summary>
         /// The c# type that this ITypeDefinition allows

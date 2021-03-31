@@ -1,6 +1,5 @@
 ﻿using OpenFlow_PluginFramework.Primitives;
 using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-using OpenFlow_PluginFramework.Primitives.TypeDefinitionProvider;
 using System;
 
 namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
@@ -23,7 +22,7 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals
 
         void AddValue(object key, LaminarValue newVal);
 
-        void AddValue(object key, ITypeDefinitionProvider typeDef, bool isUserEditable);
+        void AddValue(object key, ITypeDefinitionManager typeDef, bool isUserEditable);
 
         LaminarValue GetDisplayValue(object key);
     }
