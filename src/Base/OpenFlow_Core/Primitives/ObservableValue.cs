@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenFlow_PluginFramework.Primitives;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenFlow_PluginFramework.Primitives
+namespace OpenFlow_Core.Primitives
 {
-    public class ObservableValue<T> : INotifyPropertyChanged
+    public class ObservableValue<T> : IObservableValue<T>
     {
         private T _value;
-
-        public ObservableValue(T initialValue)
-        {
-            _value = initialValue;
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,7 +21,5 @@ namespace OpenFlow_PluginFramework.Primitives
                 }
             }
         }
-
-        public static implicit operator T(ObservableValue<T> observable) => observable.Value;
     }
 }

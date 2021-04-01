@@ -17,7 +17,7 @@
             }
             else
             {
-                FlowStates[field] = new FlowState(new ObservableValue<bool>(inputState), new ObservableValue<bool>(false));
+                FlowStates[field] = new FlowState(NewObservable(inputState), NewObservable(false));
             }
         }
 
@@ -29,30 +29,39 @@
             }
             else
             {
-                FlowStates[field] = new FlowState(new ObservableValue<bool>(false), new ObservableValue<bool>(outputState));
+                FlowStates[field] = new FlowState(NewObservable(false), NewObservable(outputState));
             }
         }
 
-        public static ObservableValue<bool> GetFlowInput(this IVisualNodeComponent field)
+        public static IObservableValue<bool> GetFlowInput(this IVisualNodeComponent field)
         {
             if (!FlowStates.ContainsKey(field))
             {
-                FlowStates[field] = new FlowState(new ObservableValue<bool>(false), new ObservableValue<bool>(false));
+                FlowStates[field] = new FlowState(NewObservable(false), NewObservable(false));
             }
 
             return FlowStates[field].Input;
         }
 
-        public static ObservableValue<bool> GetFlowOutput(this IVisualNodeComponent field)
+        public static IObservableValue<bool> GetFlowOutput(this IVisualNodeComponent field)
         {
             if (!FlowStates.ContainsKey(field))
             {
-                FlowStates[field] = new FlowState(new ObservableValue<bool>(false), new ObservableValue<bool>(false));
+                FlowStates[field] = new FlowState(NewObservable(false), NewObservable(false));
             }
 
             return FlowStates[field].Output;
         }
 
-        private record FlowState(ObservableValue<bool> Input, ObservableValue<bool> Output);
+        private record FlowState(IObservableValue<bool> Input, IObservableValue<bool> Output);
+
+        private static IObservableValue<bool> NewObservable(bool value)
+        {
+            IObservableValue<bool> output = NodeComponentBuilder.Factory.GetImplementation<IObservableValue<bool>>();
+
+            output.Value = value;
+
+            return output;
+        }
     }
 }

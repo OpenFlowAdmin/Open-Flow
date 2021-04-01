@@ -8,8 +8,8 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
     {
         public IOpacity Opacity { get; }
 
-        public ObservableValue<IConnector> InputConnector { get; }
+        public IObservableValue<IConnector> InputConnector { get; }
 
-        public ObservableValue<IConnector> OutputConnector { get; }
+        public IObservableValue<IConnector> OutputConnector { get; }
     }
 }

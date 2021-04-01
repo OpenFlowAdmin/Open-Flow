@@ -26,6 +26,8 @@ namespace OpenFlow_Core.Primitives.TypeDefinitionManagers
                 DefaultValue = defaultValue;
             }
 
+            public object this[string key] => null;
+
             public Type ValueType { get; }
 
             public object DefaultValue { get; }
@@ -36,7 +38,7 @@ namespace OpenFlow_Core.Primitives.TypeDefinitionManagers
 
             public bool CanAcceptValue(object value) => ValueType.IsAssignableFrom(value.GetType());
 
-            public bool TryConstraintValue(object inputValue, out object outputValue)
+            public bool TryConstrainValue(object inputValue, out object outputValue)
             {
                 outputValue = inputValue;
                 return true;

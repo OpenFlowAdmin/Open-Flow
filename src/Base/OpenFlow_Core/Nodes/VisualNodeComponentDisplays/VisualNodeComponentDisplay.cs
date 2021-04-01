@@ -22,11 +22,11 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 
         public IOpacity Opacity => ChildComponent.Opacity;
 
-        public virtual ObservableValue<IConnector> InputConnector { get; } = new(null);
+        public virtual IObservableValue<IConnector> InputConnector { get; } = Instance.Factory.GetImplementation<IObservableValue<IConnector>>();
 
-        public ObservableValue<HorizontalAlignment> Alignment { get; } = new(HorizontalAlignment.Middle);
+        public IObservableValue<HorizontalAlignment> Alignment { get; } = Instance.Factory.GetImplementation<IObservableValue<HorizontalAlignment>>();
 
-        public virtual ObservableValue<IConnector> OutputConnector { get; } = new(null);
+        public virtual IObservableValue<IConnector> OutputConnector { get; } = Instance.Factory.GetImplementation<IObservableValue<IConnector>>();
 
         protected T ChildComponent { get; }
 
@@ -66,8 +66,8 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
 
         private bool GetFlowFor(ConnectionType connectionType) => (connectionType) switch
         {
-            ConnectionType.Input => ChildComponent.GetFlowInput(),
-            ConnectionType.Output => ChildComponent.GetFlowOutput(),
+            ConnectionType.Input => ChildComponent.GetFlowInput().Value,
+            ConnectionType.Output => ChildComponent.GetFlowOutput().Value,
             _ => false,
         };
     }

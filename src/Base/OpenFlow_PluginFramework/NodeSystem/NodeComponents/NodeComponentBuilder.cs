@@ -2,7 +2,6 @@
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.Primitives;
 using OpenFlow_PluginFramework.Primitives.TypeDefinition;
-using OpenFlow_PluginFramework.Primitives.ValueConstraints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +80,17 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return output;
         }
 
+        public static Instance<ITypeDefinitionConstructor<T>> TypeDefinition<T>(T defaultValue, string editorName = null, string displayName = null) 
+        {
+            Instance<ITypeDefinitionConstructor<T>> output = new(Factory);
+
+            output.Build.DefaultValue = defaultValue;
+            output.Build.EditorName = editorName;
+            output.Build.DisplayName = displayName;
+
+            return output;
+        }
+
         public static Instance<IManualTypeDefinitionManager> ManualTypeDefinitionManager() => new(Factory);
 
         public static Instance<INodeComponentDictionary> NodeComponentDictionary() => new(Factory);
@@ -139,17 +149,38 @@ namespace OpenFlow_PluginFramework.NodeSystem.NodeComponents
             return builder;
         }
 
-        public static Instance<IManualTypeDefinitionManager> AddAcceptedDefinition<T>(this Instance<IManualTypeDefinitionManager> builder, T defaultValue, string editorName = null, string displayName = null, ValueConstraintChain<T> constraints = null)
-        {
-            builder.Build.RegisterTypeDefinition(defaultValue, editorName, displayName, constraints);
-            return builder;
-        }
-
         public static Instance<IManualTypeDefinitionManager> AddAcceptedDefinition(this Instance<IManualTypeDefinitionManager> builder, ITypeDefinition typeDefinition)
         {
             builder.Build.RegisterTypeDefinition(typeDefinition);
             return builder;
         }
+
+        public static Instance<IManualTypeDefinitionManager> AddAcceptedDefinition<T>(this Instance<IManualTypeDefinitionManager> builder, T defaultValue, string editorName = null, string displayName = null)
+            => builder.AddAcceptedDefinition(TypeDefinition(defaultValue, editorName, displayName).Build);
+
+        public static Instance<IManualTypeDefinitionManager> AddAcceptedDefinition<TValue>(this Instance<IManualTypeDefinitionManager> builder, ITypeDefinitionConstructor<TValue> typeDefinitionConstructor)
+            => builder.AddAcceptedDefinition(typeDefinitionConstructor.Construct());
+
+        public static Instance<ITypeDefinitionConstructor<T>> WithProperty<T>(this Instance<ITypeDefinitionConstructor<T>> builder, string propertyName, object propertyValue)
+        {
+            builder.Build.AddProperty(propertyName, propertyValue);
+
+            return builder;
+        }
+
+        public static Instance<ITypeDefinitionConstructor<T>> WithConstraint<T>(this Instance<ITypeDefinitionConstructor<T>> builder, Func<T, T> constraint)
+        {
+            Instance<IValueConstraint<T>> valueConstraint = GetInstance<IValueConstraint<T>>();
+
+            valueConstraint.Build.MyFunc = constraint;
+
+            builder.Build.AddConstraint(valueConstraint.Build);
+
+            return builder;
+        }
+
+        public static Instance<ITypeDefinitionConstructor<T>> WithConstraint<T>(this Instance<ITypeDefinitionConstructor<T>> builder, string constraintName, object constraintValue, Func<T, T> constraint)
+            => builder.WithProperty(constraintName, constraintValue).WithConstraint(constraint);
 
         public class Instance<T>
         {

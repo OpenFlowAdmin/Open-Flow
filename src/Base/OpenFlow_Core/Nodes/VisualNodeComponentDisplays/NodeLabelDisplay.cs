@@ -13,7 +13,8 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
     {
         public NodeLabelDisplay(NodeBase parent, NodeLabel child) : base(parent, child)
         {
-            LabelText = new(child.Name);
+            LabelText = Instance.Factory.GetImplementation<IObservableValue<string>>();
+            LabelText.Value = ChildComponent.Name;
             ChildComponent.PropertyChanged += (o, e) =>
             {
                 if (e.PropertyName is nameof(NodeLabel.Name))
@@ -23,6 +24,6 @@ namespace OpenFlow_Core.Nodes.VisualNodeComponentDisplays
             };
         }
 
-        public ObservableValue<string> LabelText { get; }
+        public IObservableValue<string> LabelText { get; }
     }
 }

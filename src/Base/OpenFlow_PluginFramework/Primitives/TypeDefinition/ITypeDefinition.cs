@@ -7,6 +7,8 @@
     /// </summary>
     public interface ITypeDefinition
     {
+        public object this[string key] { get; }
+
         /// <summary>
         /// The c# type that this ITypeDefinition allows
         /// </summary>
@@ -33,7 +35,7 @@
         /// <param name="inputValue">Input object to be checked</param>
         /// <param name="outputValue">Output object, with any constraints applied</param>
         /// <returns>True if inputValue is allowed, false if inputValue is not allowed</returns>
-        public bool TryConstraintValue(object inputValue, out object outputValue);
+        public bool TryConstrainValue(object inputValue, out object outputValue);
 
         public bool CanAcceptValue(object value);
     }
