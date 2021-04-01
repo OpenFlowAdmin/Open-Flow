@@ -57,7 +57,7 @@
 
         private static IObservableValue<bool> NewObservable(bool value)
         {
-            IObservableValue<bool> output = NodeComponentBuilder.Factory.GetImplementation<IObservableValue<bool>>();
+            IObservableValue<bool> output = Laminar.New<IObservableValue<bool>>();
 
             output.Value = value;
 

@@ -1,4 +1,5 @@
-﻿using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
+﻿using OpenFlow_PluginFramework;
+using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
 using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
 using OpenFlow_PluginFramework.NodeSystem.Nodes;
 using OpenFlow_PluginFramework.Primitives.TypeDefinition;
@@ -12,7 +13,7 @@ namespace OpenFlow_Inbuilt.Nodes.Maths.Arithmetic
 {
     public class SliderTest : INode
     {
-        private readonly INodeField _sliderTest = NodeComponentBuilder.NodeField("Slider Test").WithValueTypeProvider("Display", NodeComponentBuilder.RigidTypeDefinitionManager(50.0, "SliderEditor", null).Build, true).Build;
+        private readonly INodeField _sliderTest = Constructor.NodeField("Slider Test").WithValue<INodeField>("Display", Constructor.RigidTypeDefinitionManager(50.0, "SliderEditor", null), true);
 
         public string NodeName { get; } = "Slider Test";
 

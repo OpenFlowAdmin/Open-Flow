@@ -8,6 +8,7 @@
     using OpenFlow_Core.Management;
     using OpenFlow_Core.Management.UserInterface;
     using OpenFlow_Core.Nodes;
+    using OpenFlow_PluginFramework;
 
     public class Instance
     {
@@ -17,6 +18,7 @@
         public Instance()
         {
             Current = this;
+            Laminar.Init(Factory);
             //Factory = new();
             _pluginManager = new PluginManager();
             if (_configs.Valid && _configs.PluginPaths != null)

@@ -7,6 +7,7 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using OpenFlow_PluginFramework;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
@@ -36,7 +37,7 @@
 
         public override IList VisualComponentList { get; }
 
-        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.GetInstance<IVisualNodeComponent>().Build);
+        public override INodeComponent Clone() => CloneTo(Laminar.New<IVisualNodeComponent>());
 
         protected override IVisualNodeComponent CloneTo(INodeComponent nodeField)
         {

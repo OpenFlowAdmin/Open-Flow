@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using OpenFlow_PluginFramework;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
@@ -67,12 +68,12 @@
                     else
                     {
                         RemoveValue(key);
-                        AddValue(key, NodeComponentBuilder.RigidTypeDefinitionManager(value).Build, true);
+                        AddValue(key, Constructor.RigidTypeDefinitionManager(value), true);
                     }
                 }
                 else
                 {
-                    AddValue(key, NodeComponentBuilder.RigidTypeDefinitionManager(value).Build, true);
+                    AddValue(key, Constructor.RigidTypeDefinitionManager(value), true);
                 }
             }
         }
@@ -100,7 +101,7 @@
 
         public ILaminarValue GetDisplayValue(object key) => key != null && _valueStore.TryGetValue(key, out ILaminarValue value) ? value : null;
 
-        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.NodeField(Name).Build);
+        public override INodeComponent Clone() => CloneTo(Constructor.NodeField(Name));
 
         protected override INodeField CloneTo(INodeComponent nodeField)
         {

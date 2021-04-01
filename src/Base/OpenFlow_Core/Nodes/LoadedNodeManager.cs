@@ -13,11 +13,6 @@
 
     public class LoadedNodeManager
     {
-        public LoadedNodeManager()
-        {
-            NodeComponentBuilder.Factory = Instance.Factory;
-        }
-
         public NodeCatagories LoadedNodes { get; } = new();
 
         public void AddNodeToCatagory<TNode>(string catagoryName, string subCatagoryName = null)

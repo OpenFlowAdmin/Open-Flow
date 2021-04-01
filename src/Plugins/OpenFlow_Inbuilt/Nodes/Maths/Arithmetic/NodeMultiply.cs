@@ -5,11 +5,12 @@
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Visuals;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
+    using OpenFlow_PluginFramework;
 
     public class NodeMultiply : INode
     {
-        private readonly INodeComponentAutoCloner multiplyFields = NodeComponentBuilder.NodeComponentAutoCloner(NodeComponentBuilder.NodeField("Number").WithInput(0.0).Build, 1, index => $"Number {index + 1}").Build;
-        private readonly INodeField outputField = NodeComponentBuilder.NodeField("Product").WithOutput(0.0).Build;
+        private readonly INodeComponentAutoCloner multiplyFields = Constructor.NodeComponentAutoCloner(Constructor.NodeField("Number").WithInput(0.0), 1, index => $"Number {index + 1}");
+        private readonly INodeField outputField = Constructor.NodeField("Product").WithOutput(0.0);
 
         public string NodeName => "Multiply";
 

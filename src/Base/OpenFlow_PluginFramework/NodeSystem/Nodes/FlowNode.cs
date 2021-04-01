@@ -7,7 +7,7 @@
 
     public abstract class FlowNode : IFlowNode
     {
-        private readonly INodeLabel _flowField = NodeComponentBuilder.NodeLabel("Flow").WithFlowInput().WithFlowOutput().Build;
+        private readonly INodeLabel _flowField = Constructor.NodeLabel("Flow").WithFlowInput().WithFlowOutput();
 
         public abstract string NodeName { get; }
 

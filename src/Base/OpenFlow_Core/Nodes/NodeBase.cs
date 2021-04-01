@@ -15,6 +15,7 @@
     using OpenFlow_PluginFramework.Primitives;
     using OpenFlow_Core.Nodes.Connectors;
     using OpenFlow_Core.Nodes.NodeComponents.Collections;
+    using OpenFlow_PluginFramework;
 
     public class NodeBase
     {
@@ -26,7 +27,7 @@
         public NodeBase(INode baseNode)
         {
             _baseNode = baseNode;
-            _fieldSection = NodeComponentBuilder.NodeComponentList(baseNode.Fields).Build;
+            _fieldSection = Constructor.NodeComponentList(baseNode.Fields);
             _fieldSection.ParentNode = baseNode;
 
             Fields = ObservableCollectionMapper<IVisualNodeComponent, IVisualNodeComponentDisplay>.Create(_fieldSection.VisualNodeComponentsObservable, new VisualNodeComponentMapper(this));

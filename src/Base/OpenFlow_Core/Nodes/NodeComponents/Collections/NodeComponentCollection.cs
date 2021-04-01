@@ -8,6 +8,7 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
+    using OpenFlow_PluginFramework;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents;
     using OpenFlow_PluginFramework.NodeSystem.NodeComponents.Collections;
     using OpenFlow_PluginFramework.NodeSystem.Nodes;
@@ -80,7 +81,7 @@
 
         public bool Contains(INodeComponent component) => _childComponents.Contains(component);
 
-        public override INodeComponent Clone() => CloneTo(NodeComponentBuilder.NodeComponentList(_childComponents.Select(x => x.Clone())).Build);
+        public override INodeComponent Clone() => CloneTo(Constructor.NodeComponentList(_childComponents.Select(x => x.Clone())));
 
         protected virtual void ProtectedAdd(INodeComponent newComponent)
         {
