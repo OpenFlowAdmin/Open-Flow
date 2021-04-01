@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using OpenFlow_Core.Primitives;
 using OpenFlow_PluginFramework.Primitives;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace OpenFlow_PluginFramework.UnitTests.Primitives.UnitTests
 {
     public class OpacityTests
     {
-        private Opacity _sut = new Opacity();
+        private readonly Opacity _sut = new();
 
         [Fact]
         public void Value_ShouldSetProperly_WhenNoFactors()
@@ -38,7 +39,7 @@ namespace OpenFlow_PluginFramework.UnitTests.Primitives.UnitTests
         [Fact]
         public void RemoveOpacityFactor_ShouldRemoveFactor_WhenFactorContained()
         {
-            Opacity factor = new Opacity() { Value = 0.5 };
+            Opacity factor = new() { Value = 0.5 };
             _sut.AddOpacityFactor(factor);
             bool factorRemoved;
             using (var monitoredSUT = _sut.Monitor())
@@ -77,19 +78,17 @@ namespace OpenFlow_PluginFramework.UnitTests.Primitives.UnitTests
         [Fact]
         public void Value_ShouldRelayPropertyChanged_WhenFactorPropertyChanged()
         {
-            Opacity factor = new Opacity();
+            Opacity factor = new();
             _sut.AddOpacityFactor(factor);
-            using (var monitoredSUT = _sut.Monitor())
-            {
-                factor.Value = 0.5;
-                monitoredSUT.Should().RaisePropertyChangeFor(x => x.Value);
-            }
+            using var monitoredSUT = _sut.Monitor();
+            factor.Value = 0.5;
+            monitoredSUT.Should().RaisePropertyChangeFor(x => x.Value);
         }
 
         [Fact]
         public void Value_ShouldChange_WhenFactorPropertyChanged()
         {
-            Opacity factor = new Opacity();
+            Opacity factor = new();
             _sut.AddOpacityFactor(factor);
             factor.Value = 0.5;
             _sut.Value.Should().Be(0.5);
